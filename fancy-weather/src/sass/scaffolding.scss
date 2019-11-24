@@ -1,0 +1,37 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.page-wrap {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 40px 90px 90px;
+
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 14px;
+    line-height: 16px;
+    font-weight: normal;
+    text-transform: uppercase;
+    color: #fff;
+
+    background-color: rgb(41, 55, 71);
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    background-blend-mode: multiply;
+}
+
+.visually-hidden {
+    position: absolute;
+
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+
+	border: 0;
+	white-space: nowrap;
+
+	clip: rect(0 0 0 0);
+	overflow: hidden;
+}

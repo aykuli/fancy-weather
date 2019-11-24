@@ -1,0 +1,135 @@
+.controls {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 50px;
+
+    outline: 1px dotted red;
+
+    &__btns {
+        display: flex;
+    }
+
+    &__btn {
+        width: 44px;
+        height: 44px;
+        margin-right: 10px;
+
+        font-family: 'Ubuntu', sans-serif;
+        font-size: 14px;
+        line-height: 16px;
+        font-weight: 500;
+        color: #fff;
+
+        background-color: rgba(174, 181, 185, 0.5);
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+
+        &:hover, &:focus {
+            background-color: rgba(179, 0, 0, 0.2);
+            outline: none;
+        }
+
+        &:active {
+            background-color: rgba(170, 0, 0, 0.7);
+        }
+
+        &--refresh {
+            background-image:   url(../assets/img/icon_refresh.svg),
+                                url(../assets/img/icon-bg-for-refresh.svg);
+            background-position: 50% 50%, 0 0;
+            background-repeat: no-repeat, no-repeat;
+        }
+
+        &--lang {
+            width: 60px;
+            padding-left: 10px;
+
+            background-color: rgba(174, 181, 185, 0.5);
+            background-image: url(../assets/img/select-stroke.svg);
+            background-position: 40px 20px;
+            background-repeat: no-repeat;
+            border: none;
+        
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+
+            & option {
+                background-color: rgb(41, 55, 71);
+            }
+        }
+
+        &--farengeit, &--celsius {
+            margin: 0;
+        }
+
+        &--farengeit {
+            color: rgba(255, 255, 255, 0.4);
+
+            background-color: rgba(76, 82, 85, 0.4);
+            border-bottom-right-radius: 0;
+            border-top-right-radius: 0;
+        }
+
+        &--celsius {
+            color: rgba(255, 255, 255, 0.4);
+
+            background-color: rgba(76, 82, 85, 0.4);
+            border-bottom-left-radius: 0;
+            border-top-left-radius: 0;
+        }
+
+        &--active {
+            color: rgba(255, 255, 255, 1);
+
+            background-color: rgba(174, 181, 185, 0.5);
+            &:hover, &:focus {
+                background-color: rgba(174, 181, 185, 0.5);
+                cursor: auto;
+            }
+        }
+    }
+
+    &__search-form {
+        display: flex;
+    }
+
+    &__search-input {
+        width: 260px;
+        padding-left: 20px;
+
+        font-family: 'Ubuntu', sans-serif;
+        font-size: 14px;
+        line-height: 16px;
+        font-weight: 400;
+        color: #fff;
+
+        background: rgba(76, 82, 85, 0.4);
+        border: 1px solid rgba(228, 227, 227, 0.2);
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        box-sizing: border-box;
+
+        &::placeholder {
+            color: #fff;
+        }
+    }
+
+    &__search-btn {
+        padding: 0 20px;
+
+        font-family: 'Ubuntu', sans-serif;
+        font-size: 14px;
+        line-height: 16px;
+        font-weight: 500;
+        text-transform: uppercase;
+        color: #fff;
+        
+        background: rgba(174, 181, 185, 0.5);
+        border: none;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
+}
