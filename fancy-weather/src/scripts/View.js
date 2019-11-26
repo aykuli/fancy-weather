@@ -14,7 +14,7 @@ export default class View {
 
     const lang = ['EN', 'RU', 'BE'];
     for (let i = 0; i < 3; i += 1) {
-      const option = new Option(lang[i], lang[1], false, false);
+      const option = new Option(lang[i], lang[i], false, false);
       this.controlsLang.append(option);
     }
 
@@ -124,5 +124,11 @@ export default class View {
     return this.cityInput.value;
   };
 
-  watchLang() {}
+  watchLang() {
+    this.controlsLang.addEventListener('change', () => {
+      console.log('lang changed');
+      localStorage.removeItem('weatherAPILang');
+      localStorage.setItem('weatherAPILang', this.controlsLang.value);
+    });
+  }
 }
