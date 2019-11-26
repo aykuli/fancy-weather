@@ -2,8 +2,6 @@ export default class View {
   constructor() {
     this.page = document.querySelector('.page-wrap');
 
-    console.log('generatingControlElements works');
-
     // Block 1: control elements and input form
     this.controls = this.createElement('div', 'controls', this.page);
 
@@ -11,13 +9,20 @@ export default class View {
 
     this.controlsBtnRefresh = this.createElement('button', 'controls__btn', this.controlsBtns);
     this.controlsBtnRefresh.classList.add('controls__btn--refresh');
-    this.controlsBtnLang = this.createElement('select', 'controls__btn', this.controlsBtns);
-    this.controlsBtnLang.classList.add('controls__btn--lang');
+    this.controlsLang = this.createElement('select', 'controls__btn', this.controlsBtns);
+    this.controlsLang.classList.add('controls__btn--lang');
 
     const lang = ['EN', 'RU', 'BE'];
     for (let i = 0; i < 3; i += 1) {
       const option = new Option(lang[i], lang[1], false, false);
-      this.controlsBtnLang.append(option);
+      this.controlsLang.append(option);
+    }
+
+    if (localStorage.getItem('weatherAPILang') === null) {
+      localStorage.setItem('weatherAPILang', 'EN');
+      this.controlsLang.value = lang[0];
+    } else {
+      this.controlsLang.value = localStorage.getItem('weatherAPILang');
     }
 
     this.controlsBtnFarengeit = this.createElement('button', 'controls__btn', this.controlsBtns);
@@ -102,4 +107,22 @@ export default class View {
     document.body.append(this.map);
     this.map.setAttribute('style', 'width: 350px; height: 350px');
   };
+
+  watchInput() {
+    this.cityBtn.addEventListener('click', this.getInputValue);
+    window.addEventListener('keydown', e => {
+      if (e.code === 'Enter') {
+        this.getInputValue(e);
+      }
+    });
+  }
+
+  getInputValue = e => {
+    console.log('произошел клик по кнопке поиска');
+    e.preventDefault();
+    console.log(this.cityInput.value);
+    return this.cityInput.value;
+  };
+
+  watchLang() {}
 }
