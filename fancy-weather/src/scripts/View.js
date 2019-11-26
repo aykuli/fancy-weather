@@ -1,11 +1,11 @@
 export default class View {
   constructor() {
-    this.app = document.querySelector('.page-wrap');
+    this.page = document.querySelector('.page-wrap');
 
     console.log('generatingControlElements works');
 
     // Block 1: control elements and input form
-    this.controls = this.createElement('div', 'controls', this.app);
+    this.controls = this.createElement('div', 'controls', this.page);
 
     this.controlsBtns = this.createElement('div', 'controls__btns', this.controls);
 
@@ -41,7 +41,7 @@ export default class View {
     this.cityBtn.innerText = 'Search';
 
     // Block 2: Showing current weather
-    this.weather = this.createElement('div', 'weather', this.app);
+    this.weather = this.createElement('div', 'weather', this.page);
 
     this.place = this.createElement('p', 'weather__place', this.weather);
     this.city = this.createElement('span', 'weather__city', this.place);
@@ -62,6 +62,8 @@ export default class View {
     this.temperatureSign.innerText = '°';
     this.weatherIconBig = this.createElement('img', 'weather__icon--big', this.temperatureWrap);
     this.weatherIconBig.setAttribute('url', './images/icon-cloud.svg');
+
+    this.mapWrap = this.createElement('div', 'map', this.page);
   }
 
   // Create an element with an optional CSS class
@@ -76,5 +78,29 @@ export default class View {
   getElement(selector) {
     const element = document.querySelector(selector);
     return element;
+  }
+
+  coorsView = pos => {
+    var crd = pos.coords;
+    this.coors = this.createElement('div', 'map__coors', this.mapWrap);
+    this.latitudeView = this.createElement('p', 'map__coors--latitude', this.coors);
+    this.latitudeView.innerText = `Latitude: ${crd.latitude}`;
+    this.longitudeView = this.createElement('p', 'map__coors--longitude', this.coors);
+    this.longitudeView.innerText = `Longitude: ${crd.longitude}`;
+  };
+
+  mapView() {
+    // this.mapApiUrl = document.createElement('script');
+    // document.getElementsByTagName('head')[0].appendChild(this.mapApiUrl);
+    // this.mapApiUrl.src = 'https://api-maps.yandex.ru/2.1/?apikey=34a7ab76-b83a-4d53-be9a-00404d79128b&lang=ru_RU';
+    // this.mapApiUrl.setAttribute('type', 'text/javascript');
+    this.map = this.createElement('div', 'map', this.mapWrap);
+    this.map.setAttribute('style', 'width: 380px; height: 380px');
+
+    // this.mapScript = document.createElement('script');
+    // document.getElementsByTagName('head')[0].appendChild(this.mapScript);
+    // this.mapScript.setAttribute('type', 'text/javascript');
+    // this.mapScript.innerText =
+    //   ' ymaps.ready(init);function init(){var myMap = new ymaps.Map("map", {center: [55.76, 37.64],zoom: 7});}';
   }
 }
