@@ -7,6 +7,8 @@ class Controller {
     this.view = view;
     this.showCoors();
     this.map();
+    this.model.getCoors(this.model.getWeatherData);
+    this.model.getWeatherData(52, 86);
   }
 
   showCoors() {
@@ -15,7 +17,7 @@ class Controller {
 
   map() {
     this.view.mapView();
-    this.model.getMap();
+    this.model.getCoors(this.model.getMap);
   }
 }
 

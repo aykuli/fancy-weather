@@ -87,20 +87,19 @@ export default class View {
     this.latitudeView.innerText = `Latitude: ${crd.latitude}`;
     this.longitudeView = this.createElement('p', 'map__coors--longitude', this.coors);
     this.longitudeView.innerText = `Longitude: ${crd.longitude}`;
+    console.log([crd.latitude, crd.longitude], ' from coorviews function');
+    return [crd.latitude, crd.longitude];
   };
 
-  mapView() {
-    // this.mapApiUrl = document.createElement('script');
-    // document.getElementsByTagName('head')[0].appendChild(this.mapApiUrl);
-    // this.mapApiUrl.src = 'https://api-maps.yandex.ru/2.1/?apikey=34a7ab76-b83a-4d53-be9a-00404d79128b&lang=ru_RU';
-    // this.mapApiUrl.setAttribute('type', 'text/javascript');
-    this.map = this.createElement('div', 'map', this.mapWrap);
-    this.map.setAttribute('style', 'width: 380px; height: 380px');
+  mapView = () => {
+    this.mapApiUrl = document.createElement('script');
+    document.getElementsByTagName('head')[0].appendChild(this.mapApiUrl);
+    this.mapApiUrl.src = 'https://api-maps.yandex.ru/2.1/?apikey=34a7ab76-b83a-4d53-be9a-00404d79128b&lang=ru_RU';
+    this.mapApiUrl.setAttribute('type', 'text/javascript');
 
-    // this.mapScript = document.createElement('script');
-    // document.getElementsByTagName('head')[0].appendChild(this.mapScript);
-    // this.mapScript.setAttribute('type', 'text/javascript');
-    // this.mapScript.innerText =
-    //   ' ymaps.ready(init);function init(){var myMap = new ymaps.Map("map", {center: [55.76, 37.64],zoom: 7});}';
-  }
+    this.map = document.createElement('div');
+    this.map.setAttribute('id', 'map');
+    document.body.append(this.map);
+    this.map.setAttribute('style', 'width: 350px; height: 350px');
+  };
 }
