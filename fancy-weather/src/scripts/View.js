@@ -18,11 +18,13 @@ export default class View {
       this.controlsLang.append(option);
     }
 
-    if (localStorage.getItem('weatherAPILang') === null) {
-      localStorage.setItem('weatherAPILang', 'EN');
+    if (localStorage.getItem('weatherLang') === null) {
+      console.log('устанавливаем язык ');
+      localStorage.setItem('weatherLang', 'EN');
       this.controlsLang.value = lang[0];
     } else {
-      this.controlsLang.value = localStorage.getItem('weatherAPILang');
+      this.controlsLang.value = localStorage.getItem('weatherLang');
+      console.log('берем язык ');
     }
 
     this.controlsBtnFarengeit = this.createElement('button', 'controls__btn', this.controlsBtns);
@@ -53,7 +55,10 @@ export default class View {
     this.city.innerText = 'Novosibirsk, ';
     this.country = this.createElement('span', 'weather__country', this.place);
     this.country.innerText = 'Russia';
-    this.watchTime();
+
+    this.showDate();
+    this.showTimeHHMM();
+    window.setInterval(this.showTimeHHMM, 1000);
 
     this.temperatureWrap = this.createElement('p', 'weather__temperature--wrap', this.weather);
     this.temperature = this.createElement('span', 'weather__temperature', this.temperatureWrap);
@@ -124,19 +129,18 @@ export default class View {
 
   watchLang() {
     this.controlsLang.addEventListener('change', () => {
-      console.log('lang changed');
-      this.controls.submit();
       localStorage.removeItem('weatherLang');
       localStorage.setItem('weatherLang', this.controlsLang.value);
+      this.controls.submit();
     });
     return localStorage.getItem('weatherLang');
   }
 
-  watchTime() {
+  showDate() {
     let currentTime = new Date();
     let weekDayArr = {
       EN: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-      RU: ['Вск', 'Пнд', 'Втр', 'Срд', 'Чтв', 'Птн', 'Сбт'],
+      RU: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
       BE: ['Няд', 'Пнд', 'Аўт', 'Сер', 'Чцв', 'Пят', 'Суб'],
     };
     let monthArr = {
@@ -183,16 +187,29 @@ export default class View {
         'Снежань',
       ],
     };
-    console.log('localStorage.getItem(weatherAPILang): ', localStorage.getItem('weatherAPILang'));
 
     this.date = this.createElement('p', 'weather__date', this.weather);
     this.dateDay = this.createElement('span', 'weather__date--item', this.date);
-    this.dateDay.innerText = weekDayArr[localStorage.getItem('weatherAPILang')][currentTime.getDay()];
+    this.dateDay.innerText = weekDayArr[localStorage.getItem('weatherLang')][currentTime.getDay()];
     this.dateDD = this.createElement('span', 'weather__date--item', this.date);
     this.dateDD.innerText = currentTime.getDate();
     this.dateMM = this.createElement('span', 'weather__date--item', this.date);
-    this.dateMM.innerText = monthArr[localStorage.getItem('weatherAPILang')][currentTime.getMonth()];
+    this.dateMM.innerText = monthArr[localStorage.getItem('weatherLang')][currentTime.getMonth()];
     this.dateHHMM = this.createElement('span', 'weather__date--hhmm', this.date);
-    this.dateHHMM.innerText = '17:23';
+  }
+
+  showTimeHHMM = () => {
+    let tm = new Date();
+    var h = tm.getHours();
+    var m = tm.getMinutes();
+    var s = tm.getSeconds();
+    m = this.checkTime(m);
+    s = this.checkTime(s);
+
+    document.querySelector('.weather__date--hhmm').innerHTML = h + ':' + m + ':' + s;
+  };
+
+  checkTime(i) {
+    return i < 10 ? '0' + i : i;
   }
 }
