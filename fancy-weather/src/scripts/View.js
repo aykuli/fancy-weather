@@ -3,7 +3,7 @@ export default class View {
     this.page = document.querySelector('.page-wrap');
 
     // Block 1: control elements and input form
-    this.controls = this.createElement('div', 'controls', this.page);
+    this.controls = this.createElement('form', 'controls', this.page);
 
     this.controlsBtns = this.createElement('div', 'controls__btns', this.controls);
 
@@ -53,12 +53,7 @@ export default class View {
     this.city.innerText = 'Novosibirsk, ';
     this.country = this.createElement('span', 'weather__country', this.place);
     this.country.innerText = 'Russia';
-
-    this.time = this.createElement('p', 'weather__date', this.weather);
-    this.dateDDMM = this.createElement('span', 'weather__date--ddmm', this.time);
-    this.dateDDMM.innerText = 'Mon 28 October ';
-    this.dateHHMM = this.createElement('span', 'weather__date--hhmm', this.time);
-    this.dateHHMM.innerText = '17:23';
+    this.watchTime();
 
     this.temperatureWrap = this.createElement('p', 'weather__temperature--wrap', this.weather);
     this.temperature = this.createElement('span', 'weather__temperature', this.temperatureWrap);
@@ -87,6 +82,9 @@ export default class View {
 
   coorsView = pos => {
     var crd = pos.coords;
+    localStorage.removeItem('weatherCoords');
+    localStorage.setItem('weatherCoords', JSON.stringify([crd.latitude, crd.longitude]));
+    console.log(localStorage.getItem('weatherCoords'));
     this.coors = this.createElement('div', 'map__coors', this.mapWrap);
     this.latitudeView = this.createElement('p', 'map__coors--latitude', this.coors);
     this.latitudeView.innerText = `Latitude: ${crd.latitude}`;
@@ -117,18 +115,84 @@ export default class View {
     });
   }
 
-  getInputValue = e => {
-    console.log('произошел клик по кнопке поиска');
-    e.preventDefault();
+  getInputValue = () => {
     console.log(this.cityInput.value);
+    localStorage.removeItem('weatherPlace');
+    localStorage.setItem('weatherPlace', this.cityInput.value);
     return this.cityInput.value;
   };
 
   watchLang() {
     this.controlsLang.addEventListener('change', () => {
       console.log('lang changed');
-      localStorage.removeItem('weatherAPILang');
-      localStorage.setItem('weatherAPILang', this.controlsLang.value);
+      this.controls.submit();
+      localStorage.removeItem('weatherLang');
+      localStorage.setItem('weatherLang', this.controlsLang.value);
     });
+    return localStorage.getItem('weatherLang');
+  }
+
+  watchTime() {
+    let currentTime = new Date();
+    let weekDayArr = {
+      EN: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+      RU: ['Вск', 'Пнд', 'Втр', 'Срд', 'Чтв', 'Птн', 'Сбт'],
+      BE: ['Няд', 'Пнд', 'Аўт', 'Сер', 'Чцв', 'Пят', 'Суб'],
+    };
+    let monthArr = {
+      EN: [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December',
+      ],
+      RU: [
+        'Январь',
+        'Февраль',
+        'Март',
+        'Апрель',
+        'Май',
+        'Июнь',
+        'Июль',
+        'Август',
+        'Сентябрь',
+        'Октябрь',
+        'Ноябрь',
+        'Декабрь',
+      ],
+      BE: [
+        'Студзень',
+        'Люты',
+        'Сакавiк',
+        'Красавiк',
+        'Май',
+        'Червень',
+        ' Лiпень',
+        'Жнiвень',
+        'Верасень',
+        'Кастрычнiк',
+        'Лiстапад',
+        'Снежань',
+      ],
+    };
+    console.log('localStorage.getItem(weatherAPILang): ', localStorage.getItem('weatherAPILang'));
+
+    this.date = this.createElement('p', 'weather__date', this.weather);
+    this.dateDay = this.createElement('span', 'weather__date--item', this.date);
+    this.dateDay.innerText = weekDayArr[localStorage.getItem('weatherAPILang')][currentTime.getDay()];
+    this.dateDD = this.createElement('span', 'weather__date--item', this.date);
+    this.dateDD.innerText = currentTime.getDate();
+    this.dateMM = this.createElement('span', 'weather__date--item', this.date);
+    this.dateMM.innerText = monthArr[localStorage.getItem('weatherAPILang')][currentTime.getMonth()];
+    this.dateHHMM = this.createElement('span', 'weather__date--hhmm', this.date);
+    this.dateHHMM.innerText = '17:23';
   }
 }

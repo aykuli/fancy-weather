@@ -8,7 +8,6 @@ class Controller {
     this.showCoors();
     this.map();
     this.model.getCoors(this.model.getWeatherData);
-    // this.model.getWeatherData(52, 86);
     this.view.watchInput();
     this.view.watchLang();
   }

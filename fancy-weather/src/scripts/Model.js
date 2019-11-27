@@ -1,5 +1,4 @@
 // used apis
-// https://www.gismeteo.ru/api/
 // https://opencagedata.com/demo
 // https://www.flickr.com/services/developer/api/
 
@@ -38,7 +37,7 @@ export default class Model {
   getWeatherData(pos) {
     var crd = pos.coords;
     const apiKey = 'eefc04453f3143682c3c88d3669c3546';
-    let lang = 'ru';
+    let lang = localStorage.getItem('weatherAPILang');
     let unit = 'si';
 
     var url = `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/${apiKey}/${crd.latitude},${crd.longitude}?lang=${lang}&unit=${unit}`;
