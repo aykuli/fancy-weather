@@ -24,7 +24,6 @@ export default class View {
       this.controlsLang.value = lang[0];
     } else {
       this.controlsLang.value = localStorage.getItem('weatherLang');
-      console.log('берем язык ');
     }
 
     this.controlsBtnFarengeit = this.createElement('button', 'controls__btn', this.controlsBtns);
@@ -49,12 +48,6 @@ export default class View {
 
     // Block 2: Showing current weather
     this.weather = this.createElement('div', 'weather', this.page);
-
-    this.place = this.createElement('p', 'weather__place', this.weather);
-    this.city = this.createElement('span', 'weather__city', this.place);
-    this.city.innerText = 'Novosibirsk, ';
-    this.country = this.createElement('span', 'weather__country', this.place);
-    this.country.innerText = 'Russia';
 
     this.showDate();
     this.showTimeHHMM();
@@ -114,24 +107,12 @@ export default class View {
   watchInput(callback) {
     this.cityBtn.addEventListener('click', e => {
       console.log('click on search button happened');
-      this.getInputValue(e);
+      console.log('View ------------- this.cityInput.value = ', this.cityInput.value);
+      localStorage.removeItem('weatherPlace');
+      localStorage.setItem('weatherPlace', this.cityInput.value);
       callback();
     });
-    window.addEventListener('keydown', e => {
-      if (e.code === 'Enter') {
-        console.log('click on enter key happened');
-        this.getInputValue(e);
-        callback();
-      }
-    });
   }
-
-  getInputValue = () => {
-    console.log(this.cityInput.value);
-    localStorage.removeItem('weatherPlace');
-    localStorage.setItem('weatherPlace', this.cityInput.value);
-    return this.cityInput.value;
-  };
 
   watchLang() {
     this.controlsLang.addEventListener('change', () => {
@@ -217,5 +198,13 @@ export default class View {
 
   checkTime(i) {
     return i < 10 ? '0' + i : i;
+  }
+
+  showSettlementAndCountry() {
+    this.place = this.createElement('p', 'weather__place', this.weather);
+    this.city = this.createElement('span', 'weather__city', this.place);
+    this.city.innerText = `${localStorage.getItem('weatherPlace')}, `;
+    this.country = this.createElement('span', 'weather__country', this.place);
+    this.country.innerText = localStorage.getItem('weatherCountry');
   }
 }

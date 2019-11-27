@@ -6,9 +6,17 @@ class Controller {
     this.model = model;
     this.view = view;
     this.showCoors();
+
+    // shows map
     this.map();
-    this.model.getCoors(this.model.getWeatherData);
-    this.view.watchInput(this.model.getInputCoors);
+
+    // this.model.getCoors(this.model.getWeatherData);
+    console.log('Controller ---------- this.view.watchInput() = ', localStorage.getItem('weatherPlace'));
+    // this.model.getInputCoors(localStorage.getItem('weatherPlace'));
+
+    this.view.watchInput(this.model.getInputCoors(localStorage.getItem('weatherPlace')));
+    this.view.showSettlementAndCountry();
+
     this.view.watchLang();
   }
 
