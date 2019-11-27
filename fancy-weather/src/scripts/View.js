@@ -89,13 +89,13 @@ export default class View {
     var crd = pos.coords;
     localStorage.removeItem('weatherCoords');
     localStorage.setItem('weatherCoords', JSON.stringify([crd.latitude, crd.longitude]));
-    console.log(localStorage.getItem('weatherCoords'));
+    // console.log(localStorage.getItem('weatherCoords'));
     this.coors = this.createElement('div', 'map__coors', this.mapWrap);
     this.latitudeView = this.createElement('p', 'map__coors--latitude', this.coors);
     this.latitudeView.innerText = `Latitude: ${crd.latitude}`;
     this.longitudeView = this.createElement('p', 'map__coors--longitude', this.coors);
     this.longitudeView.innerText = `Longitude: ${crd.longitude}`;
-    console.log([crd.latitude, crd.longitude], ' from coorviews function');
+    // console.log([crd.latitude, crd.longitude], ' from coorviews function');
     return [crd.latitude, crd.longitude];
   };
 
@@ -111,11 +111,17 @@ export default class View {
     this.map.setAttribute('style', 'width: 350px; height: 350px');
   };
 
-  watchInput() {
-    this.cityBtn.addEventListener('click', this.getInputValue);
+  watchInput(callback) {
+    this.cityBtn.addEventListener('click', e => {
+      console.log('click on search button happened');
+      this.getInputValue(e);
+      callback();
+    });
     window.addEventListener('keydown', e => {
       if (e.code === 'Enter') {
+        console.log('click on enter key happened');
         this.getInputValue(e);
+        callback();
       }
     });
   }

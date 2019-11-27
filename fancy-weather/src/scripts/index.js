@@ -8,7 +8,7 @@ class Controller {
     this.showCoors();
     this.map();
     this.model.getCoors(this.model.getWeatherData);
-    this.view.watchInput();
+    this.view.watchInput(this.model.getInputCoors);
     this.view.watchLang();
   }
 
