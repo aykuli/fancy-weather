@@ -47,68 +47,14 @@ export default class Model {
       });
   }
 
-  getInputCoors() {
+  async getInputCoors(settlement, lang) {
     console.log('getInputCoors works');
-    console.log('settlement in yandex API = ', settlement);
+    console.log('settlement: ', settlement, '  lang: ', lang);
+    const url = `https://api.opencagedata.com/geocode/v1/json?q=${settlement}&key=08e88a2c40fb4a34966ad1a41752ff28&language=${lang}&pretty=1&no_annotations=1`;
 
-    fetch('https://api-maps.yandex.ru/2.1/?apikey=34a7ab76-b83a-4d53-be9a-00404d79128b&lang=ru_RU').then(data => {
-      ymaps.ready(init);
-
-      function init() {
-        var myMap = new ymaps.Map('map', {
-          center: [55.753994, 37.622093],
-          zoom: 9,
-        });
-        console.log('yandex init function');
-        // Поиск координат центра Нижнего Новгорода.
-        ymaps
-          .geocode(settlement, {
-            /**
-             * Опции запроса
-             * @see https://api.yandex.ru/maps/doc/jsapi/2.1/ref/reference/geocode.xml
-             */
-            // Сортировка результатов от центра окна карты.
-            // boundedBy: myMap.getBounds(),
-            // strictBounds: true,
-            // Вместе с опцией boundedBy будет искать строго внутри области, указанной в boundedBy.
-            // Если нужен только один результат, экономим трафик пользователей.
-            results: 1,
-          })
-          .then(function(res) {
-            console.log('геокодирование. получение данных');
-            // Выбираем первый результат геокодирования.
-            var firstGeoObject = res.geoObjects.get(0),
-              // Координаты геообъекта.
-              coords = firstGeoObject.geometry.getCoordinates(),
-              // Область видимости геообъекта.
-              bounds = firstGeoObject.properties.get('boundedBy');
-
-            firstGeoObject.options.set('preset', 'islands#darkBlueDotIconWithCaption');
-            // Получаем строку с адресом и выводим в иконке геообъекта.
-            firstGeoObject.properties.set('iconCaption', firstGeoObject.getAddressLine());
-
-            // Добавляем первый найденный геообъект на карту.
-            myMap.geoObjects.add(firstGeoObject);
-            // Масштабируем карту на область видимости геообъекта.
-            myMap.setBounds(bounds, {
-              // Проверяем наличие тайлов на данном масштабе.
-              checkZoomRange: true,
-            });
-            console.log('Название объекта: %s', firstGeoObject.properties.get('name'));
-            console.log('Описание объекта: %s', firstGeoObject.properties.get('description'));
-            console.log('Полное описание объекта: %s', firstGeoObject.properties.get('text'));
-            /**
-             * Прямые методы для работы с результатами геокодирования.
-             * @see https://tech.yandex.ru/maps/doc/jsapi/2.1/ref/reference/GeocodeResult-docpage/#getAddressLine
-             */
-            console.log('\nГосударство: %s', firstGeoObject.getCountry());
-            localStorage.removeItem('weatherCountry');
-            localStorage.setItem('weatherCountry', firstGeoObject.getCountry());
-            console.log('Населенный пункт: %s', firstGeoObject.getLocalities().join(', '));
-            localStorage.removeItem('weatherPlace');
-            localStorage.setItem('weatherPlace', firstGeoObject.getLocalities().join(', '));
-          });
-      }
-    });
+    const response = await fetch(url);
+    const json = await response.json();
+    // console.log(json);
+    return json;
   }
 }

@@ -3,7 +3,7 @@ export default class View {
     this.page = document.querySelector('.page-wrap');
 
     // Block 1: control elements and input form
-    this.controls = this.createElement('form', 'controls', this.page);
+    this.controls = this.createElement('div', 'controls', this.page);
 
     this.controlsBtns = this.createElement('div', 'controls__btns', this.controls);
 
@@ -12,7 +12,7 @@ export default class View {
     this.controlsLang = this.createElement('select', 'controls__btn', this.controlsBtns);
     this.controlsLang.classList.add('controls__btn--lang');
 
-    const lang = ['EN', 'RU', 'BE'];
+    const lang = ['en', 'ru', 'be'];
     for (let i = 0; i < 3; i += 1) {
       const option = new Option(lang[i], lang[i], false, false);
       this.controlsLang.append(option);
@@ -20,7 +20,7 @@ export default class View {
 
     if (localStorage.getItem('weatherLang') === null) {
       console.log('устанавливаем язык ');
-      localStorage.setItem('weatherLang', 'EN');
+      localStorage.setItem('weatherLang', 'en');
       this.controlsLang.value = lang[0];
     } else {
       this.controlsLang.value = localStorage.getItem('weatherLang');
@@ -34,7 +34,7 @@ export default class View {
     this.controlsBtnFarengeit.classList.add('controls__btn--active');
     this.controlsBtnCelsius.innerText = '°С';
 
-    this.citySearchForm = this.createElement('form', 'controls__search-form', this.controls);
+    this.citySearchForm = this.createElement('div', 'controls__search-form', this.controls);
     this.cityInput = this.createElement('input', 'controls__search-input', this.citySearchForm);
     this.cityInput.setAttribute('placeholder', 'Search city or ZIP');
     this.cityInput.setAttribute('type', 'text');
@@ -52,6 +52,12 @@ export default class View {
     this.showDate();
     this.showTimeHHMM();
     window.setInterval(this.showTimeHHMM, 1000);
+
+    this.place = this.createElement('p', 'weather__place', this.weather);
+    this.city = this.createElement('span', 'weather__place--item', this.place);
+    this.city.innerText = `${localStorage.getItem('weatherCity')}, `;
+    this.country = this.createElement('span', 'weather__place--item', this.place);
+    this.country.innerText = localStorage.getItem('weatherCountry');
 
     this.temperatureWrap = this.createElement('p', 'weather__temperature--wrap', this.weather);
     this.temperature = this.createElement('span', 'weather__temperature', this.temperatureWrap);
@@ -104,21 +110,11 @@ export default class View {
     this.map.setAttribute('style', 'width: 350px; height: 350px');
   };
 
-  watchInput(callback) {
-    this.cityBtn.addEventListener('click', e => {
-      console.log('click on search button happened');
-      console.log('View ------------- this.cityInput.value = ', this.cityInput.value);
-      localStorage.removeItem('weatherPlace');
-      localStorage.setItem('weatherPlace', this.cityInput.value);
-      callback();
-    });
-  }
-
   watchLang() {
     this.controlsLang.addEventListener('change', () => {
       localStorage.removeItem('weatherLang');
       localStorage.setItem('weatherLang', this.controlsLang.value);
-      this.controls.submit();
+      // this.controls.submit();
     });
     return localStorage.getItem('weatherLang');
   }
@@ -126,12 +122,12 @@ export default class View {
   showDate() {
     let currentTime = new Date();
     let weekDayArr = {
-      EN: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-      RU: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
-      BE: ['Няд', 'Пнд', 'Аўт', 'Сер', 'Чцв', 'Пят', 'Суб'],
+      en: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+      ru: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+      be: ['Няд', 'Пнд', 'Аўт', 'Сер', 'Чцв', 'Пят', 'Суб'],
     };
     let monthArr = {
-      EN: [
+      en: [
         'January',
         'February',
         'March',
@@ -145,7 +141,7 @@ export default class View {
         'November',
         'December',
       ],
-      RU: [
+      ru: [
         'Январь',
         'Февраль',
         'Март',
@@ -159,14 +155,14 @@ export default class View {
         'Ноябрь',
         'Декабрь',
       ],
-      BE: [
+      be: [
         'Студзень',
         'Люты',
         'Сакавiк',
         'Красавiк',
         'Май',
         'Червень',
-        ' Лiпень',
+        'Лiпень',
         'Жнiвень',
         'Верасень',
         'Кастрычнiк',
@@ -193,18 +189,27 @@ export default class View {
     m = this.checkTime(m);
     s = this.checkTime(s);
 
-    document.querySelector('.weather__date--hhmm').innerHTML = h + ':' + m + ':' + s;
+    this.dateHHMM.innerHTML = h + ':' + m + ':' + s;
   };
 
   checkTime(i) {
     return i < 10 ? '0' + i : i;
   }
 
-  showSettlementAndCountry() {
-    this.place = this.createElement('p', 'weather__place', this.weather);
-    this.city = this.createElement('span', 'weather__city', this.place);
-    this.city.innerText = `${localStorage.getItem('weatherPlace')}, `;
-    this.country = this.createElement('span', 'weather__country', this.place);
-    this.country.innerText = localStorage.getItem('weatherCountry');
+  async showCity(city, country) {
+    console.log('showNewData');
+
+    this.city.innerText = city;
+    this.country.innerText = country;
+
+    localStorage.removeItem('weatherCity');
+    localStorage.setItem('weatherCity', city);
+    localStorage.removeItem('weatherCountry');
+    localStorage.setItem('weatherCountry', country);
+  }
+
+  async showCoordinates(coors) {
+    this.latitudeView.innerText = `Latitude: ${coors.lat}`;
+    this.longitudeView.innerText = `Longitude: ${coors.lng}`;
   }
 }
