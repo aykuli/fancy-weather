@@ -1,4 +1,5 @@
 import { weekDayArr, monthArr, lang, controlsLocale } from './consts.js';
+import { yandexKey } from './apiKeys.js';
 
 export default class View {
   constructor() {
@@ -9,8 +10,8 @@ export default class View {
 
     this.controlsBtns = this.createElement('div', 'controls__btns', this.controls);
 
-    this.controlsBtnRefresh = this.createElement('button', 'controls__btn', this.controlsBtns);
-    this.controlsBtnRefresh.classList.add('controls__btn--refresh');
+    this.controlsBtnReload = this.createElement('button', 'controls__btn', this.controlsBtns);
+    this.controlsBtnReload.classList.add('controls__btn--refresh');
     this.controlsLang = this.createElement('select', 'controls__btn', this.controlsBtns);
     this.controlsLang.classList.add('controls__btn--lang');
 
@@ -73,7 +74,7 @@ export default class View {
 
     this.mapApiUrl = document.createElement('script');
     document.getElementsByTagName('head')[0].appendChild(this.mapApiUrl);
-    this.mapApiUrl.src = 'https://api-maps.yandex.ru/2.1/?apikey=34a7ab76-b83a-4d53-be9a-00404d79128b&lang=ru_RU';
+    this.mapApiUrl.src = `https://api-maps.yandex.ru/2.1/?apikey=${yandexKey}&lang=ru_RU&onload=init`;
     this.mapApiUrl.setAttribute('type', 'text/javascript');
 
     this.mapWrap = this.createElement('div', 'map', this.page);
@@ -108,13 +109,13 @@ export default class View {
     return element;
   }
 
-  showMap(coors) {
+  async showMap(coors) {
+    console.log('coors = ', [coors.lat, coors.lng]);
     this.map = document.querySelector('#map');
     if (this.map !== null) this.map.remove();
     this.map = this.createElement('div', '', this.mapWrap);
     this.map.setAttribute('id', 'map');
     this.map.setAttribute('style', 'width: 350px; height: 350px');
-
     try {
       ymaps.ready(init);
       function init() {
@@ -155,7 +156,7 @@ export default class View {
   }
 
   async showCity(city, country) {
-    console.log('showNewData');
+    console.log('show text of City and Country');
 
     this.city.innerText = city;
     this.country.innerText = country;
@@ -169,7 +170,5 @@ export default class View {
   async showCoordinates(coors) {
     this.latitudeValue.innerText = coors.lat;
     this.longitudeValue.innerText = coors.lng;
-    // this.latitude.innerText = `Latitude: ${coors.lat}`;
-    // this.longitude.innerText = `Longitude: ${coors.lng}`;
   }
 }

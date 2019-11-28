@@ -1,4 +1,4 @@
-import { darkSkyKey, openCageDataKey } from './apiKeys.js';
+import { darkSkyKey, openCageDataKey, yandexKey } from './apiKeys.js';
 
 export default class Model {
   constructor() {}
@@ -37,4 +37,6 @@ export default class Model {
     console.log(json);
     return json;
   }
+
+  async yandexMap() {}
 }
