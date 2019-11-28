@@ -1,9 +1,11 @@
+import { weekDayArr, monthArr, lang } from './consts.js';
+
 export default class View {
   constructor() {
     this.page = document.querySelector('.page-wrap');
 
     // Block 1: control elements and input form
-    this.controls = this.createElement('div', 'controls', this.page);
+    this.controls = this.createElement('form', 'controls', this.page);
 
     this.controlsBtns = this.createElement('div', 'controls__btns', this.controls);
 
@@ -12,7 +14,6 @@ export default class View {
     this.controlsLang = this.createElement('select', 'controls__btn', this.controlsBtns);
     this.controlsLang.classList.add('controls__btn--lang');
 
-    const lang = ['en', 'ru', 'be'];
     for (let i = 0; i < 3; i += 1) {
       const option = new Option(lang[i], lang[i], false, false);
       this.controlsLang.append(option);
@@ -55,6 +56,7 @@ export default class View {
 
     this.place = this.createElement('p', 'weather__place', this.weather);
     this.city = this.createElement('span', 'weather__place--item', this.place);
+
     this.city.innerText = `${localStorage.getItem('weatherCity')}, `;
     this.country = this.createElement('span', 'weather__place--item', this.place);
     this.country.innerText = localStorage.getItem('weatherCountry');
@@ -67,7 +69,21 @@ export default class View {
     this.weatherIconBig = this.createElement('img', 'weather__icon--big', this.temperatureWrap);
     this.weatherIconBig.setAttribute('url', './images/icon-cloud.svg');
 
+    this.mapApiUrl = document.createElement('script');
+    document.getElementsByTagName('head')[0].appendChild(this.mapApiUrl);
+    this.mapApiUrl.src = 'https://api-maps.yandex.ru/2.1/?apikey=34a7ab76-b83a-4d53-be9a-00404d79128b&lang=ru_RU';
+    this.mapApiUrl.setAttribute('type', 'text/javascript');
+
     this.mapWrap = this.createElement('div', 'map', this.page);
+    // this.map = this.createElement('div', '', this.mapWrap);
+    // this.map.setAttribute('id', 'map');
+    // this.map.setAttribute('style', 'width: 350px; height: 350px');
+
+    this.coors = this.createElement('div', 'map__coors', this.mapWrap);
+    this.latitudeView = this.createElement('p', 'map__coors--latitude', this.coors);
+    this.latitudeView.innerText = `Latitude:`;
+    this.longitudeView = this.createElement('p', 'map__coors--longitude', this.coors);
+    this.longitudeView.innerText = `Longitude:`;
   }
 
   // Create an element with an optional CSS class
@@ -86,90 +102,16 @@ export default class View {
 
   coorsView = pos => {
     var crd = pos.coords;
-    localStorage.removeItem('weatherCoords');
-    localStorage.setItem('weatherCoords', JSON.stringify([crd.latitude, crd.longitude]));
-    // console.log(localStorage.getItem('weatherCoords'));
     this.coors = this.createElement('div', 'map__coors', this.mapWrap);
     this.latitudeView = this.createElement('p', 'map__coors--latitude', this.coors);
     this.latitudeView.innerText = `Latitude: ${crd.latitude}`;
     this.longitudeView = this.createElement('p', 'map__coors--longitude', this.coors);
     this.longitudeView.innerText = `Longitude: ${crd.longitude}`;
-    // console.log([crd.latitude, crd.longitude], ' from coorviews function');
     return [crd.latitude, crd.longitude];
   };
 
-  mapView = () => {
-    this.mapApiUrl = document.createElement('script');
-    document.getElementsByTagName('head')[0].appendChild(this.mapApiUrl);
-    this.mapApiUrl.src = 'https://api-maps.yandex.ru/2.1/?apikey=34a7ab76-b83a-4d53-be9a-00404d79128b&lang=ru_RU';
-    this.mapApiUrl.setAttribute('type', 'text/javascript');
-
-    this.map = document.createElement('div');
-    this.map.setAttribute('id', 'map');
-    document.body.append(this.map);
-    this.map.setAttribute('style', 'width: 350px; height: 350px');
-  };
-
-  watchLang() {
-    this.controlsLang.addEventListener('change', () => {
-      localStorage.removeItem('weatherLang');
-      localStorage.setItem('weatherLang', this.controlsLang.value);
-      // this.controls.submit();
-    });
-    return localStorage.getItem('weatherLang');
-  }
-
   showDate() {
     let currentTime = new Date();
-    let weekDayArr = {
-      en: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-      ru: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
-      be: ['Няд', 'Пнд', 'Аўт', 'Сер', 'Чцв', 'Пят', 'Суб'],
-    };
-    let monthArr = {
-      en: [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December',
-      ],
-      ru: [
-        'Январь',
-        'Февраль',
-        'Март',
-        'Апрель',
-        'Май',
-        'Июнь',
-        'Июль',
-        'Август',
-        'Сентябрь',
-        'Октябрь',
-        'Ноябрь',
-        'Декабрь',
-      ],
-      be: [
-        'Студзень',
-        'Люты',
-        'Сакавiк',
-        'Красавiк',
-        'Май',
-        'Червень',
-        'Лiпень',
-        'Жнiвень',
-        'Верасень',
-        'Кастрычнiк',
-        'Лiстапад',
-        'Снежань',
-      ],
-    };
 
     this.date = this.createElement('p', 'weather__date', this.weather);
     this.dateDay = this.createElement('span', 'weather__date--item', this.date);
@@ -179,6 +121,23 @@ export default class View {
     this.dateMM = this.createElement('span', 'weather__date--item', this.date);
     this.dateMM.innerText = monthArr[localStorage.getItem('weatherLang')][currentTime.getMonth()];
     this.dateHHMM = this.createElement('span', 'weather__date--hhmm', this.date);
+  }
+
+  showMap(coors) {
+    this.map = document.querySelector('#map');
+    if (this.map !== null) this.map.remove();
+    this.map = this.createElement('div', '', this.mapWrap);
+    this.map.setAttribute('id', 'map');
+    this.map.setAttribute('style', 'width: 350px; height: 350px');
+
+    try {
+      ymaps.ready(init);
+      function init() {
+        var myMap = new ymaps.Map('map', { center: [coors.lat, coors.lng], zoom: 7 });
+      }
+    } catch (err) {
+      alert("Map didn't loaded");
+    }
   }
 
   showTimeHHMM = () => {
