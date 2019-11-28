@@ -4,8 +4,6 @@
     flex-wrap: wrap;
     margin-bottom: 50px;
 
-    outline: 1px dotted red;
-
     &__btns {
         display: flex;
     }
@@ -131,5 +129,10 @@
         border: none;
         border-top-right-radius: 5px;
         border-bottom-right-radius: 5px;
+
+        &:hover, &:focus {
+            background-color: rgba(179, 0, 0, 0.2);
+            cursor: pointer;
+        }
     }
 }

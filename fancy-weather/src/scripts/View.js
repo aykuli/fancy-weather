@@ -1,11 +1,11 @@
-import { weekDayArr, monthArr, lang } from './consts.js';
+import { weekDayArr, monthArr, lang, controlsLocale } from './consts.js';
 
 export default class View {
   constructor() {
     this.page = document.querySelector('.page-wrap');
 
     // Block 1: control elements and input form
-    this.controls = this.createElement('form', 'controls', this.page);
+    this.controls = this.createElement('div', 'controls', this.page);
 
     this.controlsBtns = this.createElement('div', 'controls__btns', this.controls);
 
@@ -37,7 +37,7 @@ export default class View {
 
     this.citySearchForm = this.createElement('div', 'controls__search-form', this.controls);
     this.cityInput = this.createElement('input', 'controls__search-input', this.citySearchForm);
-    this.cityInput.setAttribute('placeholder', 'Search city or ZIP');
+    this.cityInput.setAttribute('placeholder', controlsLocale[localStorage.getItem('weatherLang')][1]);
     this.cityInput.setAttribute('type', 'text');
     this.cityInput.setAttribute('id', 'city-input');
     this.cityInputLabel = this.createElement('label', 'visually-hidden', this.citySearchForm);
@@ -45,14 +45,16 @@ export default class View {
     this.cityInputLabel.innerText = 'Enter city name or Zip to search';
 
     this.cityBtn = this.createElement('button', 'controls__search-btn', this.citySearchForm);
-    this.cityBtn.innerText = 'Search';
+    this.cityBtn.innerText = controlsLocale[localStorage.getItem('weatherLang')][0];
 
     // Block 2: Showing current weather
     this.weather = this.createElement('div', 'weather', this.page);
 
-    this.showDate();
-    this.showTimeHHMM();
-    window.setInterval(this.showTimeHHMM, 1000);
+    this.date = this.createElement('p', 'weather__date', this.weather);
+    this.dateDay = this.createElement('span', 'weather__date--item', this.date);
+    this.dateDD = this.createElement('span', 'weather__date--item', this.date);
+    this.dateMM = this.createElement('span', 'weather__date--item', this.date);
+    this.dateHHMM = this.createElement('span', 'weather__date--hhmm', this.date);
 
     this.place = this.createElement('p', 'weather__place', this.weather);
     this.city = this.createElement('span', 'weather__place--item', this.place);
@@ -75,15 +77,21 @@ export default class View {
     this.mapApiUrl.setAttribute('type', 'text/javascript');
 
     this.mapWrap = this.createElement('div', 'map', this.page);
-    // this.map = this.createElement('div', '', this.mapWrap);
-    // this.map.setAttribute('id', 'map');
-    // this.map.setAttribute('style', 'width: 350px; height: 350px');
 
     this.coors = this.createElement('div', 'map__coors', this.mapWrap);
-    this.latitudeView = this.createElement('p', 'map__coors--latitude', this.coors);
-    this.latitudeView.innerText = `Latitude:`;
-    this.longitudeView = this.createElement('p', 'map__coors--longitude', this.coors);
-    this.longitudeView.innerText = `Longitude:`;
+    this.latitude = this.createElement('p', 'map__coors--latitude', this.coors);
+    this.latitudeLabel = this.createElement('span', '', this.latitude);
+    // this.latitudeLabel.innerText = controlsLocale[localStorage.getItem('weatherLang')][2];
+    this.latitudeValue = this.createElement('span', 'map__coors--latitude', this.latitude);
+
+    this.longitude = this.createElement('p', 'map__coors--longitude', this.coors);
+    this.longitudeLabel = this.createElement('span', '', this.longitude);
+    // this.longitudeLabel.innerText = controlsLocale[localStorage.getItem('weatherLang')][3];
+    this.longitudeValue = this.createElement('span', 'map__coors--longitude', this.longitude);
+
+    this.showDate();
+    this.showTimeHHMM();
+    window.setInterval(this.showTimeHHMM, 1000);
   }
 
   // Create an element with an optional CSS class
@@ -98,29 +106,6 @@ export default class View {
   getElement(selector) {
     const element = document.querySelector(selector);
     return element;
-  }
-
-  coorsView = pos => {
-    var crd = pos.coords;
-    this.coors = this.createElement('div', 'map__coors', this.mapWrap);
-    this.latitudeView = this.createElement('p', 'map__coors--latitude', this.coors);
-    this.latitudeView.innerText = `Latitude: ${crd.latitude}`;
-    this.longitudeView = this.createElement('p', 'map__coors--longitude', this.coors);
-    this.longitudeView.innerText = `Longitude: ${crd.longitude}`;
-    return [crd.latitude, crd.longitude];
-  };
-
-  showDate() {
-    let currentTime = new Date();
-
-    this.date = this.createElement('p', 'weather__date', this.weather);
-    this.dateDay = this.createElement('span', 'weather__date--item', this.date);
-    this.dateDay.innerText = weekDayArr[localStorage.getItem('weatherLang')][currentTime.getDay()];
-    this.dateDD = this.createElement('span', 'weather__date--item', this.date);
-    this.dateDD.innerText = currentTime.getDate();
-    this.dateMM = this.createElement('span', 'weather__date--item', this.date);
-    this.dateMM.innerText = monthArr[localStorage.getItem('weatherLang')][currentTime.getMonth()];
-    this.dateHHMM = this.createElement('span', 'weather__date--hhmm', this.date);
   }
 
   showMap(coors) {
@@ -138,6 +123,20 @@ export default class View {
     } catch (err) {
       alert("Map didn't loaded");
     }
+  }
+
+  showDate() {
+    let currentTime = new Date();
+
+    this.dateDay.innerText = weekDayArr[localStorage.getItem('weatherLang')][currentTime.getDay()];
+    this.dateDD.innerText = currentTime.getDate();
+    this.dateMM.innerText = monthArr[localStorage.getItem('weatherLang')][currentTime.getMonth()];
+
+    this.cityBtn.innerText = controlsLocale[localStorage.getItem('weatherLang')][0];
+    this.cityInput.setAttribute('placeholder', controlsLocale[localStorage.getItem('weatherLang')][1]);
+
+    this.latitudeLabel.innerText = controlsLocale[localStorage.getItem('weatherLang')][2];
+    this.longitudeLabel.innerText = controlsLocale[localStorage.getItem('weatherLang')][3];
   }
 
   showTimeHHMM = () => {
@@ -168,7 +167,9 @@ export default class View {
   }
 
   async showCoordinates(coors) {
-    this.latitudeView.innerText = `Latitude: ${coors.lat}`;
-    this.longitudeView.innerText = `Longitude: ${coors.lng}`;
+    this.latitudeValue.innerText = coors.lat;
+    this.longitudeValue.innerText = coors.lng;
+    // this.latitude.innerText = `Latitude: ${coors.lat}`;
+    // this.longitude.innerText = `Longitude: ${coors.lng}`;
   }
 }

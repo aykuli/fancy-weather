@@ -28,7 +28,13 @@ export default class Model {
     return json;
   }
 
-  async reverseGeocoding() {
-    const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}%2C${lng}&key=${openCageDataKey}`;
+  async reverseGeocoding(coors, lang) {
+    console.log('reverse Geocoding');
+    let [lat, lng] = [coors.lat, coors.lng];
+    const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}%2C${lng}&key=${openCageDataKey}&language=${lang}&pretty=1`;
+    const response = await fetch(url);
+    const json = await response.json();
+    console.log(json);
+    return json;
   }
 }
