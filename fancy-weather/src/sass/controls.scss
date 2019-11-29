@@ -30,7 +30,7 @@
         }
 
         &:active {
-            background-color: rgba(170, 0, 0, 0.7);
+            background-color: rgba(250, 96, 96, 0.3);
         }
 
         &--refresh {
@@ -79,7 +79,7 @@
             border-top-left-radius: 0;
         }
 
-        &--active {
+        &--unit-active {
             color: rgba(255, 255, 255, 1);
 
             background-color: rgba(174, 181, 185, 0.5);

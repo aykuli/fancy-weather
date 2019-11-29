@@ -27,14 +27,23 @@ export default class View {
     } else {
       this.controlsLang.value = localStorage.getItem('weatherLang');
     }
+    this.units = this.createElement('div', 'controls__unit', this.controlsBtns);
+    this.farengheit = this.createElement('button', 'controls__btn', this.units);
+    this.farengheit.classList.add('controls__btn--farengeit');
+    this.farengheit.innerText = '°F';
+    this.celsius = this.createElement('button', 'controls__btn', this.units);
+    this.celsius.classList.add('controls__btn--celsius');
+    this.celsius.innerText = '°С';
 
-    this.controlsBtnFarengeit = this.createElement('button', 'controls__btn', this.controlsBtns);
-    this.controlsBtnFarengeit.classList.add('controls__btn--farengeit');
-    this.controlsBtnFarengeit.innerText = '°F';
-    this.controlsBtnCelsius = this.createElement('button', 'controls__btn', this.controlsBtns);
-    this.controlsBtnCelsius.classList.add('controls__btn--celsius');
-    this.controlsBtnFarengeit.classList.add('controls__btn--active');
-    this.controlsBtnCelsius.innerText = '°С';
+    if (localStorage.getItem('weatherUnit') === null) {
+      console.log('устанавливаем единицу измерения температуры ');
+      localStorage.setItem('weatherUnit', 'si');
+      this.celsius.classList.add('controls__btn--unit-active');
+    } else {
+      localStorage.getItem('weatherUnit') === 'si'
+        ? this.celsius.classList.add('controls__btn--unit-active')
+        : this.farengheit.classList.add('controls__btn--unit-active');
+    }
 
     this.citySearchForm = this.createElement('div', 'controls__search-form', this.controls);
     this.cityInput = this.createElement('input', 'controls__search-input', this.citySearchForm);
@@ -66,28 +75,20 @@ export default class View {
 
     this.temperatureWrap = this.createElement('p', 'weather__temperature--wrap', this.weather);
     this.temperature = this.createElement('span', 'weather__temperature', this.temperatureWrap);
-    this.temperature.innerText = '10';
     this.temperatureSign = this.createElement('span', 'weather__temperature--sign', this.temperatureWrap);
     this.temperatureSign.innerText = '°';
     this.weatherIconBig = this.createElement('img', 'weather__icon--big', this.temperatureWrap);
     this.weatherIconBig.setAttribute('url', './images/icon-cloud.svg');
 
-    this.mapApiUrl = document.createElement('script');
-    document.getElementsByTagName('head')[0].appendChild(this.mapApiUrl);
-    this.mapApiUrl.src = `https://api-maps.yandex.ru/2.1/?apikey=${yandexKey}&lang=ru_RU&onload=init`;
-    this.mapApiUrl.setAttribute('type', 'text/javascript');
-
-    this.mapWrap = this.createElement('div', 'map', this.page);
+    this.mapWrap = this.createElement('div', 'map__wrap', this.page);
 
     this.coors = this.createElement('div', 'map__coors', this.mapWrap);
     this.latitude = this.createElement('p', 'map__coors--latitude', this.coors);
     this.latitudeLabel = this.createElement('span', '', this.latitude);
-    // this.latitudeLabel.innerText = controlsLocale[localStorage.getItem('weatherLang')][2];
     this.latitudeValue = this.createElement('span', 'map__coors--latitude', this.latitude);
 
     this.longitude = this.createElement('p', 'map__coors--longitude', this.coors);
     this.longitudeLabel = this.createElement('span', '', this.longitude);
-    // this.longitudeLabel.innerText = controlsLocale[localStorage.getItem('weatherLang')][3];
     this.longitudeValue = this.createElement('span', 'map__coors--longitude', this.longitude);
 
     this.showDate();
@@ -116,14 +117,6 @@ export default class View {
     this.map = this.createElement('div', '', this.mapWrap);
     this.map.setAttribute('id', 'map');
     this.map.setAttribute('style', 'width: 350px; height: 350px');
-    try {
-      ymaps.ready(init);
-      function init() {
-        var myMap = new ymaps.Map('map', { center: [coors.lat, coors.lng], zoom: 7 });
-      }
-    } catch (err) {
-      alert("Map didn't loaded");
-    }
   }
 
   showDate() {
@@ -170,5 +163,36 @@ export default class View {
   async showCoordinates(coors) {
     this.latitudeValue.innerText = coors.lat;
     this.longitudeValue.innerText = coors.lng;
+  }
+
+  showWeatherData(weatherData) {
+    this.temperature.innerText = weatherData.currently.temperature.toFixed(0);
+    // console.log('\ntemperature: ', weatherData.currently.temperature.toFixed(0));
+    console.log('icon: ', weatherData.currently.icon);
+    console.log('summary: ', weatherData.currently.summary);
+    console.log('feels like: ', weatherData.currently.apparentTemperature);
+    console.log('feels like: ', weatherData.currently.windSpeed.toFixed(1));
+    console.log('humidity: ', (weatherData.currently.humidity * 100).toFixed(0), '%\n');
+
+    console.log('tomorrow');
+    console.log(
+      'temperature: ',
+      ((weatherData.daily.data[0].temperatureMax + weatherData.daily.data[0].temperatureMax) / 2).toFixed(0)
+    );
+    console.log('icon: ', weatherData.daily.data[0].icon);
+
+    console.log('day after tomorrow');
+    console.log(
+      'temperature: ',
+      ((weatherData.daily.data[1].temperatureMax + weatherData.daily.data[1].temperatureMax) / 2).toFixed(0)
+    );
+    console.log('icon: ', weatherData.daily.data[1].icon);
+
+    console.log('day after aftertomorrow');
+    console.log(
+      'temperature: ',
+      ((weatherData.daily.data[2].temperatureMax + weatherData.daily.data[2].temperatureMax) / 2).toFixed(0)
+    );
+    console.log('icon: ', weatherData.daily.data[2].icon);
   }
 }

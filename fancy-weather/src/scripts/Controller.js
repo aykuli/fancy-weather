@@ -6,9 +6,7 @@ export default class Controller {
     this.watchInput();
     this.watchLang();
     this.watchReload();
-
-    console.log('             YANDEX');
-    this.model.yandexMap();
+    this.watchUnitChanging();
   }
 
   async showCurrentCoors() {
@@ -27,7 +25,7 @@ export default class Controller {
     if (!navigator.geolocation) alert('Geolocation is not supported by this browser!');
   }
 
-  success(pos) {
+  async success(pos) {
     console.log('5');
     var crd = pos.coords;
     console.log(crd);
@@ -48,15 +46,17 @@ export default class Controller {
     const coors = { lat: crd.latitude, lng: crd.longitude };
 
     this.view.showCoordinates(coors);
-    // this.view.showMap(coors);
+    this.view.showMap(coors);
+    this.model.mapbox(crd.latitude, crd.longitude);
 
-    // return { lat: crd.latitude, lng: crd.longitude };
+    const unit = localStorage.getItem('weatherUnit');
+    const weatherData = await this.model.getWeatherData(crd.latitude, crd.longitude, unit);
+    console.log('днные с darkSky: ', weatherData);
+    this.view.showWeatherData(weatherData);
   }
 
   watchInput() {
     this.view.cityBtn.addEventListener('click', this.inputSearchResult.bind(this));
-    // window.addEventListener('keydown', this.InputSearchResult.bind(this));
-    return this.view.cityInput.value;
   }
 
   watchLang() {
@@ -107,7 +107,13 @@ export default class Controller {
 
     await this.view.showCity(city, country);
     await this.view.showCoordinates(coors);
-    await this.view.showMap(coors);
+    await this.model.mapbox(coors.lat, coors.lng);
+
+    const unit = localStorage.getItem('weatherUnit');
+    const weatherData = await this.model.getWeatherData(coors.lat, coors.lng, unit);
+    console.log('\nпришли данные с darkSky');
+    console.log('днные с darkSky: ', weatherData);
+    this.view.showWeatherData(weatherData);
   }
 
   async getCurrentPlaceResult(coors) {
@@ -130,6 +136,25 @@ export default class Controller {
     console.log('country =', country);
 
     await this.view.showCity(city, country);
-    // await this.view.showMap(coors);
+  }
+
+  watchUnitChanging() {
+    this.view.units.addEventListener('click', e => {
+      if (e.target === this.view.farengheit) {
+        localStorage.removeItem('weatherUnit');
+        localStorage.setItem('weatherUnit', 'us');
+        console.log(localStorage.getItem('weatherUnit'));
+        const active = document.querySelector('.controls__btn--unit-active');
+        active.classList.remove('controls__btn--unit-active');
+        this.view.farengheit.classList.add('controls__btn--unit-active');
+      } else {
+        localStorage.removeItem('weatherUnit');
+        localStorage.setItem('weatherUnit', 'si');
+        console.log(localStorage.getItem('weatherUnit'));
+        const active = document.querySelector('.controls__btn--unit-active');
+        active.classList.remove('controls__btn--unit-active');
+        this.view.celsius.classList.add('controls__btn--unit-active');
+      }
+    });
   }
 }

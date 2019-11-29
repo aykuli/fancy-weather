@@ -1,26 +1,21 @@
-import { darkSkyKey, openCageDataKey, yandexKey } from './apiKeys.js';
+import { darkSkyKey, openCageDataKey, mapboxKey } from './apiKeys.js';
+import mapboxgl from 'mapbox-gl';
 
 export default class Model {
   constructor() {}
 
-  getWeatherData(pos) {
-    var crd = pos.coords;
+  async getWeatherData(lat, lng, unit = 'si') {
     const apiKey = darkSkyKey;
-    let lang = localStorage.getItem('weatherAPILang');
-    let unit = 'si';
+    let lang = localStorage.getItem('weatherLang');
 
-    var url = `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/${apiKey}/${crd.latitude},${crd.longitude}?lang=${lang}&unit=${unit}`;
+    var url = `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/${apiKey}/${lat},${lng}?lang=${lang}&units=${unit}`;
 
-    fetch(url)
-      .then(res => res.json())
-      .then(data => {
-        // console.log('какие-то данные с darksky ', data);
-      });
+    const response = await fetch(url);
+    const json = await response.json();
+    return json;
   }
 
-  async forwardGeocoding(settlement, lang) {
-    console.log('forwardGeocoding works');
-    console.log('settlement: ', settlement, '  lang: ', lang);
+  async forwardGeocoding(settlement, lang = 'en') {
     const url = `https://api.opencagedata.com/geocode/v1/json?q=${settlement}&key=${openCageDataKey}&language=${lang}&pretty=1&no_annotations=1`;
 
     const response = await fetch(url);
@@ -28,15 +23,21 @@ export default class Model {
     return json;
   }
 
-  async reverseGeocoding(coors, lang) {
-    console.log('reverse Geocoding');
+  async reverseGeocoding(coors, lang = 'en') {
     let [lat, lng] = [coors.lat, coors.lng];
     const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}%2C${lng}&key=${openCageDataKey}&language=${lang}&pretty=1`;
     const response = await fetch(url);
     const json = await response.json();
-    console.log(json);
     return json;
   }
 
-  async yandexMap() {}
+  async mapbox(lat, lng) {
+    mapboxgl.accessToken = mapboxKey;
+    var map = new mapboxgl.Map({
+      container: 'map', // container id
+      style: 'mapbox://styles/mapbox/streets-v9', // stylesheet location
+      center: [lng, lat], // starting position [lng, lat]
+      zoom: 9, // starting zoom
+    });
+  }
 }
