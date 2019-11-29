@@ -94,7 +94,7 @@
     &__search {
         &--form {
         display: flex;
-    }
+        }
 
         &--input {
             width: 260px;
@@ -120,7 +120,8 @@
 
         &--btn {
             padding: 0 20px;
-
+            height: 44px;
+            
             font-family: 'Ubuntu', sans-serif;
             font-size: 14px;
             line-height: 16px;

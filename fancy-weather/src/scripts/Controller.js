@@ -46,7 +46,7 @@ export default class Controller {
     const coors = { lat: crd.latitude, lng: crd.longitude };
 
     this.view.showCoordinates(coors);
-    this.view.showMap(coors);
+    this.view.cleanMap();
     this.model.mapbox(crd.latitude, crd.longitude);
 
     const unit = localStorage.getItem('weatherUnit');
@@ -111,6 +111,7 @@ export default class Controller {
 
     await this.view.showCity(city, country);
     await this.view.showCoordinates(coors);
+    await this.view.cleanMap();
     await this.model.mapbox(coors.lat, coors.lng);
 
     const unit = localStorage.getItem('weatherUnit');

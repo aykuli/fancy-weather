@@ -34,7 +34,7 @@ export default class Model {
     mapboxgl.accessToken = mapboxKey;
     var map = new mapboxgl.Map({
       container: 'map', // container id
-      style: 'mapbox://styles/mapbox/streets-v9', // stylesheet location
+      style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
       center: [lng, lat], // starting position [lng, lat]
       zoom: 9, // starting zoom
     });

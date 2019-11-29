@@ -17,6 +17,10 @@ export default class View {
 
     this.mapWrap = this.createElement('div', 'map__wrap', this.container);
 
+    this.map = this.createElement('div', '', this.mapWrap);
+    this.map.setAttribute('id', 'map');
+    this.map.setAttribute('style', 'width: 350px; height: 350px');
+
     this.coors = this.createElement('div', 'map__coors', this.mapWrap);
     this.latitude = this.createElement('p', 'map__coors--latitude', this.coors);
     this.latitudeLabel = this.createElement('span', '', this.latitude);
@@ -86,7 +90,7 @@ export default class View {
         : this.farengheit.classList.add('controls__btn--unit-active');
     }
 
-    this.citySearchForm = this.createElement('div', 'controls__search--form', this.controls);
+    this.citySearchForm = this.createElement('form', 'controls__search--form', this.controls);
     this.cityInput = this.createElement('input', 'controls__search--input', this.citySearchForm);
     this.cityInput.setAttribute('placeholder', controlsLocale[localStorage.getItem('weatherLang')][1]);
     this.cityInput.setAttribute('type', 'text');
@@ -134,15 +138,6 @@ export default class View {
     this.weatherWind = this.createElement('p', 'weather__current--item', this.weatherCurrentData);
 
     this.weatherHumidity = this.createElement('p', 'weather__current--item', this.weatherCurrentData);
-  }
-
-  async showMap(coors) {
-    console.log('coors = ', [coors.lat, coors.lng]);
-    this.map = document.querySelector('#map');
-    if (this.map !== null) this.map.remove();
-    this.map = this.createElement('div', '', this.mapWrap);
-    this.map.setAttribute('id', 'map');
-    this.map.setAttribute('style', 'width: 350px; height: 350px');
   }
 
   showDate() {
@@ -225,5 +220,12 @@ export default class View {
       ((weatherData.daily.data[2].temperatureMax + weatherData.daily.data[2].temperatureMax) / 2).toFixed(0)
     );
     console.log('icon: ', weatherData.daily.data[2].icon);
+  }
+
+  cleanMap() {
+    var map = document.querySelector('#map');
+    while (map.firstChild) {
+      map.removeChild(map.firstChild);
+    }
   }
 }

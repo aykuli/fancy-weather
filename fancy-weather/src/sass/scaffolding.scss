@@ -44,3 +44,19 @@
 
     outline: 1px solid red;
 }
+
+@media(max-width: 1200px) {
+    .page-wrap {
+        padding: 40px;
+    }
+
+    .container {
+        justify-content: space-around;
+    }
+}
+
+@media(max-width: 1000px) {
+    .page-wrap {
+        padding: 20px;
+    }
+}
