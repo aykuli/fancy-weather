@@ -2,10 +2,11 @@
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    margin-bottom: 50px;
+    margin-bottom: 25px;
 
     &__btns {
         display: flex;
+        margin-bottom: 25px;
     }
 
     &__btn {
@@ -90,49 +91,52 @@
         }
     }
 
-    &__search-form {
+    &__search {
+        &--form {
         display: flex;
     }
 
-    &__search-input {
-        width: 260px;
-        padding-left: 20px;
+        &--input {
+            width: 260px;
+            height: 44px;
+            padding-left: 20px;
 
-        font-family: 'Ubuntu', sans-serif;
-        font-size: 14px;
-        line-height: 16px;
-        font-weight: 400;
-        color: #fff;
-
-        background: rgba(76, 82, 85, 0.4);
-        border: 1px solid rgba(228, 227, 227, 0.2);
-        border-top-left-radius: 5px;
-        border-bottom-left-radius: 5px;
-        box-sizing: border-box;
-
-        &::placeholder {
+            font-family: 'Ubuntu', sans-serif;
+            font-size: 14px;
+            line-height: 16px;
+            font-weight: 400;
             color: #fff;
+
+            background: rgba(76, 82, 85, 0.4);
+            border: 1px solid rgba(228, 227, 227, 0.2);
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+            box-sizing: border-box;
+
+            &::placeholder {
+                color: #fff;
+            }
         }
-    }
 
-    &__search-btn {
-        padding: 0 20px;
+        &--btn {
+            padding: 0 20px;
 
-        font-family: 'Ubuntu', sans-serif;
-        font-size: 14px;
-        line-height: 16px;
-        font-weight: 500;
-        text-transform: uppercase;
-        color: #fff;
-        
-        background: rgba(174, 181, 185, 0.5);
-        border: none;
-        border-top-right-radius: 5px;
-        border-bottom-right-radius: 5px;
+            font-family: 'Ubuntu', sans-serif;
+            font-size: 14px;
+            line-height: 16px;
+            font-weight: 500;
+            text-transform: uppercase;
+            color: #fff;
+            
+            background: rgba(174, 181, 185, 0.5);
+            border: none;
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
 
-        &:hover, &:focus {
-            background-color: rgba(179, 0, 0, 0.2);
-            cursor: pointer;
+            &:hover, &:focus {
+                background-color: rgba(179, 0, 0, 0.2);
+                cursor: pointer;
+            }
         }
     }
 }

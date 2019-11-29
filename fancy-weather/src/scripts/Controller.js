@@ -64,7 +64,11 @@ export default class Controller {
       console.log('\n language change');
       localStorage.removeItem('weatherLang');
       localStorage.setItem('weatherLang', this.view.controlsLang.value);
-      this.getCurrentPlaceResult({ lat: localStorage.getItem('weatherLat'), lng: localStorage.getItem('weatherLng') });
+
+      const lat = localStorage.getItem('weatherLat');
+      const lng = localStorage.getItem('weatherLng');
+
+      this.getCurrentPlaceResult(lat, lng);
       this.view.showDate();
     });
     return localStorage.getItem('weatherLang');
@@ -116,9 +120,9 @@ export default class Controller {
     this.view.showWeatherData(weatherData);
   }
 
-  async getCurrentPlaceResult(coors) {
+  async getCurrentPlaceResult(lat, lng) {
     let lang = localStorage.getItem('weatherLang');
-    const data = await this.model.reverseGeocoding(coors, lang);
+    const data = await this.model.reverseGeocoding(lat, lng, lang);
     console.log('data form reverseGeocoding =', data);
     let city;
 
@@ -141,19 +145,31 @@ export default class Controller {
   watchUnitChanging() {
     this.view.units.addEventListener('click', e => {
       if (e.target === this.view.farengheit) {
-        localStorage.removeItem('weatherUnit');
-        localStorage.setItem('weatherUnit', 'us');
-        console.log(localStorage.getItem('weatherUnit'));
-        const active = document.querySelector('.controls__btn--unit-active');
-        active.classList.remove('controls__btn--unit-active');
-        this.view.farengheit.classList.add('controls__btn--unit-active');
+        if (this.view.temperatureSign.innerText === '°') {
+          localStorage.removeItem('weatherUnit');
+          localStorage.setItem('weatherUnit', 'us');
+
+          const celsius = Number(this.view.temperature.innerText);
+          this.view.temperature.innerText = ((9 / 5) * celsius + 32).toFixed(0);
+          this.view.temperatureSign.innerText = '°F';
+
+          const active = document.querySelector('.controls__btn--unit-active');
+          active.classList.remove('controls__btn--unit-active');
+          this.view.farengheit.classList.add('controls__btn--unit-active');
+        } else return;
       } else {
-        localStorage.removeItem('weatherUnit');
-        localStorage.setItem('weatherUnit', 'si');
-        console.log(localStorage.getItem('weatherUnit'));
-        const active = document.querySelector('.controls__btn--unit-active');
-        active.classList.remove('controls__btn--unit-active');
-        this.view.celsius.classList.add('controls__btn--unit-active');
+        if (this.view.temperatureSign.innerText === '°F') {
+          localStorage.removeItem('weatherUnit');
+          localStorage.setItem('weatherUnit', 'si');
+
+          const farengheit = Number(this.view.temperature.innerText);
+          this.view.temperature.innerText = ((5 / 9) * (farengheit - 32)).toFixed(0);
+          this.view.temperatureSign.innerText = '°';
+
+          const active = document.querySelector('.controls__btn--unit-active');
+          active.classList.remove('controls__btn--unit-active');
+          this.view.celsius.classList.add('controls__btn--unit-active');
+        } else return;
       }
     });
   }

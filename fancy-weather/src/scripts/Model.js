@@ -23,8 +23,7 @@ export default class Model {
     return json;
   }
 
-  async reverseGeocoding(coors, lang = 'en') {
-    let [lat, lng] = [coors.lat, coors.lng];
+  async reverseGeocoding(lat, lng, lang = 'en') {
     const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}%2C${lng}&key=${openCageDataKey}&language=${lang}&pretty=1`;
     const response = await fetch(url);
     const json = await response.json();

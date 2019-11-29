@@ -1,10 +1,51 @@
 import { weekDayArr, monthArr, lang, controlsLocale } from './consts.js';
-import { yandexKey } from './apiKeys.js';
 
 export default class View {
   constructor() {
     this.page = document.querySelector('.page-wrap');
 
+    this.renderControlElements();
+
+    // Block 2: Showing current weather
+    this.container = this.createElement('div', 'container', this.page);
+
+    this.weather = this.createElement('div', 'weather', this.container);
+
+    this.renderPlace();
+    this.renderDate();
+    this.renderCurrentWeather();
+
+    this.mapWrap = this.createElement('div', 'map__wrap', this.container);
+
+    this.coors = this.createElement('div', 'map__coors', this.mapWrap);
+    this.latitude = this.createElement('p', 'map__coors--latitude', this.coors);
+    this.latitudeLabel = this.createElement('span', '', this.latitude);
+    this.latitudeValue = this.createElement('span', 'map__coors--latitude', this.latitude);
+
+    this.longitude = this.createElement('p', 'map__coors--longitude', this.coors);
+    this.longitudeLabel = this.createElement('span', '', this.longitude);
+    this.longitudeValue = this.createElement('span', 'map__coors--longitude', this.longitude);
+
+    this.showDate();
+    this.showTimeHHMM();
+    window.setInterval(this.showTimeHHMM, 1000);
+  }
+
+  // Create an element with an optional CSS class
+  createElement(tag, className, whereAppend) {
+    const element = document.createElement(tag);
+    if (className) element.classList.add(className);
+    whereAppend.append(element);
+    return element;
+  }
+
+  // Retrieve an element from the DOM
+  getElement(selector) {
+    const element = document.querySelector(selector);
+    return element;
+  }
+
+  renderControlElements() {
     // Block 1: control elements and input form
     this.controls = this.createElement('div', 'controls', this.page);
 
@@ -45,8 +86,8 @@ export default class View {
         : this.farengheit.classList.add('controls__btn--unit-active');
     }
 
-    this.citySearchForm = this.createElement('div', 'controls__search-form', this.controls);
-    this.cityInput = this.createElement('input', 'controls__search-input', this.citySearchForm);
+    this.citySearchForm = this.createElement('div', 'controls__search--form', this.controls);
+    this.cityInput = this.createElement('input', 'controls__search--input', this.citySearchForm);
     this.cityInput.setAttribute('placeholder', controlsLocale[localStorage.getItem('weatherLang')][1]);
     this.cityInput.setAttribute('type', 'text');
     this.cityInput.setAttribute('id', 'city-input');
@@ -54,60 +95,45 @@ export default class View {
     this.cityInputLabel.setAttribute('for', 'city-input');
     this.cityInputLabel.innerText = 'Enter city name or Zip to search';
 
-    this.cityBtn = this.createElement('button', 'controls__search-btn', this.citySearchForm);
+    this.cityBtn = this.createElement('button', 'controls__search--btn', this.citySearchForm);
     this.cityBtn.innerText = controlsLocale[localStorage.getItem('weatherLang')][0];
+  }
 
-    // Block 2: Showing current weather
-    this.weather = this.createElement('div', 'weather', this.page);
-
+  renderDate() {
     this.date = this.createElement('p', 'weather__date', this.weather);
     this.dateDay = this.createElement('span', 'weather__date--item', this.date);
     this.dateDD = this.createElement('span', 'weather__date--item', this.date);
     this.dateMM = this.createElement('span', 'weather__date--item', this.date);
     this.dateHHMM = this.createElement('span', 'weather__date--hhmm', this.date);
+  }
 
+  renderPlace() {
     this.place = this.createElement('p', 'weather__place', this.weather);
     this.city = this.createElement('span', 'weather__place--item', this.place);
 
     this.city.innerText = `${localStorage.getItem('weatherCity')}, `;
     this.country = this.createElement('span', 'weather__place--item', this.place);
     this.country.innerText = localStorage.getItem('weatherCountry');
+  }
 
-    this.temperatureWrap = this.createElement('p', 'weather__temperature--wrap', this.weather);
-    this.temperature = this.createElement('span', 'weather__temperature', this.temperatureWrap);
-    this.temperatureSign = this.createElement('span', 'weather__temperature--sign', this.temperatureWrap);
-    this.temperatureSign.innerText = '°';
-    this.weatherIconBig = this.createElement('img', 'weather__icon--big', this.temperatureWrap);
+  renderCurrentWeather() {
+    this.weatherCurrentWrap = this.createElement('div', 'weather__current--wrap', this.weather);
+    this.temperature = this.createElement('p', 'weather__current', this.weatherCurrentWrap);
+    this.temperatureSign = this.createElement('p', 'weather__current--sign', this.weatherCurrentWrap);
+    switch (localStorage.getItem('weatherUnit')) {
+      case 'si':
+        this.temperatureSign.innerText = '°';
+      default:
+        this.temperatureSign.innerText = '°F';
+    }
+    this.weatherIconBig = this.createElement('img', 'weather__icon--big', this.weatherCurrentWrap);
     this.weatherIconBig.setAttribute('url', './images/icon-cloud.svg');
+    this.weatherCurrentData = this.createElement('div', 'weather__current--list', this.weatherCurrentWrap);
+    this.weatherSummary = this.createElement('p', 'weather__current--item', this.weatherCurrentData);
+    this.weatherApparent = this.createElement('p', 'weather__current--item', this.weatherCurrentData);
+    this.weatherWind = this.createElement('p', 'weather__current--item', this.weatherCurrentData);
 
-    this.mapWrap = this.createElement('div', 'map__wrap', this.page);
-
-    this.coors = this.createElement('div', 'map__coors', this.mapWrap);
-    this.latitude = this.createElement('p', 'map__coors--latitude', this.coors);
-    this.latitudeLabel = this.createElement('span', '', this.latitude);
-    this.latitudeValue = this.createElement('span', 'map__coors--latitude', this.latitude);
-
-    this.longitude = this.createElement('p', 'map__coors--longitude', this.coors);
-    this.longitudeLabel = this.createElement('span', '', this.longitude);
-    this.longitudeValue = this.createElement('span', 'map__coors--longitude', this.longitude);
-
-    this.showDate();
-    this.showTimeHHMM();
-    window.setInterval(this.showTimeHHMM, 1000);
-  }
-
-  // Create an element with an optional CSS class
-  createElement(tag, className, whereAppend) {
-    const element = document.createElement(tag);
-    if (className) element.classList.add(className);
-    whereAppend.append(element);
-    return element;
-  }
-
-  // Retrieve an element from the DOM
-  getElement(selector) {
-    const element = document.querySelector(selector);
-    return element;
+    this.weatherHumidity = this.createElement('p', 'weather__current--item', this.weatherCurrentData);
   }
 
   async showMap(coors) {
@@ -169,6 +195,11 @@ export default class View {
     this.temperature.innerText = weatherData.currently.temperature.toFixed(0);
     // console.log('\ntemperature: ', weatherData.currently.temperature.toFixed(0));
     console.log('icon: ', weatherData.currently.icon);
+    this.weatherSummary.innerText = weatherData.currently.summary;
+    this.weatherApparent.innerText = weatherData.currently.apparentTemperature;
+    this.weatherWind.innerText = weatherData.currently.windSpeed.toFixed(1);
+    this.weatherHumidity.innerText = `${(weatherData.currently.humidity * 100).toFixed(0)} %`;
+
     console.log('summary: ', weatherData.currently.summary);
     console.log('feels like: ', weatherData.currently.apparentTemperature);
     console.log('feels like: ', weatherData.currently.windSpeed.toFixed(1));

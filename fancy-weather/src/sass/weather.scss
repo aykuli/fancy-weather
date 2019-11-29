@@ -1,10 +1,14 @@
 .weather {
+    max-width: 600px;
+
     &__place {
         font-size: 44px;
         line-height: 54px;
     }
 
     &__date {
+        margin-bottom: 50px;
+
         font-size: 24px;
         line-height: 30px;
         text-transform: none;
@@ -14,7 +18,7 @@
         }
     }
 
-    &__temperature {
+    &__current {
         font-size: 300px;
         line-height: 300px;
         font-weight: 700;
@@ -22,7 +26,6 @@
         &--wrap {
             position: relative;
             display: flex;
-            align-items: flex-start;
 
             outline: 1px dotted green;;
         }
@@ -31,6 +34,15 @@
             font-size: 100px;
             line-height: 100px;
             font-weight: 700;
+        }
+
+        &--list {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            
+            font-size: 22px;
+            line-height: 24px;
         }
     }
 }
