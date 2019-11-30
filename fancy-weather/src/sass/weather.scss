@@ -74,6 +74,11 @@
             line-height: 80px;
         }
     }
+
+    &__icon--big {
+        width: 220px;
+        height: 220px;
+    }
 }
 
 @media (max-width: 1200px) {
