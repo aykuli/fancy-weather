@@ -6,13 +6,12 @@
 .page-wrap {
     max-width: 1260px;
     margin: 0 auto;
-    padding: 40px 90px 90px;
+    padding: 40px 90px;
 
     font-family: 'Ubuntu', sans-serif;
     font-size: 14px;
     line-height: 16px;
     font-weight: normal;
-    text-transform: uppercase;
     color: #fff;
 
     background-color: rgb(41, 55, 71);
@@ -40,7 +39,6 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    flex-wrap: wrap;
 
     outline: 1px solid red;
 }
@@ -49,10 +47,9 @@
     .page-wrap {
         padding: 40px;
     }
-}
 
-@media(max-width: 1000px) {
-    .page-wrap {
-        padding: 20px;
+    .container {
+        justify-content: space-around;
+        flex-wrap: wrap;
     }
 }

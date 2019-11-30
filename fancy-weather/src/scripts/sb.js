@@ -20,7 +20,7 @@ export default class View {
 
     this.map = this.createElement('div', '', this.mapWrap);
     this.map.setAttribute('id', 'map');
-    this.map.setAttribute('style', 'width: 380px; height: 380px');
+    this.map.setAttribute('style', 'width: 350px; height: 350px');
 
     this.coors = this.createElement('div', 'map__coors', this.mapWrap);
     this.latitude = this.createElement('p', 'map__coors--latitude', this.coors);
@@ -34,7 +34,6 @@ export default class View {
     this.showDate();
     this.showTimeHHMM();
     window.setInterval(this.showTimeHHMM, 1000);
-    this.showWeatherUnits(localStorage.getItem('weatherLang'));
   }
 
   // Create an element with an optional CSS class
@@ -131,15 +130,13 @@ export default class View {
 
   renderCurrentWeather() {
     this.weatherCurrentWrap = this.createElement('div', 'weather__current--wrap', this.weather);
-    this.temperatureWrap = this.createElement('div', 'weather__current', this.weatherCurrentWrap);
-    this.temperature = this.createElement('span', '', this.temperatureWrap);
-    this.temperatureSign = this.createElement('span', 'weather__current--sign', this.temperatureWrap);
+    this.temperature = this.createElement('p', 'weather__current', this.weatherCurrentWrap);
+    this.temperatureSign = this.createElement('p', 'weather__current--sign', this.weatherCurrentWrap);
     this.temperatureSign.innerText = '°';
-
     this.weatherIconBig = this.createElement('img', 'weather__icon--big', this.weatherCurrentWrap);
     this.weatherIconBig.setAttribute('url', './images/icon-cloud.svg');
-
     this.weatherCurrentData = this.createElement('div', 'weather__current--list', this.weatherCurrentWrap);
+
     this.weatherSummary = this.createElement('p', 'weather__current--item', this.weatherCurrentData);
 
     this.weatherApparentWrap = this.createElement('p', 'weather__current--item', this.weatherCurrentData);
@@ -151,9 +148,7 @@ export default class View {
     this.weatherWind = this.createElement('span', '', this.weatherWindWrap);
     this.weatherWindSign = this.createElement('span', '', this.weatherWindWrap);
 
-    this.weatherHumidityWrap = this.createElement('p', 'weather__current--item', this.weatherCurrentData);
-    this.weatherHumidityLabel = this.createElement('p', 'weather__current--item', this.weatherHumidityWrap);
-    this.weatherHumidity = this.createElement('p', 'weather__current--item', this.weatherHumidityWrap);
+    this.weatherHumidity = this.createElement('p', 'weather__current--item', this.weatherCurrentData);
   }
 
   renderForecastWeather() {
@@ -240,7 +235,7 @@ export default class View {
     this.weatherSummary.innerText = data.currently.summary;
     this.weatherApparent.innerText = `${data.currently.apparentTemperature}°`;
     this.weatherWind.innerText = data.currently.windSpeed.toFixed(1);
-    this.weatherHumidity.innerText = `${(data.currently.humidity * 100).toFixed(0)}%`;
+    this.weatherHumidity.innerText = `${(data.currently.humidity * 100).toFixed(0)} %`;
 
     this.tomorrowTemperature.innerText = (
       (data.daily.data[0].temperatureMax + data.daily.data[0].temperatureMax) /
@@ -260,17 +255,14 @@ export default class View {
     console.log('icon: ', data.daily.data[2].icon);
   }
 
+  showWeatherUnits(lang) {
+    this.weatherApparentLabel.innerText = 'Fells like: ';
+  }
+
   cleanMap() {
     var map = document.querySelector('#map');
     while (map.firstChild) {
       map.removeChild(map.firstChild);
     }
-  }
-
-  showWeatherUnits(lang) {
-    this.weatherApparentLabel.innerText = controlsLocale[lang][4];
-    this.weatherWindLabel.innerText = controlsLocale[lang][5];
-    this.weatherWindSign.innerText = controlsLocale[lang][6];
-    this.weatherHumidityLabel.innerText = controlsLocale[lang][7];
   }
 }

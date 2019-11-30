@@ -62,14 +62,16 @@ export default class Controller {
   watchLang() {
     this.view.controlsLang.addEventListener('change', () => {
       console.log('\n language change');
+      const lang = this.view.controlsLang.value;
       localStorage.removeItem('weatherLang');
-      localStorage.setItem('weatherLang', this.view.controlsLang.value);
+      localStorage.setItem('weatherLang', lang);
 
       const lat = localStorage.getItem('weatherLat');
       const lng = localStorage.getItem('weatherLng');
 
       this.getCurrentPlaceResult(lat, lng);
       this.view.showDate();
+      this.view.showWeatherUnits(lang);
     });
     return localStorage.getItem('weatherLang');
   }
@@ -155,8 +157,14 @@ export default class Controller {
             this.view.farengheit.classList.add('controls__btn--unit-active');
 
             const celsius = Number(this.view.temperature.innerText);
-            const celsiusTomorrow = Number();
+            const celsiusTomorrow = Number(this.view.tomorrowTemperature.innerText);
+            const celsiusAfter2Days = Number(this.view.after2DaysTemperature.innerText);
+            const celsiusAfter3Days = Number(this.view.after3DaysTemperature.innerText);
+
             this.view.temperature.innerText = this.celsiusToFarengeitAndReverse(celsius);
+            this.view.tomorrowTemperature.innerText = this.celsiusToFarengeitAndReverse(celsiusTomorrow);
+            this.view.after2DaysTemperature.innerText = this.celsiusToFarengeitAndReverse(celsiusAfter2Days);
+            this.view.after3DaysTemperature.innerText = this.celsiusToFarengeitAndReverse(celsiusAfter3Days);
 
             localStorage.setItem('weatherUnit', 'us');
             break;
@@ -164,7 +172,14 @@ export default class Controller {
             this.view.celsius.classList.add('controls__btn--unit-active');
 
             const farengheit = Number(this.view.temperature.innerText);
+            const farengheitTomorrow = Number(this.view.tomorrowTemperature.innerText);
+            const farengheitAfter2Days = Number(this.view.after2DaysTemperature.innerText);
+            const farengheitAfter3Days = Number(this.view.after3DaysTemperature.innerText);
+
             this.view.temperature.innerText = this.celsiusToFarengeitAndReverse(farengheit, false);
+            this.view.tomorrowTemperature.innerText = this.celsiusToFarengeitAndReverse(farengheitTomorrow, false);
+            this.view.after2DaysTemperature.innerText = this.celsiusToFarengeitAndReverse(farengheitAfter2Days, false);
+            this.view.after3DaysTemperature.innerText = this.celsiusToFarengeitAndReverse(farengheitAfter3Days, false);
 
             localStorage.setItem('weatherUnit', 'si');
             break;
