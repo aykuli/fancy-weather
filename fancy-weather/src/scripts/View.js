@@ -14,6 +14,7 @@ export default class View {
     this.renderPlace();
     this.renderDate();
     this.renderCurrentWeather();
+    this.renderForecastWeather();
 
     this.mapWrap = this.createElement('div', 'map__wrap', this.container);
 
@@ -65,13 +66,18 @@ export default class View {
       this.controlsLang.append(option);
     }
 
-    if (localStorage.getItem('weatherLang') === null) {
-      console.log('устанавливаем язык ');
-      localStorage.setItem('weatherLang', 'en');
-      this.controlsLang.value = lang[0];
-    } else {
-      this.controlsLang.value = localStorage.getItem('weatherLang');
+    switch (localStorage.getItem('weatherLang')) {
+      case 'en':
+      case 'ru':
+      case 'be':
+        this.controlsLang.value = localStorage.getItem('weatherLang');
+        break;
+      default:
+        localStorage.removeItem('weatherLang');
+        localStorage.setItem('weatherLang', 'en');
+        this.controlsLang.value = 'en';
     }
+
     this.units = this.createElement('div', 'controls__unit', this.controlsBtns);
     this.farengheit = this.createElement('button', 'controls__btn', this.units);
     this.farengheit.classList.add('controls__btn--farengeit');
@@ -80,14 +86,16 @@ export default class View {
     this.celsius.classList.add('controls__btn--celsius');
     this.celsius.innerText = '°С';
 
-    if (localStorage.getItem('weatherUnit') === null) {
-      console.log('устанавливаем единицу измерения температуры ');
-      localStorage.setItem('weatherUnit', 'si');
-      this.celsius.classList.add('controls__btn--unit-active');
-    } else {
-      localStorage.getItem('weatherUnit') === 'si'
-        ? this.celsius.classList.add('controls__btn--unit-active')
-        : this.farengheit.classList.add('controls__btn--unit-active');
+    switch (localStorage.getItem('weatherUnit')) {
+      case 'si':
+        this.celsius.classList.add('controls__btn--unit-active');
+        break;
+      case 'us':
+        this.farengheit.classList.add('controls__btn--unit-active');
+        break;
+      default:
+        localStorage.setItem('weatherUnit', 'si');
+        this.celsius.classList.add('controls__btn--unit-active');
     }
 
     this.citySearchForm = this.createElement('form', 'controls__search--form', this.controls);
@@ -124,34 +132,67 @@ export default class View {
     this.weatherCurrentWrap = this.createElement('div', 'weather__current--wrap', this.weather);
     this.temperature = this.createElement('p', 'weather__current', this.weatherCurrentWrap);
     this.temperatureSign = this.createElement('p', 'weather__current--sign', this.weatherCurrentWrap);
-    switch (localStorage.getItem('weatherUnit')) {
-      case 'si':
-        this.temperatureSign.innerText = '°';
-      default:
-        this.temperatureSign.innerText = '°F';
-    }
+    this.temperatureSign.innerText = '°';
     this.weatherIconBig = this.createElement('img', 'weather__icon--big', this.weatherCurrentWrap);
     this.weatherIconBig.setAttribute('url', './images/icon-cloud.svg');
     this.weatherCurrentData = this.createElement('div', 'weather__current--list', this.weatherCurrentWrap);
+
     this.weatherSummary = this.createElement('p', 'weather__current--item', this.weatherCurrentData);
-    this.weatherApparent = this.createElement('p', 'weather__current--item', this.weatherCurrentData);
-    this.weatherWind = this.createElement('p', 'weather__current--item', this.weatherCurrentData);
+
+    this.weatherApparentWrap = this.createElement('p', 'weather__current--item', this.weatherCurrentData);
+    this.weatherApparentLabel = this.createElement('span', '', this.weatherApparentWrap);
+    this.weatherApparent = this.createElement('span', '', this.weatherApparentWrap);
+
+    this.weatherWindWrap = this.createElement('p', 'weather__current--item', this.weatherCurrentData);
+    this.weatherWind = this.createElement('span', '', this.weatherWindWrap);
+    this.weatherWind = this.createElement('span', '', this.weatherWindWrap);
 
     this.weatherHumidity = this.createElement('p', 'weather__current--item', this.weatherCurrentData);
   }
 
+  renderForecastWeather() {
+    this.forecast = this.createElement('div', 'weather__forecast', this.weather);
+
+    this.tomorrow = this.createElement('div', 'weather__forecast--item', this.forecast);
+    this.tomorrowDay = this.createElement('p', 'weather__forecast--day', this.tomorrow);
+    this.tomorrowTemperatureWrap = this.createElement('div', 'weather__forecast--temperature', this.tomorrow);
+    this.tomorrowTemperature = this.createElement('span', '', this.tomorrowTemperatureWrap);
+    this.tomorrowTemperatureSign = this.createElement('span', '', this.tomorrowTemperatureWrap);
+    this.tomorrowTemperatureSign.innerText = '°';
+    // this.tomorrowIcon =
+
+    this.after2Days = this.createElement('div', 'weather__forecast--items', this.forecast);
+    this.after2DaysDay = this.createElement('p', 'weather__forecast--day', this.after2Days);
+    this.after2DaysTemperatureWrap = this.createElement('div', 'weather__forecast--temperature', this.after2Days);
+    this.after2DaysTemperature = this.createElement('span', '', this.after2DaysTemperatureWrap);
+    this.after2DaysTemperatureSign = this.createElement('span', '', this.after2DaysTemperatureWrap);
+    this.after2DaysTemperatureSign.innerText = '°';
+
+    this.after3Days = this.createElement('div', 'weather__forecast--items', this.forecast);
+    this.after3DaysDay = this.createElement('p', 'weather__forecast--day', this.after3Days);
+    this.after3DaysTemperatureWrap = this.createElement('p', 'weather__forecast--temperature', this.after3Days);
+    this.after3DaysTemperature = this.createElement('span', '', this.after3DaysTemperatureWrap);
+    this.after3DaysTemperatureSign = this.createElement('span', '', this.after3DaysTemperatureWrap);
+    this.after3DaysTemperatureSign.innerText = '°';
+  }
+
   showDate() {
-    let currentTime = new Date();
+    let time = new Date();
+    const lang = localStorage.getItem('weatherLang');
 
-    this.dateDay.innerText = weekDayArr[localStorage.getItem('weatherLang')][currentTime.getDay()];
-    this.dateDD.innerText = currentTime.getDate();
-    this.dateMM.innerText = monthArr[localStorage.getItem('weatherLang')][currentTime.getMonth()];
+    this.dateDay.innerText = weekDayArr[lang][time.getDay()];
+    this.dateDD.innerText = time.getDate();
+    this.dateMM.innerText = monthArr[lang][time.getMonth()];
 
-    this.cityBtn.innerText = controlsLocale[localStorage.getItem('weatherLang')][0];
-    this.cityInput.setAttribute('placeholder', controlsLocale[localStorage.getItem('weatherLang')][1]);
+    this.tomorrowDay.innerText = weekDayArr[lang][((time.getDay() + 1) % 7) + 7];
+    this.after2DaysDay.innerText = weekDayArr[lang][((time.getDay() + 2) % 7) + 7];
+    this.after3DaysDay.innerText = weekDayArr[lang][((time.getDay() + 3) % 7) + 7];
 
-    this.latitudeLabel.innerText = controlsLocale[localStorage.getItem('weatherLang')][2];
-    this.longitudeLabel.innerText = controlsLocale[localStorage.getItem('weatherLang')][3];
+    this.cityBtn.innerText = controlsLocale[lang][0];
+    this.cityInput.setAttribute('placeholder', controlsLocale[lang][1]);
+
+    this.latitudeLabel.innerText = controlsLocale[lang][2];
+    this.longitudeLabel.innerText = controlsLocale[lang][3];
   }
 
   showTimeHHMM = () => {
@@ -186,40 +227,31 @@ export default class View {
     this.longitudeValue.innerText = coors.lng;
   }
 
-  showWeatherData(weatherData) {
-    this.temperature.innerText = weatherData.currently.temperature.toFixed(0);
-    // console.log('\ntemperature: ', weatherData.currently.temperature.toFixed(0));
-    console.log('icon: ', weatherData.currently.icon);
-    this.weatherSummary.innerText = weatherData.currently.summary;
-    this.weatherApparent.innerText = weatherData.currently.apparentTemperature;
-    this.weatherWind.innerText = weatherData.currently.windSpeed.toFixed(1);
-    this.weatherHumidity.innerText = `${(weatherData.currently.humidity * 100).toFixed(0)} %`;
+  showWeatherData(data) {
+    this.temperature.innerText = data.currently.temperature.toFixed(0);
+    // console.log('\ntemperature: ', data.currently.temperature.toFixed(0));
+    console.log('icon: ', data.currently.icon);
+    this.weatherSummary.innerText = data.currently.summary;
+    this.weatherApparent.innerText = data.currently.apparentTemperature;
+    this.weatherWind.innerText = data.currently.windSpeed.toFixed(1);
+    this.weatherHumidity.innerText = `${(data.currently.humidity * 100).toFixed(0)} %`;
 
-    console.log('summary: ', weatherData.currently.summary);
-    console.log('feels like: ', weatherData.currently.apparentTemperature);
-    console.log('feels like: ', weatherData.currently.windSpeed.toFixed(1));
-    console.log('humidity: ', (weatherData.currently.humidity * 100).toFixed(0), '%\n');
+    this.tomorrowTemperature.innerText = (
+      (data.daily.data[0].temperatureMax + data.daily.data[0].temperatureMax) /
+      2
+    ).toFixed(0);
+    this.after2DaysTemperature.innerText = (
+      (data.daily.data[2].temperatureMax + data.daily.data[2].temperatureMax) /
+      2
+    ).toFixed(0);
 
-    console.log('tomorrow');
-    console.log(
-      'temperature: ',
-      ((weatherData.daily.data[0].temperatureMax + weatherData.daily.data[0].temperatureMax) / 2).toFixed(0)
-    );
-    console.log('icon: ', weatherData.daily.data[0].icon);
-
-    console.log('day after tomorrow');
-    console.log(
-      'temperature: ',
-      ((weatherData.daily.data[1].temperatureMax + weatherData.daily.data[1].temperatureMax) / 2).toFixed(0)
-    );
-    console.log('icon: ', weatherData.daily.data[1].icon);
-
-    console.log('day after aftertomorrow');
-    console.log(
-      'temperature: ',
-      ((weatherData.daily.data[2].temperatureMax + weatherData.daily.data[2].temperatureMax) / 2).toFixed(0)
-    );
-    console.log('icon: ', weatherData.daily.data[2].icon);
+    this.after3DaysTemperature.innerText = (
+      (data.daily.data[2].temperatureMax + data.daily.data[2].temperatureMax) /
+      2
+    ).toFixed(0);
+    console.log('icon: ', data.daily.data[0].icon);
+    console.log('icon: ', data.daily.data[1].icon);
+    console.log('icon: ', data.daily.data[2].icon);
   }
 
   cleanMap() {

@@ -1,6 +1,6 @@
 .weather {
     max-width: 600px;
-    margin-bottom: 40px;
+    margin: 0 auto 40px;
 
     &__place {
         font-size: 44px;
@@ -27,6 +27,7 @@
         &--wrap {
             position: relative;
             display: flex;
+            margin-bottom: 30px;
 
             outline: 1px dotted green;;
         }
@@ -47,6 +48,22 @@
             line-height: 26px;
         }
     }
+
+    &__forecast {
+        display: flex;
+        justify-content: space-between;
+        
+        text-align: center;
+
+        &--day {
+            font-size: 22px;
+            line-height: 24px;
+        }
+        &--temperature {
+            font-size: 80px;
+            line-height: 80px;
+        }
+    }
 }
 
 @media (max-width: 1050px) {
@@ -59,7 +76,7 @@
         &__current {
             font-size: 200px;
             line-height: 200px;
-    
+
             &--sign {
                 font-size: 50px;
                 line-height: 50px;

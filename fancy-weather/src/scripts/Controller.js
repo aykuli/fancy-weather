@@ -145,33 +145,37 @@ export default class Controller {
 
   watchUnitChanging() {
     this.view.units.addEventListener('click', e => {
-      if (e.target === this.view.farengheit) {
-        if (this.view.temperatureSign.innerText === '°') {
-          localStorage.removeItem('weatherUnit');
-          localStorage.setItem('weatherUnit', 'us');
+      const active = document.querySelector('.controls__btn--unit-active');
+      localStorage.removeItem('weatherUnit');
 
-          const celsius = Number(this.view.temperature.innerText);
-          this.view.temperature.innerText = ((9 / 5) * celsius + 32).toFixed(0);
-          this.view.temperatureSign.innerText = '°F';
+      if (e.target !== active) {
+        active.classList.remove('controls__btn--unit-active');
+        switch (e.target) {
+          case this.view.farengheit:
+            this.view.farengheit.classList.add('controls__btn--unit-active');
 
-          const active = document.querySelector('.controls__btn--unit-active');
-          active.classList.remove('controls__btn--unit-active');
-          this.view.farengheit.classList.add('controls__btn--unit-active');
-        } else return;
-      } else {
-        if (this.view.temperatureSign.innerText === '°F') {
-          localStorage.removeItem('weatherUnit');
-          localStorage.setItem('weatherUnit', 'si');
+            const celsius = Number(this.view.temperature.innerText);
+            const celsiusTomorrow = Number();
+            this.view.temperature.innerText = this.celsiusToFarengeitAndReverse(celsius);
 
-          const farengheit = Number(this.view.temperature.innerText);
-          this.view.temperature.innerText = ((5 / 9) * (farengheit - 32)).toFixed(0);
-          this.view.temperatureSign.innerText = '°';
+            localStorage.setItem('weatherUnit', 'us');
+            break;
+          case this.view.celsius:
+            this.view.celsius.classList.add('controls__btn--unit-active');
 
-          const active = document.querySelector('.controls__btn--unit-active');
-          active.classList.remove('controls__btn--unit-active');
-          this.view.celsius.classList.add('controls__btn--unit-active');
-        } else return;
+            const farengheit = Number(this.view.temperature.innerText);
+            this.view.temperature.innerText = this.celsiusToFarengeitAndReverse(farengheit, false);
+
+            localStorage.setItem('weatherUnit', 'si');
+            break;
+          default:
+            alert('Something wrong with units. Reload page');
+        }
       }
     });
+  }
+
+  celsiusToFarengeitAndReverse(temp, isToFarengheit = true) {
+    return isToFarengheit ? ((9 / 5) * temp + 32).toFixed(0) : ((5 / 9) * (temp - 32)).toFixed(0);
   }
 }

@@ -10,9 +10,13 @@ export default class Model {
 
     var url = `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/${apiKey}/${lat},${lng}?lang=${lang}&units=${unit}`;
 
-    const response = await fetch(url);
-    const json = await response.json();
-    return json;
+    try {
+      const response = await fetch(url);
+      const json = await response.json();
+      return json;
+    } catch (err) {
+      alert("Map hasn't been loaded. Check connection");
+    }
   }
 
   async forwardGeocoding(settlement, lang = 'en') {

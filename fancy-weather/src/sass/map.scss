@@ -1,6 +1,18 @@
 .map {
     outline: 1px dotted blue;
+    &__wrap {        
+        margin: 0 auto;
+    }
     &__coors {
+        padding: 10px 0;
+        font-size: 20px;
+        line-height: 30px;
+        text-align: right;
         text-transform: none;
     }
+}
+
+.mapboxgl-canvas {
+    border-radius: 15px;
+    border-bottom-right-radius: 0;
 }
