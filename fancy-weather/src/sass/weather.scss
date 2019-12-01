@@ -1,5 +1,5 @@
 .weather {
-    width: 700px;
+    width: 600px;
     margin-bottom: 40px;
 
     outline: 1px solid white;
@@ -21,18 +21,19 @@
     }
 
     &__current {
+        position: relative;
+
         display: flex;
         align-items: flex-start;
-        margin-right: 5px;
+        width: 380px;
 
-        font-size: 220px;
+        font-size: 200px;
         line-height: 250px;
         font-weight: 700;
 
         &--wrap {
-            position: relative;
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between;
             margin-bottom: 30px;
 
             outline: 1px dotted green;;
@@ -61,11 +62,12 @@
 
     &__forecast {
         display: flex;
-        justify-content: space-between;
         
         text-align: center;
 
         &--day {
+            margin-bottom: 15px;
+
             font-size: 22px;
             line-height: 24px;
         }
@@ -73,29 +75,43 @@
             font-size: 80px;
             line-height: 80px;
         }
+        &--item {
+            width: 300px;
+        }
     }
 
-    &__icon--big {
-        width: 220px;
-        height: 220px;
+    &__icon{
+        &--big {
+            position: absolute;
+            top: -35px;
+            right: -30px;
+
+            font-size: 100px;
+            opacity: 0.8;
+        }
+        &--small {
+            margin-left: 10px;
+            vertical-align: top;
+
+            font-size: 50px;
+            opacity: 0.8;
+        }
     }
 }
 
 @media (max-width: 1200px) {
     .weather {
-        width: 100%;
-
         &__place {
             font-size: 30px;
             line-height: 34px;
         }
 
         &__current {
-
             &--sign {
                 font-size: 50px;
                 line-height: 50px;
             }
+
             &--list {
                 margin-bottom: 25px;
             }
@@ -105,17 +121,25 @@
 
 @media(max-width: 600px) {
     .weather {
+        width: 100%;
+
         &__current {
+            margin-bottom: 15px;
+
             font-size: 150px;
             line-height: 150px;
 
-            &--list {
-                font-size: 16px;
-                line-height: 18px;
+            &--wrap {
+                display: flex;
+                justify-content: flex-start;
+                flex-wrap: wrap;
             }
         }
 
         &__forecast {
+            display: flex;
+            flex-wrap: wrap;
+
             &--temperature {
                 font-size: 80px;
             }
@@ -123,6 +147,15 @@
             &--day {
                 font-size: 16px;
             }
+
+            &--item {
+                width: 100%;
+                margin-bottom: 25px;
+            }
+        }
+
+        &__icon--big {
+            right: 0;
         }
     }
 }

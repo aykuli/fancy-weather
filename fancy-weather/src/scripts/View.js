@@ -1,11 +1,11 @@
-import { weekDayArr, monthArr, lang, controlsLocale } from './consts.js';
+import { weekDayArr, monthArr, lang, controlsLocale, weatherIcons } from './consts.js';
+import 'weather-icons/css/weather-icons.css';
 
 export default class View {
   constructor() {
     this.page = document.querySelector('.page-wrap');
 
     this.renderControlElements();
-
     // Block 2: Showing current weather
     this.container = this.createElement('div', 'container', this.page);
 
@@ -136,8 +136,7 @@ export default class View {
     this.temperatureSign = this.createElement('span', 'weather__current--sign', this.temperatureWrap);
     this.temperatureSign.innerText = '°';
 
-    this.weatherIconBig = this.createElement('img', 'weather__icon--big', this.weatherCurrentWrap);
-    this.weatherIconBig.setAttribute('url', './images/icon-cloud.svg');
+    this.weatherIconBig = this.createElement('i', 'weather__icon--big', this.temperatureWrap);
 
     this.weatherCurrentData = this.createElement('div', 'weather__current--list', this.weatherCurrentWrap);
     this.weatherSummary = this.createElement('p', 'weather__current--item', this.weatherCurrentData);
@@ -161,25 +160,28 @@ export default class View {
 
     this.tomorrow = this.createElement('div', 'weather__forecast--item', this.forecast);
     this.tomorrowDay = this.createElement('p', 'weather__forecast--day', this.tomorrow);
+
     this.tomorrowTemperatureWrap = this.createElement('div', 'weather__forecast--temperature', this.tomorrow);
     this.tomorrowTemperature = this.createElement('span', '', this.tomorrowTemperatureWrap);
     this.tomorrowTemperatureSign = this.createElement('span', '', this.tomorrowTemperatureWrap);
     this.tomorrowTemperatureSign.innerText = '°';
-    // this.tomorrowIcon =
+    this.tomorrowIcon = this.createElement('i', '', this.tomorrowTemperatureWrap);
 
-    this.after2Days = this.createElement('div', 'weather__forecast--items', this.forecast);
+    this.after2Days = this.createElement('div', 'weather__forecast--item', this.forecast);
     this.after2DaysDay = this.createElement('p', 'weather__forecast--day', this.after2Days);
     this.after2DaysTemperatureWrap = this.createElement('div', 'weather__forecast--temperature', this.after2Days);
     this.after2DaysTemperature = this.createElement('span', '', this.after2DaysTemperatureWrap);
     this.after2DaysTemperatureSign = this.createElement('span', '', this.after2DaysTemperatureWrap);
     this.after2DaysTemperatureSign.innerText = '°';
+    this.after2DaysIcon = this.createElement('i', '', this.after2DaysTemperatureWrap);
 
-    this.after3Days = this.createElement('div', 'weather__forecast--items', this.forecast);
+    this.after3Days = this.createElement('div', 'weather__forecast--item', this.forecast);
     this.after3DaysDay = this.createElement('p', 'weather__forecast--day', this.after3Days);
     this.after3DaysTemperatureWrap = this.createElement('p', 'weather__forecast--temperature', this.after3Days);
     this.after3DaysTemperature = this.createElement('span', '', this.after3DaysTemperatureWrap);
     this.after3DaysTemperatureSign = this.createElement('span', '', this.after3DaysTemperatureWrap);
     this.after3DaysTemperatureSign.innerText = '°';
+    this.after3DaysIcon = this.createElement('i', '', this.after3DaysTemperatureWrap);
   }
 
   showDate() {
@@ -234,9 +236,22 @@ export default class View {
   }
 
   showWeatherData(data) {
+    const weatherIcons = new Map([
+      ['clear-day', 'wi-day-sunny'],
+      ['clear-night', 'wi-night-clear'],
+      ['rain', 'wi-rain'],
+      ['snow', 'wi-snow'],
+      ['sleet', 'sleet'],
+      ['wind', 'wi-windy'],
+      ['fog', 'wi-fog'],
+      ['cloudy', 'wi-cloudy'],
+      ['partly-cloudy-day', 'wi-day-cloudy'],
+      ['partly-cloudy-night', 'wi-night-alt-cloudy'],
+    ]);
+
     this.temperature.innerText = data.currently.temperature.toFixed(0);
-    // console.log('\ntemperature: ', data.currently.temperature.toFixed(0));
-    console.log('icon: ', data.currently.icon);
+    this.weatherIconBig.className = `weather__icon--big wi ${weatherIcons.get(data.currently.icon)}`;
+
     this.weatherSummary.innerText = data.currently.summary;
     this.weatherApparent.innerText = `${data.currently.apparentTemperature}°`;
     this.weatherWind.innerText = data.currently.windSpeed.toFixed(1);
@@ -255,9 +270,10 @@ export default class View {
       (data.daily.data[2].temperatureMax + data.daily.data[2].temperatureMax) /
       2
     ).toFixed(0);
-    console.log('icon: ', data.daily.data[0].icon);
-    console.log('icon: ', data.daily.data[1].icon);
-    console.log('icon: ', data.daily.data[2].icon);
+
+    this.tomorrowIcon.className = `weather__icon--small wi ${weatherIcons.get(data.daily.data[0].icon)}`;
+    this.after2DaysIcon.className = `weather__icon--small wi ${weatherIcons.get(data.daily.data[1].icon)}`;
+    this.after3DaysIcon.className = `weather__icon--small wi ${weatherIcons.get(data.daily.data[2].icon)}`;
   }
 
   cleanMap() {

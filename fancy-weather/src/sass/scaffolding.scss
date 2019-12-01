@@ -53,3 +53,9 @@
         flex-wrap: wrap;
     }
 }
+
+@media(max-width: 700px) {
+    .page-wrap {
+        padding: 40px 10px;
+    }
+}
