@@ -1,12 +1,34 @@
+import { celsiusToFarengeitAndReverse } from './math';
+
 export default class Controller {
   constructor(model, view) {
     this.model = model;
     this.view = view;
-    this.showCurrentCoors();
+
+    this.init();
     this.watchInput();
     this.watchLang();
     this.watchReload();
     this.watchUnitChanging();
+  }
+
+  async init() {
+    const [lat, lng] = [Number(localStorage.getItem('weatherLat')), Number(localStorage.getItem('weatherLng'))];
+
+    try {
+      if (lat && lng) {
+        this.view.showCoordinates(lat, lng);
+        this.getPlaceByCoors(lat, lng);
+        this.view.cleanMap();
+        this.model.mapbox(lat, lng);
+        const weatherData = await this.model.getWeatherData(lat, lng);
+        this.view.showWeatherData(weatherData);
+      } else {
+        this.showCurrentCoors();
+      }
+    } catch (err) {
+      alert("cannot render page, some api didn't work");
+    }
   }
 
   async showCurrentCoors() {
@@ -17,7 +39,7 @@ export default class Controller {
     };
 
     function error(err) {
-      console.warn(`ERROR(${err.code}): ${err.message}`);
+      alert(`ERROR(${err.code}): ${err.message}`);
     }
 
     navigator.geolocation.getCurrentPosition(this.success.bind(this), error, options);
@@ -26,13 +48,7 @@ export default class Controller {
   }
 
   async success(pos) {
-    console.log('5');
     var crd = pos.coords;
-    console.log(crd);
-    console.log('Your current position is:');
-    console.log(`Latitude : ${crd.latitude}`);
-    console.log(`Longitude: ${crd.longitude}`);
-    console.log(`More or less ${crd.accuracy} meters.`);
 
     this.view.latitudeValue.innerText = crd.latitude;
     this.view.longitudeValue.innerText = crd.longitude;
@@ -43,16 +59,17 @@ export default class Controller {
     localStorage.setItem('weatherLng', crd.longitude);
 
     // draw map of current geolocation
-    const coors = { lat: crd.latitude, lng: crd.longitude };
-
-    this.view.showCoordinates(coors);
+    this.view.showCoordinates(crd.latitude, crd.longitude);
     this.view.cleanMap();
     this.model.mapbox(crd.latitude, crd.longitude);
 
-    const unit = localStorage.getItem('weatherUnit');
-    const weatherData = await this.model.getWeatherData(crd.latitude, crd.longitude, unit);
-    console.log('днные с darkSky: ', weatherData);
+    const weatherData = await this.model.getWeatherData(crd.latitude, crd.longitude);
     this.view.showWeatherData(weatherData);
+
+    // const data = await this.model.flickr('Almaty', 'winter', 'night');
+    // console.log('flickr data =', data);
+
+    // this.view.page.style.backgroundImage = `url(${data})`;
   }
 
   watchInput() {
@@ -61,7 +78,6 @@ export default class Controller {
 
   watchLang() {
     this.view.controlsLang.addEventListener('change', () => {
-      console.log('\n language change');
       const lang = this.view.controlsLang.value;
       localStorage.removeItem('weatherLang');
       localStorage.setItem('weatherLang', lang);
@@ -69,35 +85,30 @@ export default class Controller {
       const lat = localStorage.getItem('weatherLat');
       const lng = localStorage.getItem('weatherLng');
 
-      this.getCurrentPlaceResult(lat, lng);
+      this.getPlaceByCoors(lat, lng);
       this.view.showDate();
       this.view.showWeatherUnits(lang);
     });
-    return localStorage.getItem('weatherLang');
   }
 
   watchReload() {
-    this.view.controlsBtnReload.addEventListener('click', () => {
-      console.log('reload button');
-      this.showCurrentCoors.bind(this);
-    });
+    this.view.controlsBtnReload.addEventListener('click', this.init.bind(this));
   }
 
   async inputSearchResult(e) {
     e.preventDefault();
     const settlement = this.view.cityInput.value;
     let lang = localStorage.getItem('weatherLang');
-    const data = await this.model.forwardGeocoding(settlement, lang);
-
+    let data = await this.model.forwardGeocoding(settlement, lang);
+    console.log(data);
     let city;
-    console.log('data =', data);
 
     if (data.results[0].components.city) {
-      city = `${data.results[0].components.city}, `;
+      city = data.results[0].components.city;
     } else if (data.results[0].components.village) {
-      city = `${data.results[0].components.village}, `;
+      city = data.results[0].components.village;
     } else if (data.results[0].components.state) {
-      city = `${data.results[0].components.state}, `;
+      city = data.results[0].components.state;
     }
     if (city === undefined) city = '';
     const country = data.results[0].components.country;
@@ -108,45 +119,77 @@ export default class Controller {
     localStorage.removeItem('weatherLng');
     localStorage.setItem('weatherLng', coors.lng);
 
-    console.log('city =', city);
-    console.log('country =', country);
-
     await this.view.showCity(city, country);
-    await this.view.showCoordinates(coors);
+    await this.view.showCoordinates(coors.lat, coors.lng);
     await this.view.cleanMap();
     await this.model.mapbox(coors.lat, coors.lng);
 
     const unit = localStorage.getItem('weatherUnit');
     const weatherData = await this.model.getWeatherData(coors.lat, coors.lng, unit);
-    console.log('\nпришли данные с darkSky');
-    console.log('днные с darkSky: ', weatherData);
+    // console.log('\nпришли данные с darkSky');
+    // console.log('днные с darkSky: ', weatherData);
     this.view.showWeatherData(weatherData);
+    this.showAppBg(city, weatherData.daily.data[0].icon);
+    // data = await this.model.unsplashForBG(city, 'winter', 'night');
+    data = await this.model.unsplashForBG();
+    // console.log('unsplash: ', data);
+
+    this.view.page.style.backgroundImage = `url(${data})`;
   }
 
-  async getCurrentPlaceResult(lat, lng) {
+  async getPlaceByCoors(lat, lng) {
     let lang = localStorage.getItem('weatherLang');
     const data = await this.model.reverseGeocoding(lat, lng, lang);
-    console.log('data form reverseGeocoding =', data);
     let city;
 
     if (data.results[0].components.city) {
-      city = `${data.results[0].components.city}, `;
+      city = data.results[0].components.city;
     } else if (data.results[0].components.village) {
-      city = `${data.results[0].components.village}, `;
+      city = data.results[0].components.village;
     } else if (data.results[0].components.state) {
-      city = `${data.results[0].components.state}, `;
+      city = data.results[0].components.state;
     }
     if (city === undefined) city = '';
     const country = data.results[0].components.country;
 
-    console.log('city =', city);
-    console.log('country =', country);
-
     await this.view.showCity(city, country);
+  }
+
+  async showAppBg(city, icon) {
+    let tm = new Date();
+    const month = tm.getMonth();
+    const season = () => {
+      if (month < 2 || month === 11) {
+        return 'winter';
+      } else if (month > 1 || month < 5) {
+        return 'spring';
+      } else if (month > 4 || month < 8) {
+        return 'summer';
+      } else {
+        return 'fall';
+      }
+    };
+
+    const day = tm.getHours();
+    const dayTime = () => {
+      if (dayTime > 4 || dayTime < 11) {
+        return 'morning';
+      } else if (dayTime > 10 || dayTime < 19) {
+        return 'day';
+      } else if (dayTime > 18 || dayTime < 23) {
+        return 'evening';
+      } else {
+        return 'night';
+      }
+    };
+
+    const data = await this.model.unsplashForBG(city, season(), dayTime(), icon);
+    this.view.page.style.backgroundImage = `url(${data})`;
   }
 
   watchUnitChanging() {
     this.view.units.addEventListener('click', e => {
+      console.log('кликаем на смену фарегейта');
       const active = document.querySelector('.controls__btn--unit-active');
       localStorage.removeItem('weatherUnit');
 
@@ -161,10 +204,10 @@ export default class Controller {
             const celsiusAfter2Days = Number(this.view.after2DaysTemperature.innerText);
             const celsiusAfter3Days = Number(this.view.after3DaysTemperature.innerText);
 
-            this.view.temperature.innerText = this.celsiusToFarengeitAndReverse(celsius);
-            this.view.tomorrowTemperature.innerText = this.celsiusToFarengeitAndReverse(celsiusTomorrow);
-            this.view.after2DaysTemperature.innerText = this.celsiusToFarengeitAndReverse(celsiusAfter2Days);
-            this.view.after3DaysTemperature.innerText = this.celsiusToFarengeitAndReverse(celsiusAfter3Days);
+            this.view.temperature.innerText = celsiusToFarengeitAndReverse(celsius);
+            this.view.tomorrowTemperature.innerText = celsiusToFarengeitAndReverse(celsiusTomorrow);
+            this.view.after2DaysTemperature.innerText = celsiusToFarengeitAndReverse(celsiusAfter2Days);
+            this.view.after3DaysTemperature.innerText = celsiusToFarengeitAndReverse(celsiusAfter3Days);
 
             localStorage.setItem('weatherUnit', 'us');
             break;
@@ -176,10 +219,10 @@ export default class Controller {
             const farengheitAfter2Days = Number(this.view.after2DaysTemperature.innerText);
             const farengheitAfter3Days = Number(this.view.after3DaysTemperature.innerText);
 
-            this.view.temperature.innerText = this.celsiusToFarengeitAndReverse(farengheit, false);
-            this.view.tomorrowTemperature.innerText = this.celsiusToFarengeitAndReverse(farengheitTomorrow, false);
-            this.view.after2DaysTemperature.innerText = this.celsiusToFarengeitAndReverse(farengheitAfter2Days, false);
-            this.view.after3DaysTemperature.innerText = this.celsiusToFarengeitAndReverse(farengheitAfter3Days, false);
+            this.view.temperature.innerText = celsiusToFarengeitAndReverse(farengheit, false);
+            this.view.tomorrowTemperature.innerText = celsiusToFarengeitAndReverse(farengheitTomorrow, false);
+            this.view.after2DaysTemperature.innerText = celsiusToFarengeitAndReverse(farengheitAfter2Days, false);
+            this.view.after3DaysTemperature.innerText = celsiusToFarengeitAndReverse(farengheitAfter3Days, false);
 
             localStorage.setItem('weatherUnit', 'si');
             break;
@@ -190,7 +233,13 @@ export default class Controller {
     });
   }
 
-  celsiusToFarengeitAndReverse(temp, isToFarengheit = true) {
-    return isToFarengheit ? ((9 / 5) * temp + 32).toFixed(0) : ((5 / 9) * (temp - 32)).toFixed(0);
-  }
+  // async getBackground() {
+  //   console.log('getBackground works');
+  //   const data = await this.model.unsplashForBg();
+  //   console.log('data =', data);
+
+  //   // this.view.page.style.backgroundImage = `url(${data})`;
+  //   // this.view.page.style.backgroundBlendMode = 'multiply';
+  //   // this.view.page.style.backgroundColor = 'rgb(41, 55, 71, .7)';
+  // }
 }

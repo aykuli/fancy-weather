@@ -5,31 +5,21 @@ export default class View {
   constructor() {
     this.page = document.querySelector('.page-wrap');
 
+    // Block 1: control elements and input form
     this.renderControlElements();
+
     // Block 2: Showing current weather
     this.container = this.createElement('div', 'container', this.page);
-
     this.weather = this.createElement('div', 'weather', this.container);
 
+    // Block 3: Weather data
     this.renderPlace();
     this.renderDate();
     this.renderCurrentWeather();
     this.renderForecastWeather();
 
-    this.mapWrap = this.createElement('div', 'map__wrap', this.container);
-
-    this.map = this.createElement('div', '', this.mapWrap);
-    this.map.setAttribute('id', 'map');
-    this.map.setAttribute('style', 'width: 380px; height: 380px');
-
-    this.coors = this.createElement('div', 'map__coors', this.mapWrap);
-    this.latitude = this.createElement('p', 'map__coors--latitude', this.coors);
-    this.latitudeLabel = this.createElement('span', '', this.latitude);
-    this.latitudeValue = this.createElement('span', 'map__coors--latitude', this.latitude);
-
-    this.longitude = this.createElement('p', 'map__coors--longitude', this.coors);
-    this.longitudeLabel = this.createElement('span', '', this.longitude);
-    this.longitudeValue = this.createElement('span', 'map__coors--longitude', this.longitude);
+    // Block 4: Map and coordinates
+    this.renderMap();
 
     this.showDate();
     this.showTimeHHMM();
@@ -45,14 +35,7 @@ export default class View {
     return element;
   }
 
-  // Retrieve an element from the DOM
-  getElement(selector) {
-    const element = document.querySelector(selector);
-    return element;
-  }
-
   renderControlElements() {
-    // Block 1: control elements and input form
     this.controls = this.createElement('div', 'controls', this.page);
 
     this.controlsBtns = this.createElement('div', 'controls__btns', this.controls);
@@ -95,6 +78,7 @@ export default class View {
         this.farengheit.classList.add('controls__btn--unit-active');
         break;
       default:
+        localStorage.removeItem('weatherUnit');
         localStorage.setItem('weatherUnit', 'si');
         this.celsius.classList.add('controls__btn--unit-active');
     }
@@ -136,7 +120,7 @@ export default class View {
     this.temperatureSign = this.createElement('span', 'weather__current--sign', this.temperatureWrap);
     this.temperatureSign.innerText = '°';
 
-    this.weatherIconBig = this.createElement('i', 'weather__icon--big', this.temperatureWrap);
+    this.weatherIconBig = this.createElement('i', 'weather__icon--big', this.weather);
 
     this.weatherCurrentData = this.createElement('div', 'weather__current--list', this.weatherCurrentWrap);
     this.weatherSummary = this.createElement('p', 'weather__current--item', this.weatherCurrentData);
@@ -184,6 +168,23 @@ export default class View {
     this.after3DaysIcon = this.createElement('i', '', this.after3DaysTemperatureWrap);
   }
 
+  renderMap() {
+    this.mapWrap = this.createElement('div', 'map__wrap', this.container);
+
+    this.map = this.createElement('div', '', this.mapWrap);
+    this.map.setAttribute('id', 'map');
+    this.map.setAttribute('style', 'width: 380px; height: 380px');
+
+    this.coors = this.createElement('div', 'map__coors', this.mapWrap);
+    this.latitude = this.createElement('p', 'map__coors--latitude', this.coors);
+    this.latitudeLabel = this.createElement('span', '', this.latitude);
+    this.latitudeValue = this.createElement('span', 'map__coors--latitude', this.latitude);
+
+    this.longitude = this.createElement('p', 'map__coors--longitude', this.coors);
+    this.longitudeLabel = this.createElement('span', '', this.longitude);
+    this.longitudeValue = this.createElement('span', 'map__coors--longitude', this.longitude);
+  }
+
   showDate() {
     let time = new Date();
     const lang = localStorage.getItem('weatherLang');
@@ -221,7 +222,7 @@ export default class View {
   async showCity(city, country) {
     console.log('show text of City and Country');
 
-    this.city.innerText = city;
+    this.city.innerText = `${city}, `;
     this.country.innerText = country;
 
     localStorage.removeItem('weatherCity');
@@ -230,25 +231,15 @@ export default class View {
     localStorage.setItem('weatherCountry', country);
   }
 
-  async showCoordinates(coors) {
-    this.latitudeValue.innerText = coors.lat;
-    this.longitudeValue.innerText = coors.lng;
+  showCoordinates(lat, lng) {
+    const latMin = Math.abs((lat.toFixed(0) - lat) * 60).toFixed(0);
+    const lngMin = Math.abs((lng.toFixed(0) - lng) * 60).toFixed(0);
+    this.latitudeValue.innerText = `${lat.toFixed(0)}° ${latMin}\'`;
+    this.longitudeValue.innerText = `${lng.toFixed(0)}° ${lngMin}\'`;
   }
 
   showWeatherData(data) {
-    const weatherIcons = new Map([
-      ['clear-day', 'wi-day-sunny'],
-      ['clear-night', 'wi-night-clear'],
-      ['rain', 'wi-rain'],
-      ['snow', 'wi-snow'],
-      ['sleet', 'sleet'],
-      ['wind', 'wi-windy'],
-      ['fog', 'wi-fog'],
-      ['cloudy', 'wi-cloudy'],
-      ['partly-cloudy-day', 'wi-day-cloudy'],
-      ['partly-cloudy-night', 'wi-night-alt-cloudy'],
-    ]);
-
+    if (data === undefined) alert("Weather data hasn't been loaded");
     this.temperature.innerText = data.currently.temperature.toFixed(0);
     this.weatherIconBig.className = `weather__icon--big wi ${weatherIcons.get(data.currently.icon)}`;
 

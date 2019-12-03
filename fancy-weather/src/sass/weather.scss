@@ -1,8 +1,9 @@
 .weather {
+    position: relative;
+
     width: 600px;
     margin-bottom: 40px;
 
-    outline: 1px solid white;
     &__place {
         font-size: 44px;
         line-height: 54px;
@@ -24,6 +25,7 @@
         position: relative;
 
         display: flex;
+        justify-content: center;
         align-items: flex-start;
         width: 380px;
 
@@ -35,8 +37,6 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 30px;
-
-            outline: 1px dotted green;;
         }
 
         &--sign {
@@ -68,25 +68,27 @@
         &--day {
             margin-bottom: 15px;
 
-            font-size: 22px;
+            font-size: 18px;
             line-height: 24px;
         }
+
         &--temperature {
-            font-size: 80px;
+            font-size: 50px;
             line-height: 80px;
         }
+
         &--item {
             width: 300px;
         }
     }
 
-    &__icon{
+    &__icon {
         &--big {
             position: absolute;
-            top: -35px;
-            right: -30px;
+            top: 115px;
+            right: 100px;
 
-            font-size: 100px;
+            font-size: 80px;
             opacity: 0.8;
         }
         &--small {
@@ -107,13 +109,17 @@
         }
 
         &__current {
-            &--sign {
-                font-size: 50px;
-                line-height: 50px;
-            }
-
             &--list {
                 margin-bottom: 25px;
+            }
+        }
+
+        &__icon {
+            &--big {
+                top: 80px;
+                right: 160px;
+
+                font-size: 60px;
             }
         }
     }
@@ -154,8 +160,10 @@
             }
         }
 
-        &__icon--big {
-            right: 0;
+        &__icon {
+            &--big {
+                right: 0;
+            }
         }
     }
 }
