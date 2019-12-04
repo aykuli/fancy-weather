@@ -1,7 +1,7 @@
 {
-  "name": "aaaaaa",
-  "version": "2.0.0",
-  "description": "",
+  "name": "fancy-weather",
+  "version": "1.0.0",
+  "description": "application shows weather data of searched and current place",
   "main": "./src/scripts/index.js",
   "scripts": {
     "build": "node_modules/.bin/webpack --progress",
@@ -47,6 +47,7 @@
     "@babel/helper-plugin-utils": "^7.0.0",
     "babel-loader": "^8.0.6",
     "fibers": "^4.0.2",
+    "moment-timezone": "^0.5.27",
     "sass": "^1.23.3"
   }
 }

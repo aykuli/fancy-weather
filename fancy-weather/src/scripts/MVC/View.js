@@ -1,5 +1,6 @@
-import { weekDayArr, monthArr, lang, controlsLocale, weatherIcons } from './consts.js';
+import { weekDayArr, monthArr, lang, controlsLocale, weatherIcons } from '../modules/consts.js';
 import 'weather-icons/css/weather-icons.css';
+import { celsiusToFarengeitAndReverse, timeThere } from '../modules/math';
 
 export default class View {
   constructor() {
@@ -101,7 +102,8 @@ export default class View {
     this.dateDay = this.createElement('span', 'weather__date--item', this.date);
     this.dateDD = this.createElement('span', 'weather__date--item', this.date);
     this.dateMM = this.createElement('span', 'weather__date--item', this.date);
-    this.dateHHMM = this.createElement('span', 'weather__date--hhmm', this.date);
+    this.dateHH = this.createElement('span', 'weather__date--hh', this.date);
+    this.dateMM = this.createElement('span', 'weather__date--mm', this.date);
   }
 
   renderPlace() {
@@ -204,15 +206,18 @@ export default class View {
     this.longitudeLabel.innerText = controlsLocale[lang][3];
   }
 
-  showTimeHHMM = () => {
+  showTimeHHMM = hour => {
+    if (hour) {
+    } else {
+    }
     let tm = new Date();
-    var h = tm.getHours();
-    var m = tm.getMinutes();
-    var s = tm.getSeconds();
+    let h = tm.getHours();
+    let m = tm.getMinutes();
+    let s = tm.getSeconds();
     m = this.checkTime(m);
     s = this.checkTime(s);
 
-    this.dateHHMM.innerHTML = h + ':' + m + ':' + s;
+    this.dateMM.innerHTML = ':' + m + ':' + s;
   };
 
   checkTime(i) {
@@ -222,7 +227,9 @@ export default class View {
   async showCity(city, country) {
     console.log('show text of City and Country');
 
-    this.city.innerText = `${city}, `;
+    if (city !== '') {
+      this.city.innerText = `${city}, `;
+    } else this.city.innerText = '';
     this.country.innerText = country;
 
     localStorage.removeItem('weatherCity');
@@ -240,6 +247,7 @@ export default class View {
 
   showWeatherData(data) {
     if (data === undefined) alert("Weather data hasn't been loaded");
+
     this.temperature.innerText = data.currently.temperature.toFixed(0);
     this.weatherIconBig.className = `weather__icon--big wi ${weatherIcons.get(data.currently.icon)}`;
 
@@ -256,7 +264,6 @@ export default class View {
       (data.daily.data[2].temperatureMax + data.daily.data[2].temperatureMax) /
       2
     ).toFixed(0);
-
     this.after3DaysTemperature.innerText = (
       (data.daily.data[2].temperatureMax + data.daily.data[2].temperatureMax) /
       2
@@ -279,5 +286,51 @@ export default class View {
     this.weatherWindLabel.innerText = controlsLocale[lang][5];
     this.weatherWindSign.innerText = controlsLocale[lang][6];
     this.weatherHumidityLabel.innerText = controlsLocale[lang][7];
+  }
+
+  watchUnitChanging() {
+    this.units.addEventListener('click', e => {
+      console.log('кликаем на смену фарегейта');
+      const active = document.querySelector('.controls__btn--unit-active');
+      localStorage.removeItem('weatherUnit');
+
+      if (e.target !== active) {
+        active.classList.remove('controls__btn--unit-active');
+        switch (e.target) {
+          case this.farengheit:
+            this.farengheit.classList.add('controls__btn--unit-active');
+
+            const celsius = Number(this.temperature.innerText);
+            const celsiusTomorrow = Number(this.tomorrowTemperature.innerText);
+            const celsiusAfter2Days = Number(this.after2DaysTemperature.innerText);
+            const celsiusAfter3Days = Number(this.after3DaysTemperature.innerText);
+
+            this.temperature.innerText = celsiusToFarengeitAndReverse(celsius);
+            this.tomorrowTemperature.innerText = celsiusToFarengeitAndReverse(celsiusTomorrow);
+            this.after2DaysTemperature.innerText = celsiusToFarengeitAndReverse(celsiusAfter2Days);
+            this.after3DaysTemperature.innerText = celsiusToFarengeitAndReverse(celsiusAfter3Days);
+
+            localStorage.setItem('weatherUnit', 'us');
+            break;
+          case this.celsius:
+            this.celsius.classList.add('controls__btn--unit-active');
+
+            const farengheit = Number(this.temperature.innerText);
+            const farengheitTomorrow = Number(this.tomorrowTemperature.innerText);
+            const farengheitAfter2Days = Number(this.after2DaysTemperature.innerText);
+            const farengheitAfter3Days = Number(this.after3DaysTemperature.innerText);
+
+            this.temperature.innerText = celsiusToFarengeitAndReverse(farengheit, false);
+            this.tomorrowTemperature.innerText = celsiusToFarengeitAndReverse(farengheitTomorrow, false);
+            this.after2DaysTemperature.innerText = celsiusToFarengeitAndReverse(farengheitAfter2Days, false);
+            this.after3DaysTemperature.innerText = celsiusToFarengeitAndReverse(farengheitAfter3Days, false);
+
+            localStorage.setItem('weatherUnit', 'si');
+            break;
+          default:
+            alert('Something wrong with units. Reload page');
+        }
+      }
+    });
   }
 }

@@ -1,10 +1,8 @@
-import { darkSkyKey, openCageDataKey, mapboxKey, unsplasKey } from './apiKeys.js';
+import { darkSkyKey, openCageDataKey, mapboxKey, unsplasKey } from '../modules/apiKeys.js';
 import mapboxgl from 'mapbox-gl';
-import { randomInt } from './math.js';
+import { randomInt } from '../modules/math.js';
 
 export default class Model {
-  constructor() {}
-
   async getWeatherData(lat, lng) {
     const apiKey = darkSkyKey;
     const lang = localStorage.getItem('weatherLang');
@@ -50,13 +48,13 @@ export default class Model {
 
     try {
       var map = new mapboxgl.Map({
-        container: 'map', // container id
+        container: 'map', // container id in html
         style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
-        center: [lng, lat], // starting position [lng, lat]
+        center: [lng, lat],
         zoom: 9, // starting zoom
       });
     } catch (err) {
-      alert("Map hasn't been loaded. Check connection");
+      alert('The map was not loaded. Check connection');
     }
   }
 
@@ -67,13 +65,11 @@ export default class Model {
 
     console.log('args: ', args);
     if (args === []) {
-      console.log('пустой args');
       query = localStorage.getItem('weatherBgQuery');
     } else {
       for (let arg of args) {
-        query += arg + '%2C';
+        query += arg + '-';
       }
-      console.log('query: ', query);
       localStorage.removeItem('weatherBgQuery');
       localStorage.setItem('weatherBgQuery', query);
     }
@@ -83,24 +79,18 @@ export default class Model {
     try {
       const response = await fetch(url);
       const json = await response.json();
-      console.log('json: ', json);
 
       const imgUrl = () => {
-        console.log('ширина окна клиента', max);
         const num = randomInt(0, json.results.length);
         if (max < 600) {
-          console.log('размер экрана меньше 400');
           return json.results[num].urls.small;
         } else {
-          console.log('размер экрана больше 400');
-          console.log(num);
           return json.results[num].urls.regular;
         }
       };
 
       localStorage.removeItem('weatherBgImg');
       localStorage.setItem('weatherBgImg', imgUrl());
-      console.log('localStorage.getItem(weatherBgImg): ', localStorage.getItem('weatherBgImg'));
       return imgUrl();
     } catch (err) {
       return localStorage.getItem('weatherBgImg');
