@@ -37,6 +37,12 @@ export default class Controller {
   async success(pos) {
     const [lat, lng] = [pos.coords.latitude, pos.coords.longitude];
 
+    // save current position in storage
+    localStorage.removeItem('weatherLat');
+    localStorage.setItem('weatherLat', lat);
+    localStorage.removeItem('weatherLng');
+    localStorage.setItem('weatherLng', lng);
+
     localStorage.removeItem('weatherCurrentLng');
     localStorage.setItem('weatherCurrentLng', lng);
 
@@ -49,7 +55,6 @@ export default class Controller {
     let [city, country] = data;
     this.view.showCity(city, country);
     const weatherData = await this.model.getWeatherData(lat, lng);
-    console.log('weatherData=', weatherData);
     this.view.showWeatherData(weatherData);
 
     this.view.dateHH.innerText = timeThere(weatherData.timezone);
@@ -64,17 +69,24 @@ export default class Controller {
   watchLang() {
     this.view.controlsLang.addEventListener('change', () => {
       const lang = this.view.controlsLang.value;
+
       localStorage.removeItem('weatherLang');
       localStorage.setItem('weatherLang', lang);
 
       const lat = localStorage.getItem('weatherLat');
       const lng = localStorage.getItem('weatherLng');
 
-      const [city, country] = this.getPlaceByCoors(lat, lng, lang);
+      const unit = localStorage.getItem('weatherUnit');
+      this.model.getWeatherData(lat, lng, unit).then(res => {
+        this.view.weatherSummary.innerText = res.currently.summary;
+      });
 
-      this.view.showCity(city, country);
-      this.view.showDate();
-      this.view.showWeatherUnits(lang);
+      this.getPlaceByCoors(lat, lng, lang).then(res => {
+        const [city, country] = res;
+        this.view.showCity(city, country);
+        this.view.showDate();
+        this.view.showWeatherUnits(lang);
+      });
     });
   }
 
@@ -83,13 +95,17 @@ export default class Controller {
   }
 
   async inputSearchResult(e) {
-    console.log('\ninputSearchResult');
     e.preventDefault();
     const settlement = this.view.cityInput.value;
     let lang = localStorage.getItem('weatherLang');
     let data = await this.model.forwardGeocoding(settlement, lang);
     console.log(data);
     let city;
+
+    if (data.results.length === 0) {
+      alert('Type correct value in search input');
+      return;
+    }
 
     if (data.results[0].components.city) {
       city = data.results[0].components.city;
@@ -114,7 +130,6 @@ export default class Controller {
 
     const unit = localStorage.getItem('weatherUnit');
     const weatherData = await this.model.getWeatherData(coors.lat, coors.lng, unit);
-    console.log('\nweatherData of input', weatherData.timezone);
     this.view.showWeatherData(weatherData);
 
     this.view.dateHH.innerText = timeThere(weatherData.timezone);
@@ -124,9 +139,8 @@ export default class Controller {
 
   async getPlaceByCoors(lat, lng, lang = 'en') {
     const data = await this.model.reverseGeocoding(lat, lng, lang);
-    console.log(data);
-    let city;
 
+    let city;
     if (data.results[0].components.city) {
       city = data.results[0].components.city;
     } else if (data.results[0].components.village) {
@@ -137,7 +151,7 @@ export default class Controller {
     if (city === undefined) city = '';
     const country = data.results[0].components.country;
     this.continent = data.results[0].components.continent;
-
+    console.log([city, country]);
     return [city, country];
   }
 
@@ -179,14 +193,4 @@ export default class Controller {
     // data = await this.model.unsplashForBG(country, city, season(), dayTime(), icon);
     // this.view.page.style.backgroundImage = `url(${data})`;
   }
-
-  // async getBackground() {
-  //   console.log('getBackground works');
-  //   const data = await this.model.unsplashForBg();
-  //   console.log('data =', data);
-
-  //   // this.view.page.style.backgroundImage = `url(${data})`;
-  //   // this.view.page.style.backgroundBlendMode = 'multiply';
-  //   // this.view.page.style.backgroundColor = 'rgb(41, 55, 71, .7)';
-  // }
 }
