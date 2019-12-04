@@ -14,7 +14,7 @@
     font-weight: normal;
     color: #fff;
 
-    background-color: rgba(41, 55, 71, 0.7);
+    background-color: rgba(32, 109, 197, 0.7);
     background-repeat: no-repeat;
     background-position: 0 0;
     background-size: cover;
@@ -42,8 +42,24 @@
     align-items: flex-end;
 }
 
+.popup {
+    position: fixed;
+    top: 100px;
+    left: 25%;
+    transform: translate3d(50%, 50%, 50%);
+    
+    
+    padding: 15px;
+
+    font-size: 16px;
+color: #fff;
+
+    background-color: rgba(32, 109, 197, 0.7);
+}
+
 @media(max-width: 1200px) {
     .page-wrap {
+        margin: 0;
         padding: 40px;
     }
 
@@ -53,7 +69,7 @@
     }
 }
 
-@media(max-width: 700px) {
+@media(max-width: 400px) {
     .page-wrap {
         padding: 40px 10px;
     }

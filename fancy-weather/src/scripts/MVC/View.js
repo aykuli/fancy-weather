@@ -101,9 +101,8 @@ export default class View {
     this.date = this.createElement('p', 'weather__date', this.weather);
     this.dateDay = this.createElement('span', 'weather__date--item', this.date);
     this.dateDD = this.createElement('span', 'weather__date--item', this.date);
-    this.dateMM = this.createElement('span', 'weather__date--item', this.date);
-    this.dateHH = this.createElement('span', 'weather__date--hh', this.date);
-    this.dateMM = this.createElement('span', 'weather__date--mm', this.date);
+    this.dateHH = this.createElement('span', '', this.date);
+    this.dateMM = this.createElement('span', '', this.date);
   }
 
   renderPlace() {
@@ -175,7 +174,7 @@ export default class View {
 
     this.map = this.createElement('div', '', this.mapWrap);
     this.map.setAttribute('id', 'map');
-    this.map.setAttribute('style', 'width: 380px; height: 380px');
+    this.map.setAttribute('style', 'width: 320px; height: 320px');
 
     this.coors = this.createElement('div', 'map__coors', this.mapWrap);
     this.latitude = this.createElement('p', 'map__coors--latitude', this.coors);

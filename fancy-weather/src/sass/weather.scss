@@ -10,6 +10,7 @@
     }
 
     &__date {
+        margin-top: 15px;
         margin-bottom: 50px;
 
         font-size: 24px;
@@ -125,12 +126,12 @@
     }
 }
 
-@media(max-width: 600px) {
+@media(max-width: 650px) {
     .weather {
         width: 100%;
 
         &__current {
-            margin-bottom: 15px;
+            margin-bottom: 25px;
 
             font-size: 150px;
             line-height: 150px;
@@ -139,12 +140,19 @@
                 display: flex;
                 justify-content: flex-start;
                 flex-wrap: wrap;
+                padding: 10px 10px 0;
+
+                background-color: rgba(114, 170, 235, 0.5);
+                border-radius: 15px;
             }
         }
 
         &__forecast {
-            display: flex;
-            flex-wrap: wrap;
+            display: block;
+            padding: 15px 0;
+
+            background-color: rgba(114, 170, 235, 0.5);
+            border-radius: 15px;
 
             &--temperature {
                 font-size: 80px;
@@ -156,7 +164,10 @@
 
             &--item {
                 width: 100%;
-                margin-bottom: 25px;
+                margin: 0 auto 25px;
+                // margin-bottom: 25px;
+
+                font-size: 24px;
             }
         }
 
