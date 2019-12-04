@@ -1,4 +1,4 @@
-var moment = require('moment-timezone');
+const moment = require('moment-timezone');
 
 export function randomInt(min, max) {
   // получить случайное число от (min-0.5) до (max+0.5)
@@ -16,4 +16,11 @@ export function timeThere(timezone) {
     .format();
   const hour = timeThere.slice(11, 13);
   return hour;
+}
+
+export function createPopup(msg) {
+  const popup = document.querySelector('.popup');
+  popup.classList.remove('visually-hidden');
+  popup.innerText = msg;
+  setTimeout(() => popup.classList.add('visually-hidden'), 5000);
 }

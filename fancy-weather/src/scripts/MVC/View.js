@@ -1,6 +1,6 @@
 import { weekDayArr, monthArr, lang, controlsLocale, weatherIcons } from '../modules/consts.js';
 import 'weather-icons/css/weather-icons.css';
-import { celsiusToFarengeitAndReverse, timeThere } from '../modules/math';
+import { celsiusToFarengeitAndReverse, createPopup } from '../modules/functions.js';
 
 export default class View {
   constructor() {
@@ -21,6 +21,8 @@ export default class View {
 
     // Block 4: Map and coordinates
     this.renderMap();
+
+    this.renderPopup();
 
     this.showDate();
     this.showTimeHHMM();
@@ -186,6 +188,11 @@ export default class View {
     this.longitudeValue = this.createElement('span', 'map__coors--longitude', this.longitude);
   }
 
+  renderPopup() {
+    this.renderPopup = this.createElement('div', 'popup', this.page);
+    this.renderPopup.classList.add('visually-hidden');
+  }
+
   showDate() {
     let time = new Date();
     const lang = localStorage.getItem('weatherLang');
@@ -245,7 +252,7 @@ export default class View {
   }
 
   showWeatherData(data) {
-    if (data === undefined) alert("Weather data hasn't been loaded");
+    if (data === undefined) createPopup("Weather data hasn't been loaded");
 
     this.temperature.innerText = data.currently.temperature.toFixed(0);
     this.weatherIconBig.className = `weather__icon--big wi ${weatherIcons.get(data.currently.icon)}`;
@@ -327,7 +334,7 @@ export default class View {
             localStorage.setItem('weatherUnit', 'si');
             break;
           default:
-            alert('Something wrong with units. Reload page');
+            createPopup('Something wrong with units. Reload page');
         }
       }
     });

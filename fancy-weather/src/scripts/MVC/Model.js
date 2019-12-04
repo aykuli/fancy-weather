@@ -1,6 +1,6 @@
 import { darkSkyKey, openCageDataKey, mapboxKey, unsplasKey } from '../modules/apiKeys.js';
 import mapboxgl from 'mapbox-gl';
-import { randomInt } from '../modules/math.js';
+import { randomInt, createPopup } from '../modules/functions.js';
 
 export default class Model {
   async getWeatherData(lat, lng) {
@@ -15,7 +15,7 @@ export default class Model {
       const json = await response.json();
       return json;
     } catch (err) {
-      alert("Weather data hasn't been loaded. Check connection");
+      createPopup("Weather data hasn't been loaded. Check connection");
     }
   }
 
@@ -27,7 +27,7 @@ export default class Model {
       const json = await response.json();
       return json;
     } catch (err) {
-      alert("Geo data hasn't been loaded. Check your connection");
+      createPopup("Geo data hasn't been loaded. Check your connection");
     }
   }
 
@@ -39,7 +39,7 @@ export default class Model {
       const json = await response.json();
       return json;
     } catch (err) {
-      alert("This place hasn't been founded. Check your connection or maybe this place doesn't exist");
+      createPopup("This place hasn't been founded. Check your connection or maybe this place doesn't exist");
     }
   }
 
@@ -54,7 +54,7 @@ export default class Model {
         zoom: 9, // starting zoom
       });
     } catch (err) {
-      alert('The map was not loaded. Check connection');
+      createPopup('The map was not loaded. Check connection');
     }
   }
 
@@ -65,7 +65,6 @@ export default class Model {
 
     console.log('args: ', args);
     if (args.length === 0) {
-      console.log('берем данные из памяти');
       query = localStorage.getItem('weatherBgQuery');
     } else {
       for (let arg of args) {

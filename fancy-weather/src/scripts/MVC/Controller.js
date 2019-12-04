@@ -1,4 +1,4 @@
-import { celsiusToFarengeitAndReverse, timeThere } from '../modules/math';
+import { timeThere, createPopup } from '../modules/functions.js';
 
 export default class Controller {
   constructor(model, view) {
@@ -26,12 +26,12 @@ export default class Controller {
     };
 
     function error(err) {
-      alert(`ERROR(${err.code}): ${err.message}`);
+      createPopup(`ERROR(${err.code}): ${err.message}`);
     }
 
     navigator.geolocation.getCurrentPosition(this.success.bind(this), error, options);
 
-    if (!navigator.geolocation) alert('Geolocation is not supported by this browser!');
+    if (!navigator.geolocation) createPopup('Geolocation is not supported by this browser!');
   }
 
   async success(pos) {
@@ -105,7 +105,7 @@ export default class Controller {
     let city;
 
     if (data.results.length === 0) {
-      alert('Type correct value in search input');
+      createPopup('Type correct value in search input');
       return;
     }
 
