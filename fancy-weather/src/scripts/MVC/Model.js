@@ -64,7 +64,8 @@ export default class Model {
     let query = '';
 
     console.log('args: ', args);
-    if (args === []) {
+    if (args.length === 0) {
+      console.log('берем данные из памяти');
       query = localStorage.getItem('weatherBgQuery');
     } else {
       for (let arg of args) {

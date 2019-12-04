@@ -10,7 +10,7 @@ export default class Controller {
 
     this.watchInput();
     this.watchLang();
-    // this.watchReload();
+    this.watchReload();
     this.view.watchUnitChanging();
   }
 
@@ -91,7 +91,10 @@ export default class Controller {
   }
 
   watchReload() {
-    this.view.controlsBtnReload.addEventListener('click', this.init.bind(this));
+    this.view.controlsBtnReload.addEventListener('click', () => {
+      console.log('reload btn');
+      this.model.unsplashForBG().then(res => (this.view.page.style.backgroundImage = `url(${res})`));
+    });
   }
 
   async inputSearchResult(e) {
@@ -99,7 +102,6 @@ export default class Controller {
     const settlement = this.view.cityInput.value;
     let lang = localStorage.getItem('weatherLang');
     let data = await this.model.forwardGeocoding(settlement, lang);
-    console.log(data);
     let city;
 
     if (data.results.length === 0) {

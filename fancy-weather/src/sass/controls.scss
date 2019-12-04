@@ -166,3 +166,15 @@
         }
     }
 }
+
+@media(max-width: 400px) {
+    .controls {
+        &__search {
+            &--input {
+                width: 200px;
+
+                text-overflow: ellipsis;
+            }
+        }
+    }
+}
