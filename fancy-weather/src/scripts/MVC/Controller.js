@@ -57,7 +57,7 @@ export default class Controller {
     const weatherData = await this.model.getWeatherData(lat, lng);
     this.view.showWeatherData(weatherData);
 
-    this.view.dateHH.innerText = timeThere(weatherData.timezone);
+    this.view.datehh.innerText = timeThere(weatherData.timezone);
 
     this.showAppBg(lat, lng, weatherData, city, country);
   }
@@ -91,23 +91,26 @@ export default class Controller {
   }
 
   watchReload() {
-    this.view.controlsBtnReload.addEventListener('click', () => {
+    this.view.controlsBtnRefresh.addEventListener('click', () => {
       console.log('reload btn');
       this.model.unsplashForBG().then(res => (this.view.page.style.backgroundImage = `url(${res})`));
+      this.view.controlsBtnRefresh.children[0].classList.add('spin-animation');
+      setTimeout(() => this.view.controlsBtnRefresh.children[0].classList.remove('spin-animation'), 500);
     });
   }
 
   async inputSearchResult(e) {
     e.preventDefault();
     const settlement = this.view.cityInput.value;
-    let lang = localStorage.getItem('weatherLang');
-    let data = await this.model.forwardGeocoding(settlement, lang);
-    let city;
 
-    if (data.results.length === 0) {
+    if (settlement === '') {
       createPopup('Type correct value in search input');
       return;
     }
+
+    let lang = localStorage.getItem('weatherLang');
+    let data = await this.model.forwardGeocoding(settlement, lang);
+    let city;
 
     if (data.results[0].components.city) {
       city = data.results[0].components.city;
@@ -134,7 +137,7 @@ export default class Controller {
     const weatherData = await this.model.getWeatherData(coors.lat, coors.lng, unit);
     this.view.showWeatherData(weatherData);
 
-    this.view.dateHH.innerText = timeThere(weatherData.timezone);
+    this.view.datehh.innerText = timeThere(weatherData.timezone);
 
     this.showAppBg(coors.lat, coors.lng, weatherData, city, country);
   }
@@ -181,18 +184,12 @@ export default class Controller {
       };
     }
 
-    const time = this.view.dateHH.textContent;
-    const dayTime = () => {
-      if (time > 6 && time < 20) {
-        return 'day';
-      } else {
-        return 'night';
-      }
-    };
+    const time = this.view.datehh.textContent;
+    const dayTime = time > 6 && time < 22 ? 'day' : 'night';
 
     const icon = weatherData.currently.icon;
 
-    // data = await this.model.unsplashForBG(country, city, season(), dayTime(), icon);
-    // this.view.page.style.backgroundImage = `url(${data})`;
+    data = await this.model.unsplashForBG(country, city, season(), dayTime, icon);
+    this.view.page.style.backgroundImage = `url(${data})`;
   }
 }

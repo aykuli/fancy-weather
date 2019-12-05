@@ -1,11 +1,11 @@
 import { weekDayArr, monthArr, lang, controlsLocale, weatherIcons } from '../modules/consts.js';
-import 'weather-icons/css/weather-icons.css';
 import { celsiusToFarengeitAndReverse, createPopup } from '../modules/functions.js';
+import 'weather-icons/css/weather-icons.css';
 
 export default class View {
   constructor() {
-    this.page = document.querySelector('.page-wrap');
-
+    // this.page = document.querySelector('.page-wrap');
+    this.page = this.createElement('div', 'page-wrap', document.body);
     // Block 1: control elements and input form
     this.renderControlElements();
 
@@ -31,9 +31,9 @@ export default class View {
   }
 
   // Create an element with an optional CSS class
-  createElement(tag, className, whereAppend) {
+  createElement(tag, classes, whereAppend) {
     const element = document.createElement(tag);
-    if (className) element.classList.add(className);
+    if (classes) element.className = classes;
     whereAppend.append(element);
     return element;
   }
@@ -43,10 +43,10 @@ export default class View {
 
     this.controlsBtns = this.createElement('div', 'controls__btns', this.controls);
 
-    this.controlsBtnReload = this.createElement('button', 'controls__btn', this.controlsBtns);
-    this.controlsBtnReload.classList.add('controls__btn--refresh');
-    this.controlsLang = this.createElement('select', 'controls__btn', this.controlsBtns);
-    this.controlsLang.classList.add('controls__btn--lang');
+    this.controlsBtnRefresh = this.createElement('button', 'controls__btn controls__btn--refresh', this.controlsBtns);
+    this.controlsBtnRefresh.innerHTML = '<i class="fa fa-refresh" aria-hidden="true"></i>';
+    // this.refreshIcon = this.createElement('i', 'fa fa-refresh', this.controlsBtnRefresh);
+    this.controlsLang = this.createElement('select', 'controls__btn controls__btn--lang', this.controlsBtns);
 
     for (let i = 0; i < 3; i += 1) {
       const option = new Option(lang[i], lang[i], false, false);
@@ -66,11 +66,9 @@ export default class View {
     }
 
     this.units = this.createElement('div', 'controls__unit', this.controlsBtns);
-    this.farengheit = this.createElement('button', 'controls__btn', this.units);
-    this.farengheit.classList.add('controls__btn--farengeit');
+    this.farengheit = this.createElement('button', 'controls__btn controls__btn--farengeit', this.units);
     this.farengheit.innerText = '°F';
-    this.celsius = this.createElement('button', 'controls__btn', this.units);
-    this.celsius.classList.add('controls__btn--celsius');
+    this.celsius = this.createElement('button', 'controls__btn controls__btn--celsius', this.units);
     this.celsius.innerText = '°С';
 
     switch (localStorage.getItem('weatherUnit')) {
@@ -102,9 +100,10 @@ export default class View {
   renderDate() {
     this.date = this.createElement('p', 'weather__date', this.weather);
     this.dateDay = this.createElement('span', 'weather__date--item', this.date);
+    this.dateMM = this.createElement('span', 'weather__date--item', this.date);
     this.dateDD = this.createElement('span', 'weather__date--item', this.date);
-    this.dateHH = this.createElement('span', '', this.date);
-    this.dateMM = this.createElement('span', '', this.date);
+    this.datehh = this.createElement('span', '', this.date);
+    this.datemm = this.createElement('span', '', this.date);
   }
 
   renderPlace() {
@@ -123,7 +122,7 @@ export default class View {
     this.temperatureSign = this.createElement('span', 'weather__current--sign', this.temperatureWrap);
     this.temperatureSign.innerText = '°';
 
-    this.weatherIconBig = this.createElement('i', 'weather__icon--big', this.weather);
+    this.weatherIconBig = this.createElement('i', 'weather__icon--big', this.weatherCurrentWrap);
 
     this.weatherCurrentData = this.createElement('div', 'weather__current--list', this.weatherCurrentWrap);
     this.weatherSummary = this.createElement('p', 'weather__current--item', this.weatherCurrentData);
@@ -189,8 +188,7 @@ export default class View {
   }
 
   renderPopup() {
-    this.renderPopup = this.createElement('div', 'popup', this.page);
-    this.renderPopup.classList.add('visually-hidden');
+    this.renderPopup = this.createElement('div', 'popup visually-hidden', this.page);
   }
 
   showDate() {
@@ -223,7 +221,7 @@ export default class View {
     m = this.checkTime(m);
     s = this.checkTime(s);
 
-    this.dateMM.innerHTML = ':' + m + ':' + s;
+    this.datemm.innerHTML = ':' + m + ':' + s;
   };
 
   checkTime(i) {
@@ -338,5 +336,9 @@ export default class View {
         }
       }
     });
+  }
+
+  animatingBtns() {
+    document.body.insertAdjacentHTML('beforeend', '<p>Привет</p>');
   }
 }

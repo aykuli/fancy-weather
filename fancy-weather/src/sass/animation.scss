@@ -1,0 +1,21 @@
+// modified from https://jsfiddle.net/dimlucas/5f8vyx2x/
+@keyframes spin {
+    to { transform: rotate(360deg) }
+}
+
+.controls__btn--refresh {
+    i {
+        font-size: 14px;
+        color: #fff;
+    }
+
+    i.spin-animation {
+        animation-name: spin;
+        animation-duration: 0.5s;
+        animation-timing-function: ease-in;
+    }
+}
+
+
+
+

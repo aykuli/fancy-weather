@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Ubuntu:400,500,700&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -48,12 +50,17 @@
     top: 100px;
     transform: translateX(-50%);    
     
+    width: 80%;
+    margin: auto;
     padding: 15px;
 
     font-size: 24px;
-    color: #fff;
+    line-height: 30px;
+    color: #3c763d;
+    text-align: center;
 
-    background-color: rgba(122, 219, 130, 0.7);
+    background-color: rgba(223, 240, 216, .8);    
+    border: 1px solid #d6e9c6;
     border-radius: 5px;
 }
 

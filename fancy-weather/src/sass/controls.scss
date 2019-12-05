@@ -26,19 +26,20 @@
         cursor: pointer;
 
         &:hover, &:focus {
-            background-color: rgba(241, 103, 23, 0.2);
+            background-color: rgba(241, 103, 23, 0.5);
             outline: none;
         }
 
         &:active {
-            background-color: rgba(241, 103, 23, 0.4);
+            background-color: rgba(241, 103, 23, 0.7);
         }
 
         &--refresh {
-            background-image:   url(../assets/img/icon_refresh.svg),
-                                url(../assets/img/icon-bg-for-refresh.svg);
-            background-position: 50% 50%, 0 0;
-            background-repeat: no-repeat, no-repeat;
+            position: relative;
+            
+            background-image: url(../assets/img/icon-bg-for-refresh.svg);
+            background-position: 0 0;
+            background-repeat: no-repeat;
         }
 
         &--lang {
@@ -139,29 +140,61 @@
         }
 
         &--btn {
+            position: relative;
+
             width: 100px;
             height: 44px;
-            padding: 0 20px;
             
             font-family: 'Ubuntu', sans-serif;
             font-size: 14px;
-            line-height: 16px;
+            line-height: 44px;
             font-weight: 500;
             text-transform: uppercase;
             color: #fff;
             
             background: rgba(174, 181, 185, 0.5);
-            border: none;
+            border: 1px solid #7591AF;
             border-top-right-radius: 5px;
             border-bottom-right-radius: 5px;
-            
-            &:hover, &:focus {
-                background-color: rgba(241, 103, 23, 0.2);
+
+            transition: all 0.3s ease-in-out;
+            overflow:hidden;
+
+            &:before {
+                transition: all 0.1s linear;  
+                content: attr(value);
+                display: block; 
+            }
+
+            &:after {
+                content: "";
+
+                display: block;
+                height: 44px;
+                margin-top: 0px;
+                
+                background-color: white;
+
+                transition: all 0.3s ease-in-out;  
+            }
+
+            &:hover {
+                color:rgba(76, 82, 85, 0.8);
+
+                &:after{
+                    margin-top:-44px;
+                }
+            }
+
+            &:focus {
+                color:#fff;
+
+                background-color: rgba(241, 103, 23, 0.5);
                 outline: none;
             }
     
             &:active {
-                background-color: rgba(241, 103, 23, 0.4);
+                background-color: rgba(241, 103, 23, 0.8);
             }
         }
     }

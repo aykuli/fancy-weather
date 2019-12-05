@@ -22,5 +22,5 @@ export function createPopup(msg) {
   const popup = document.querySelector('.popup');
   popup.classList.remove('visually-hidden');
   popup.innerText = msg;
-  setTimeout(() => popup.classList.add('visually-hidden'), 5000);
+  setTimeout(() => popup.classList.add('visually-hidden'), 2500);
 }

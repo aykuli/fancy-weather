@@ -46,6 +46,11 @@ export default class Model {
   async mapbox(lat, lng) {
     mapboxgl.accessToken = mapboxKey;
 
+    if (typeof lat !== 'number' || typeof lng !== 'number') {
+      createPopup('The coordinates were not determined. Refresh page');
+      return;
+    }
+
     try {
       var map = new mapboxgl.Map({
         container: 'map', // container id in html
@@ -73,7 +78,7 @@ export default class Model {
       localStorage.removeItem('weatherBgQuery');
       localStorage.setItem('weatherBgQuery', query);
     }
-
+    console.log(query);
     const url = `https://api.unsplash.com/search/photos?page=1&per_page=100&orientation=${orientation}&query=${query}&client_id=${unsplasKey}`;
 
     try {
