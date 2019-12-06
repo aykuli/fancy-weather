@@ -7,7 +7,7 @@
     "build": "node_modules/.bin/webpack --progress",
     "dev": "node_modules/.bin/webpack-dev-server --open",
     "lint": "node_modules/.bin/eslint src",
-    "lintF": "node_modules/.bin/eslint --fix src"
+    "test": "jest"
   },
   "author": "Aynur Shauerman",
   "license": "ISC",
@@ -16,10 +16,13 @@
     "@babel/plugin-transform-runtime": "^7.7.4",
     "@babel/preset-env": "^7.7.1",
     "@babel/preset-react": "^7.7.0",
+    "@babel/register": "^7.7.4",
     "@babel/runtime": "^7.7.4",
     "@fortawesome/fontawesome-free": "^5.11.2",
     "babel-eslint": "^10.0.3",
     "browser-sync": "^2.26.7",
+    "canvas": "^2.6.0",
+    "chai": "^4.2.0",
     "css-loader": "^3.2.0",
     "eslint": "^6.6.0",
     "eslint-config-airbnb-base": "^14.0.0",
@@ -32,8 +35,11 @@
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
     "ipinfo": "^1.3.9",
+    "jest": "^24.9.0",
     "mapbox-gl": "^1.5.1",
     "mini-css-extract-plugin": "^0.8.0",
+    "mocha": "^6.2.2",
+    "mocha-jsdom": "^2.0.0",
     "node-sass": "^4.13.0",
     "prettier": "^1.19.1",
     "sass-loader": "^8.0.0",
@@ -48,6 +54,7 @@
     "@babel/helper-plugin-utils": "^7.0.0",
     "babel-loader": "^8.0.6",
     "fibers": "^4.0.2",
+    "jsdom": "^15.2.1",
     "moment-timezone": "^0.5.27",
     "sass": "^1.23.3"
   }

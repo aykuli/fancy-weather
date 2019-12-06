@@ -24,3 +24,10 @@ export function createPopup(msg) {
   popup.innerText = msg;
   setTimeout(() => popup.classList.add('visually-hidden'), 2500);
 }
+
+export function createElement(tag, classes, whereAppend) {
+  const element = document.createElement(tag);
+  if (classes) element.className = classes;
+  whereAppend.append(element);
+  return element;
+}

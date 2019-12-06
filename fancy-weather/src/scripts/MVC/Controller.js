@@ -1,4 +1,5 @@
 import { timeThere, createPopup } from '../modules/functions.js';
+import { forwardGeocoding, reverseGeocoding } from '../API/opencagedata.js';
 
 export default class Controller {
   constructor(model, view) {
@@ -109,7 +110,7 @@ export default class Controller {
     }
 
     let lang = localStorage.getItem('weatherLang');
-    let data = await this.model.forwardGeocoding(settlement, lang);
+    let data = await forwardGeocoding(settlement, lang);
     let city;
 
     if (data.results[0].components.city) {
@@ -143,7 +144,12 @@ export default class Controller {
   }
 
   async getPlaceByCoors(lat, lng, lang = 'en') {
-    const data = await this.model.reverseGeocoding(lat, lng, lang);
+    const data = await reverseGeocoding(lat, lng, lang);
+    console.log(data.results);
+    if (data.results[0] === undefined) {
+      createPopup("This place hasn't been founded. Check your connection or maybe this place doesn't exist");
+      return;
+    }
 
     let city;
     if (data.results[0].components.city) {

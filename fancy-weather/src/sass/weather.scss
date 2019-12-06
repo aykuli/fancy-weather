@@ -62,7 +62,7 @@
             line-height: 22px;
         }
         &--item {
-            margin-bottom: 5px;
+            margin-bottom: 15px;
         }
     }
 
@@ -91,8 +91,8 @@
     &__icon {
         &--big {
             position: absolute;
-            top: -40px;
-            right: 100px;
+            top: -100px;
+            right: 180px;
 
             font-size: 80px;
             opacity: 0.8;
@@ -122,7 +122,7 @@
 
         &__icon {
             &--big {
-                top: 0px;
+                top: -70px;
                 right: 160px;
 
                 font-size: 60px;
@@ -177,8 +177,12 @@
 
         &__icon {
             &--big {
-                top: 180px;
+                top: 200px;
                 right: 10px;
+
+                margin-right: 15px;
+
+                font-size: 80px;
             }
         }
     }
