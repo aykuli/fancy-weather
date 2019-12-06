@@ -3,11 +3,15 @@ import { celsiusToFarengeitAndReverse, createPopup, createElement } from '../mod
 import 'weather-icons/css/weather-icons.css';
 import { renderControlBtns } from './renderControlBtns.js';
 import { renderInput } from './renderInput.js';
+import { renderCurrentWeather, renderForecastWeather } from '../MVC/renderWeather.js';
+import { renderDate } from './renderDate.js';
+import { renderMap } from './renderMap.js';
+import { renderPlace } from './renderPlace.js';
 
 export default class View {
   constructor() {
-    // this.page = document.querySelector('.page-wrap');
     this.page = createElement('div', 'page-wrap', document.body);
+
     // Block 1: control elements and input form
     [
       this.controls,
@@ -25,114 +29,44 @@ export default class View {
     this.weather = createElement('div', 'weather', this.container);
 
     // Block 3: Weather data
-    this.renderPlace();
-    this.renderDate();
-    this.renderCurrentWeather();
-    this.renderForecastWeather();
+    [this.city, this.country] = renderPlace(this.weather);
+    [this.dateDay, this.dateMM, this.dateDD, this.datehh, this.datemm] = renderDate(this.weather);
+
+    [
+      this.temperature,
+      this.weatherIconBig,
+      this.weatherSummary,
+      this.weatherApparentLabel,
+      this.weatherApparent,
+      this.weatherWindLabel,
+      this.weatherWind,
+      this.weatherWindSign,
+      this.weatherHumidityLabel,
+      this.weatherHumidity,
+    ] = renderCurrentWeather(this.weather);
+    [
+      this.tomorrowDay,
+      this.tomorrowTemperature,
+      this.tomorrowIcon,
+      this.after2DaysDay,
+      this.after2DaysTemperature,
+      this.after2DaysIcon,
+      this.after3DaysDay,
+      this.after3DaysTemperature,
+      this.after3DaysIcon,
+    ] = renderForecastWeather(this.weather);
 
     // Block 4: Map and coordinates
-    this.renderMap();
+    [this.map, this.latitudeLabel, this.latitudeValue, this.longitudeLabel, this.longitudeValue] = renderMap(
+      this.container
+    );
 
-    this.renderPopup();
+    this.renderPopup = createElement('div', 'popup visually-hidden', this.page);
 
     this.showDate();
     this.showTimeHHMM();
     window.setInterval(this.showTimeHHMM, 1000);
     this.showWeatherUnits(localStorage.getItem('weatherLang'));
-  }
-
-  renderDate() {
-    this.date = createElement('p', 'weather__date', this.weather);
-    this.dateDay = createElement('span', 'weather__date--item', this.date);
-    this.dateMM = createElement('span', 'weather__date--item', this.date);
-    this.dateDD = createElement('span', 'weather__date--item', this.date);
-    this.datehh = createElement('span', '', this.date);
-    this.datemm = createElement('span', '', this.date);
-  }
-
-  renderPlace() {
-    this.place = createElement('p', 'weather__place', this.weather);
-    this.city = createElement('span', 'weather__place--item', this.place);
-
-    this.city.innerText = `${localStorage.getItem('weatherCity')}, `;
-    this.country = createElement('span', 'weather__place--item', this.place);
-    this.country.innerText = localStorage.getItem('weatherCountry');
-  }
-
-  renderCurrentWeather() {
-    this.weatherCurrentWrap = createElement('div', 'weather__current--wrap', this.weather);
-    this.temperatureWrap = createElement('div', 'weather__current', this.weatherCurrentWrap);
-    this.temperature = createElement('span', '', this.temperatureWrap);
-    this.temperatureSign = createElement('span', 'weather__current--sign', this.temperatureWrap);
-    this.temperatureSign.innerText = '°';
-
-    this.weatherIconBig = createElement('i', 'weather__icon--big', this.weatherCurrentWrap);
-
-    this.weatherCurrentData = createElement('div', 'weather__current--list', this.weatherCurrentWrap);
-    this.weatherSummary = createElement('p', 'weather__current--item', this.weatherCurrentData);
-
-    this.weatherApparentWrap = createElement('p', 'weather__current--item', this.weatherCurrentData);
-    this.weatherApparentLabel = createElement('span', '', this.weatherApparentWrap);
-    this.weatherApparent = createElement('span', '', this.weatherApparentWrap);
-
-    this.weatherWindWrap = createElement('p', 'weather__current--item', this.weatherCurrentData);
-    this.weatherWindLabel = createElement('span', '', this.weatherWindWrap);
-    this.weatherWind = createElement('span', '', this.weatherWindWrap);
-    this.weatherWindSign = createElement('span', '', this.weatherWindWrap);
-
-    this.weatherHumidityWrap = createElement('p', 'weather__current--item', this.weatherCurrentData);
-    this.weatherHumidityLabel = createElement('p', 'weather__current--item', this.weatherHumidityWrap);
-    this.weatherHumidity = createElement('p', 'weather__current--item', this.weatherHumidityWrap);
-  }
-
-  renderForecastWeather() {
-    this.forecast = createElement('div', 'weather__forecast', this.weather);
-
-    this.tomorrow = createElement('div', 'weather__forecast--item', this.forecast);
-    this.tomorrowDay = createElement('p', 'weather__forecast--day', this.tomorrow);
-
-    this.tomorrowTemperatureWrap = createElement('div', 'weather__forecast--temperature', this.tomorrow);
-    this.tomorrowTemperature = createElement('span', '', this.tomorrowTemperatureWrap);
-    this.tomorrowTemperatureSign = createElement('span', '', this.tomorrowTemperatureWrap);
-    this.tomorrowTemperatureSign.innerText = '°';
-    this.tomorrowIcon = createElement('i', '', this.tomorrowTemperatureWrap);
-
-    this.after2Days = createElement('div', 'weather__forecast--item', this.forecast);
-    this.after2DaysDay = createElement('p', 'weather__forecast--day', this.after2Days);
-    this.after2DaysTemperatureWrap = createElement('div', 'weather__forecast--temperature', this.after2Days);
-    this.after2DaysTemperature = createElement('span', '', this.after2DaysTemperatureWrap);
-    this.after2DaysTemperatureSign = createElement('span', '', this.after2DaysTemperatureWrap);
-    this.after2DaysTemperatureSign.innerText = '°';
-    this.after2DaysIcon = createElement('i', '', this.after2DaysTemperatureWrap);
-
-    this.after3Days = createElement('div', 'weather__forecast--item', this.forecast);
-    this.after3DaysDay = createElement('p', 'weather__forecast--day', this.after3Days);
-    this.after3DaysTemperatureWrap = createElement('p', 'weather__forecast--temperature', this.after3Days);
-    this.after3DaysTemperature = createElement('span', '', this.after3DaysTemperatureWrap);
-    this.after3DaysTemperatureSign = createElement('span', '', this.after3DaysTemperatureWrap);
-    this.after3DaysTemperatureSign.innerText = '°';
-    this.after3DaysIcon = createElement('i', '', this.after3DaysTemperatureWrap);
-  }
-
-  renderMap() {
-    this.mapWrap = createElement('div', 'map__wrap', this.container);
-
-    this.map = createElement('div', '', this.mapWrap);
-    this.map.setAttribute('id', 'map');
-    this.map.setAttribute('style', 'width: 320px; height: 320px');
-
-    this.coors = createElement('div', 'map__coors', this.mapWrap);
-    this.latitude = createElement('p', 'map__coors--latitude', this.coors);
-    this.latitudeLabel = createElement('span', '', this.latitude);
-    this.latitudeValue = createElement('span', 'map__coors--latitude', this.latitude);
-
-    this.longitude = createElement('p', 'map__coors--longitude', this.coors);
-    this.longitudeLabel = createElement('span', '', this.longitude);
-    this.longitudeValue = createElement('span', 'map__coors--longitude', this.longitude);
-  }
-
-  renderPopup() {
-    this.renderPopup = createElement('div', 'popup visually-hidden', this.page);
   }
 
   showDate() {
@@ -154,10 +88,7 @@ export default class View {
     this.longitudeLabel.innerText = controlsLocale[lang][3];
   }
 
-  showTimeHHMM = hour => {
-    if (hour) {
-    } else {
-    }
+  showTimeHHMM = () => {
     let tm = new Date();
     let h = tm.getHours();
     let m = tm.getMinutes();
@@ -238,7 +169,6 @@ export default class View {
 
   watchUnitChanging() {
     this.units.addEventListener('click', e => {
-      console.log('кликаем на смену фарегейта');
       const active = document.querySelector('.controls__btn--unit-active');
       localStorage.removeItem('weatherUnit');
 
@@ -280,9 +210,5 @@ export default class View {
         }
       }
     });
-  }
-
-  animatingBtns() {
-    document.body.insertAdjacentHTML('beforeend', '<p>Привет</p>');
   }
 }

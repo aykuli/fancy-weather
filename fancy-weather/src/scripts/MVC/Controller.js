@@ -93,7 +93,6 @@ export default class Controller {
 
   watchReload() {
     this.view.controlsBtnRefresh.addEventListener('click', () => {
-      console.log('reload btn');
       this.model.unsplashForBG().then(res => (this.view.page.style.backgroundImage = `url(${res})`));
       this.view.controlsBtnRefresh.children[0].classList.add('spin-animation');
       setTimeout(() => this.view.controlsBtnRefresh.children[0].classList.remove('spin-animation'), 500);
@@ -145,7 +144,7 @@ export default class Controller {
 
   async getPlaceByCoors(lat, lng, lang = 'en') {
     const data = await reverseGeocoding(lat, lng, lang);
-    console.log(data.results);
+
     if (data.results[0] === undefined) {
       createPopup("This place hasn't been founded. Check your connection or maybe this place doesn't exist");
       return;

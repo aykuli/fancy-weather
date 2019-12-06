@@ -19,11 +19,9 @@ async function reverseGeocoding(lat, lng, lang = 'en') {
   try {
     const response = await fetch(url);
     const json = await response.json();
-    console.log('reverseGeocoding');
     return json;
   } catch (err) {
     createPopup("This place hasn't been founded. Check your connection or maybe this place doesn't exist");
-    console.clear();
   }
 }
 
