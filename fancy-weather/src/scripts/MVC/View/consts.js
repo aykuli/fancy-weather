@@ -126,23 +126,11 @@ const weatherIcons = new Map([
   ['rain', 'rain'],
   ['snow', 'snow'],
   ['sleet', 'sleet'],
-  ['wind', 'windy'],
+  ['wind', 'wind'],
   ['fog', 'fog'],
   ['cloudy', 'cloudy'],
   ['partly-cloudy-day', 'partly-cloudy-day'],
-  ['partly-cloudy-night', 'partly-cloudy-day'],
+  ['partly-cloudy-night', 'partly-cloudy-night'],
 ]);
 
-// const weatherIcons = [
-//   ['clear-day', 'wi-day-sunny'],
-//   ['clear-night', 'wi-night-clear'],
-//   ['rain', 'wi-rain'],
-//   ['snow', 'wi-snow'],
-//   ['sleet', 'sleet'],
-//   ['wind', 'wi-windy'],
-//   ['fog', 'wi-fog'],
-//   ['cloudy', 'wi-cloudy'],
-//   ['partly-cloudy-day', 'wi-day-cloudy'],
-//   ['partly-cloudy-night', 'wi-night-alt-cloudy'],
-// ];
 export { weekDayArr, monthArr, lang, controlsLocale, weatherIcons };

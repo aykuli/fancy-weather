@@ -195,6 +195,6 @@ export default class Controller {
     const icon = weatherData.currently.icon;
 
     data = await this.model.unsplashForBG(country, city, season(), dayTime, icon);
-    this.view.page.style.backgroundImage = `url(${data})`;
+    // this.view.page.style.backgroundImage = `url(${data})`;
   }
 }

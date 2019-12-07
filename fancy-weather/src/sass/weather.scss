@@ -79,6 +79,8 @@
         }
 
         &--temperature {
+            position: relative;
+
             font-size: 50px;
             line-height: 80px;
         }
@@ -92,19 +94,50 @@
         &--big {
             position: absolute;
             top: -100px;
-            right: 180px;
+            right: 140px;
+
+            width: 150px;
+            height: 150px;
 
             font-size: 80px;
             opacity: 0.8;
+
+            background-position: 0 0;
+            background-repeat: no-repeat;
+            background-size: cover;
         }
         &--small {
+            position: absolute;
+            top: -50px;
+            right: -20px;
+
             width: 100px;
             height: 100px;
             margin-left: 10px;
-            vertical-align: top;
-
+            
             font-size: 50px;
             opacity: 0.8;
+
+            background-position: 0 0;
+            background-repeat: no-repeat;
+            background-size: cover;
+
+            &-top {
+                position: absolute;
+                top: -65px;
+                right: -20px;
+
+                width: 100px;
+                height: 100px;
+                margin-left: 10px;
+                
+                font-size: 50px;
+                opacity: 0.8;
+
+                background-position: 0 0;
+                background-repeat: no-repeat;
+                background-size: cover;
+            }
         }
     }
 }

@@ -7,7 +7,7 @@ export function renderCurrentWeather(weather) {
   const temperatureSign = createElement('span', 'weather__current--sign', temperatureWrap);
   temperatureSign.innerText = '°';
 
-  const weatherIconBig = createElement('i', 'weather__icon--big', weatherCurrentWrap);
+  const weatherIconBig = createElement('div', 'weather__icon--big', weatherCurrentWrap);
 
   const weatherCurrentData = createElement('div', 'weather__current--list', weatherCurrentWrap);
   const weatherSummary = createElement('p', 'weather__current--item', weatherCurrentData);
@@ -49,7 +49,7 @@ export function renderForecastWeather(weather) {
   const tomorrowTemperature = createElement('span', '', tomorrowTemperatureWrap);
   const tomorrowTemperatureSign = createElement('span', '', tomorrowTemperatureWrap);
   tomorrowTemperatureSign.innerText = '°';
-  const tomorrowIcon = createElement('img', '', tomorrowTemperatureWrap);
+  const tomorrowIcon = createElement('div', 'weather__icon--small', tomorrowTemperatureWrap);
 
   const after2Days = createElement('div', 'weather__forecast--item', forecast);
   const after2DaysDay = createElement('p', 'weather__forecast--day', after2Days);
@@ -57,7 +57,7 @@ export function renderForecastWeather(weather) {
   const after2DaysTemperature = createElement('span', '', after2DaysTemperatureWrap);
   const after2DaysTemperatureSign = createElement('span', '', after2DaysTemperatureWrap);
   after2DaysTemperatureSign.innerText = '°';
-  const after2DaysIcon = createElement('i', '', after2DaysTemperatureWrap);
+  const after2DaysIcon = createElement('div', 'weather__icon--small', after2DaysTemperatureWrap);
 
   const after3Days = createElement('div', 'weather__forecast--item', forecast);
   const after3DaysDay = createElement('p', 'weather__forecast--day', after3Days);
@@ -65,7 +65,7 @@ export function renderForecastWeather(weather) {
   const after3DaysTemperature = createElement('span', '', after3DaysTemperatureWrap);
   const after3DaysTemperatureSign = createElement('span', '', after3DaysTemperatureWrap);
   after3DaysTemperatureSign.innerText = '°';
-  const after3DaysIcon = createElement('i', '', after3DaysTemperatureWrap);
+  const after3DaysIcon = createElement('div', 'weather__icon--small', after3DaysTemperatureWrap);
 
   return [
     tomorrowDay,

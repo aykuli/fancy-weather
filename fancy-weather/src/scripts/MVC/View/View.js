@@ -130,8 +130,6 @@ export default class View {
     if (data === undefined) createPopup("Weather data hasn't been loaded");
 
     this.temperature.innerText = data.currently.temperature.toFixed(0);
-    // this.weatherIconBig.className = `weather__icon--big wi ${weatherIcons.get(data.currently.icon)}`;
-
     this.weatherSummary.innerText = data.currently.summary;
     this.weatherApparent.innerText = `${data.currently.apparentTemperature}°`;
     this.weatherWind.innerText = data.currently.windSpeed.toFixed(1);
@@ -150,14 +148,24 @@ export default class View {
       2
     ).toFixed(0);
 
-    // const pathToIcons = require.context('../../assets/img', true);
-    this.tomorrowIcon.className = 'weather__icon--small'; // wi ${weatherIcons.get(data.daily.data[0].icon)}`;
-    this.tomorrowIcon.setAttribute(
-      'url',
-      `${require(`../../../assets/img/${weatherIcons.get(data.daily.data[1].icon)]}.png`)}`
-    );
-    // this.after2DaysIcon.className = `weather__icon--small wi ${weatherIcons.get(data.daily.data[1].icon)}`;
-    // this.after3DaysIcon.className = `weather__icon--small wi ${weatherIcons.get(data.daily.data[2].icon)}`;
+    const getIcon = key => {
+      return weatherIcons.get(data.daily.data[key].icon);
+    };
+    const [iconTomorrow, iconAfter2Day, iconAfter3Day] = [getIcon(0), getIcon(1), getIcon(2), getIcon(3)];
+    const iconUrl = (icon, el) => {
+      if (icon === 'cloudy' || icon === 'partly-cloudy-day' || icon === 'patrly-cloudy-night') {
+        el.classList.remove('weather__icon--small');
+        el.classList.add('weather__icon--small-top');
+      }
+      return `url(${require(`../../../assets/img/${icon}.png`)})`;
+    };
+
+    const iconToday = weatherIcons.get(data.currently.icon);
+
+    this.weatherIconBig.style.backgroundImage = iconUrl(iconToday);
+    this.tomorrowIcon.style.backgroundImage = iconUrl(iconTomorrow, this.tomorrowIcon);
+    this.after2DaysIcon.style.backgroundImage = iconUrl(iconAfter2Day, this.after2DaysIcon);
+    this.after3DaysIcon.style.backgroundImage = iconUrl(iconAfter3Day, this.after3DaysIcon);
   }
 
   cleanMap() {
@@ -194,6 +202,7 @@ export default class View {
       }
     });
   }
+
   setTemperature(element) {
     element.classList.add('controls__btn--unit-active');
 
