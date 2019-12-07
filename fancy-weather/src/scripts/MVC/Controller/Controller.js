@@ -1,5 +1,5 @@
-import { timeThere, createPopup } from '../modules/functions.js';
-import { forwardGeocoding, reverseGeocoding } from '../API/opencagedata.js';
+import { timeThere, createPopup } from '../../functions/functions.js';
+import { forwardGeocoding, reverseGeocoding } from '../Model/opencagedata.js';
 
 export default class Controller {
   constructor(model, view) {

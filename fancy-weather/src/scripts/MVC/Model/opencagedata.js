@@ -1,5 +1,5 @@
-import { openCageDataKey } from '../API/apiKeys.js';
-import { createPopup } from '../modules/functions.js';
+import { openCageDataKey } from './apiKeys.js';
+import { createPopup } from '../../functions/functions.js';
 
 async function forwardGeocoding(settlement, lang = 'en') {
   const url = `https://api.opencagedata.com/geocode/v1/json?q=${settlement}&key=${openCageDataKey}&language=${lang}&pretty=1&no_annotations=1`;
@@ -21,7 +21,7 @@ async function reverseGeocoding(lat, lng, lang = 'en') {
     const json = await response.json();
     return json;
   } catch (err) {
-    createPopup("This place hasn't been founded. Check your connection or maybe this place doesn't exist");
+    // createPopup("This place hasn't been founded. Check your connection or maybe this place doesn't exist");
   }
 }
 

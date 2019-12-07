@@ -1,5 +1,5 @@
-import { darkSkyKey, mapboxKey, unsplasKey } from '../API/apiKeys.js';
-import { randomInt, createPopup } from '../modules/functions.js';
+import { darkSkyKey, mapboxKey, unsplasKey } from './apiKeys.js';
+import { randomInt, createPopup } from '../../functions/functions.js';
 import mapboxgl from 'mapbox-gl';
 
 export default class Model {

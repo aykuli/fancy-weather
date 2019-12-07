@@ -1,9 +1,9 @@
-import { weekDayArr, monthArr, controlsLocale, weatherIcons } from '../modules/consts.js';
-import { celsiusToFarengeitAndReverse, createPopup, createElement } from '../modules/functions.js';
+import { weekDayArr, monthArr, controlsLocale, weatherIcons } from './consts.js';
+import { celsiusToFarengeitAndReverse, createPopup, createElement } from '../../functions/functions.js';
 import 'weather-icons/css/weather-icons.css';
 import { renderControlBtns } from './renderControlBtns.js';
 import { renderInput } from './renderInput.js';
-import { renderCurrentWeather, renderForecastWeather } from '../MVC/renderWeather.js';
+import { renderCurrentWeather, renderForecastWeather } from './renderWeather.js';
 import { renderDate } from './renderDate.js';
 import { renderMap } from './renderMap.js';
 import { renderPlace } from './renderPlace.js';
@@ -80,10 +80,14 @@ export default class View {
     this.tomorrowDay.innerText = weekDayArr[lang][((time.getDay() + 1) % 7) + 7];
     this.after2DaysDay.innerText = weekDayArr[lang][((time.getDay() + 2) % 7) + 7];
     this.after3DaysDay.innerText = weekDayArr[lang][((time.getDay() + 3) % 7) + 7];
+  }
 
+  showInput() {
     this.cityBtn.innerText = controlsLocale[lang][0];
     this.cityInput.setAttribute('placeholder', controlsLocale[lang][1]);
+  }
 
+  showLatLng() {
     this.latitudeLabel.innerText = controlsLocale[lang][2];
     this.longitudeLabel.innerText = controlsLocale[lang][3];
   }
@@ -104,8 +108,6 @@ export default class View {
   }
 
   async showCity(city, country) {
-    console.log('show text of City and Country');
-
     if (city !== '') {
       this.city.innerText = `${city}, `;
     } else this.city.innerText = '';
@@ -128,7 +130,7 @@ export default class View {
     if (data === undefined) createPopup("Weather data hasn't been loaded");
 
     this.temperature.innerText = data.currently.temperature.toFixed(0);
-    this.weatherIconBig.className = `weather__icon--big wi ${weatherIcons.get(data.currently.icon)}`;
+    // this.weatherIconBig.className = `weather__icon--big wi ${weatherIcons.get(data.currently.icon)}`;
 
     this.weatherSummary.innerText = data.currently.summary;
     this.weatherApparent.innerText = `${data.currently.apparentTemperature}°`;
@@ -148,15 +150,19 @@ export default class View {
       2
     ).toFixed(0);
 
-    this.tomorrowIcon.className = `weather__icon--small wi ${weatherIcons.get(data.daily.data[0].icon)}`;
-    this.after2DaysIcon.className = `weather__icon--small wi ${weatherIcons.get(data.daily.data[1].icon)}`;
-    this.after3DaysIcon.className = `weather__icon--small wi ${weatherIcons.get(data.daily.data[2].icon)}`;
+    // const pathToIcons = require.context('../../assets/img', true);
+    this.tomorrowIcon.className = 'weather__icon--small'; // wi ${weatherIcons.get(data.daily.data[0].icon)}`;
+    this.tomorrowIcon.setAttribute(
+      'url',
+      `${require(`../../../assets/img/${weatherIcons.get(data.daily.data[1].icon)]}.png`)}`
+    );
+    // this.after2DaysIcon.className = `weather__icon--small wi ${weatherIcons.get(data.daily.data[1].icon)}`;
+    // this.after3DaysIcon.className = `weather__icon--small wi ${weatherIcons.get(data.daily.data[2].icon)}`;
   }
 
   cleanMap() {
-    var map = document.querySelector('#map');
-    while (map.firstChild) {
-      map.removeChild(map.firstChild);
+    while (this.map.firstChild) {
+      this.map.removeChild(this.map.firstChild);
     }
   }
 
@@ -174,35 +180,12 @@ export default class View {
 
       if (e.target !== active) {
         active.classList.remove('controls__btn--unit-active');
+        this.setTemperature(e.target);
         switch (e.target) {
           case this.farengheit:
-            this.farengheit.classList.add('controls__btn--unit-active');
-
-            const celsius = Number(this.temperature.innerText);
-            const celsiusTomorrow = Number(this.tomorrowTemperature.innerText);
-            const celsiusAfter2Days = Number(this.after2DaysTemperature.innerText);
-            const celsiusAfter3Days = Number(this.after3DaysTemperature.innerText);
-
-            this.temperature.innerText = celsiusToFarengeitAndReverse(celsius);
-            this.tomorrowTemperature.innerText = celsiusToFarengeitAndReverse(celsiusTomorrow);
-            this.after2DaysTemperature.innerText = celsiusToFarengeitAndReverse(celsiusAfter2Days);
-            this.after3DaysTemperature.innerText = celsiusToFarengeitAndReverse(celsiusAfter3Days);
-
             localStorage.setItem('weatherUnit', 'us');
             break;
           case this.celsius:
-            this.celsius.classList.add('controls__btn--unit-active');
-
-            const farengheit = Number(this.temperature.innerText);
-            const farengheitTomorrow = Number(this.tomorrowTemperature.innerText);
-            const farengheitAfter2Days = Number(this.after2DaysTemperature.innerText);
-            const farengheitAfter3Days = Number(this.after3DaysTemperature.innerText);
-
-            this.temperature.innerText = celsiusToFarengeitAndReverse(farengheit, false);
-            this.tomorrowTemperature.innerText = celsiusToFarengeitAndReverse(farengheitTomorrow, false);
-            this.after2DaysTemperature.innerText = celsiusToFarengeitAndReverse(farengheitAfter2Days, false);
-            this.after3DaysTemperature.innerText = celsiusToFarengeitAndReverse(farengheitAfter3Days, false);
-
             localStorage.setItem('weatherUnit', 'si');
             break;
           default:
@@ -210,5 +193,19 @@ export default class View {
         }
       }
     });
+  }
+  setTemperature(element) {
+    element.classList.add('controls__btn--unit-active');
+
+    const temperature = Number(this.temperature.innerText);
+    const tomorrow = Number(this.tomorrowTemperature.innerText);
+    const after2Days = Number(this.after2DaysTemperature.innerText);
+    const after3Days = Number(this.after3DaysTemperature.innerText);
+
+    const isCelsius = element === this.celsius;
+    this.temperature.innerText = celsiusToFarengeitAndReverse(temperature, isCelsius);
+    this.tomorrowTemperature.innerText = celsiusToFarengeitAndReverse(tomorrow, isCelsius);
+    this.after2DaysTemperature.innerText = celsiusToFarengeitAndReverse(after2Days, isCelsius);
+    this.after3DaysTemperature.innerText = celsiusToFarengeitAndReverse(after3Days, isCelsius);
   }
 }

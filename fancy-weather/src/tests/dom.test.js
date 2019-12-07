@@ -1,6 +1,8 @@
-import { renderControlBtns } from '../scripts/MVC/renderControlBtns.js';
-import { renderInput } from '../scripts/MVC/renderInput.js';
-import { createPopup, createElement } from '../scripts/modules/functions.js';
+import { renderControlBtns } from '../scripts/MVC/VIew/renderControlBtns.js';
+import { renderInput } from '../scripts/MVC/View/renderInput.js';
+import { renderCurrentWeather, renderForecastWeather } from '../scripts/MVC/View/renderWeather.js';
+import { createPopup, createElement } from '../scripts/functions/functions.js';
+import { View } from '../scripts/MVC/View/View.js';
 
 require('@babel/register');
 const jsdom = require('jsdom');
@@ -58,4 +60,62 @@ test('renderInput creates input from in Block 1', () => {
 
   expect(elArr[2].className).toEqual('controls__search--btn');
   expect(elArr[2].innerText).toEqual('Search');
+});
+
+test('renderForecastWeather creates elements in Block2 and 3', () => {
+  const [
+    tomorrowDay,
+    tomorrowTemperature,
+    tomorrowIcon,
+    after2DaysDay,
+    after2DaysTemperature,
+    after2DaysIcon,
+    after3DaysDay,
+    after3DaysTemperature,
+    after3DaysIcon,
+  ] = renderForecastWeather(page);
+
+  expect(tomorrowDay.className).toEqual('weather__forecast--day');
+  expect(tomorrowTemperature.nodeName).toEqual('SPAN');
+  expect(tomorrowIcon.nodeName).toEqual('I');
+  expect(after2DaysDay.className).toEqual('weather__forecast--day');
+  expect(after2DaysTemperature.nodeName).toEqual('SPAN');
+  expect(after2DaysIcon.nodeName).toEqual('I');
+  expect(after3DaysDay.className).toEqual('weather__forecast--day');
+  expect(after3DaysTemperature.nodeName).toEqual('SPAN');
+  expect(after3DaysIcon.nodeName).toEqual('I');
+});
+
+test('renderCurrentWeather creates elements in Block2 and 3', () => {
+  const [
+    temperature,
+    weatherIconBig,
+    weatherSummary,
+    weatherApparentLabel,
+    weatherApparent,
+    weatherWindLabel,
+    weatherWind,
+    weatherWindSign,
+    weatherHumidityLabel,
+    weatherHumidity,
+  ] = renderCurrentWeather(page);
+
+  expect(temperature.className).toEqual('');
+  expect(weatherIconBig.className).toEqual('weather__icon--big');
+  expect(weatherIconBig.nodeName).toEqual('I');
+  expect(weatherSummary.className).toEqual('weather__current--item');
+  expect(weatherApparentLabel.nodeName).toEqual('SPAN');
+  expect(weatherApparent.nodeName).toEqual('SPAN');
+  expect(weatherWindLabel.nodeName).toEqual('SPAN');
+  expect(weatherWind.nodeName).toEqual('SPAN');
+  expect(weatherWindSign.nodeName).toEqual('SPAN');
+  expect(weatherHumidityLabel.nodeName).toEqual('SPAN');
+  expect(weatherHumidity.nodeName).toEqual('SPAN');
+});
+
+test('1', () => {
+  const lang = 'be';
+  const view = new View();
+  view.showLatLng();
+  expect(view.latitudeLabel.innerText).toEqual('1');
 });

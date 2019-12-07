@@ -1,5 +1,5 @@
-import { controlsLocale } from '../modules/consts.js';
-import { createElement } from '../modules/functions.js';
+import { controlsLocale } from './consts.js';
+import { createElement } from '../../functions/functions.js';
 
 export function renderInput(controls) {
   const citySearchForm = createElement('form', 'controls__search--form', controls);

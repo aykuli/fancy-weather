@@ -1,5 +1,5 @@
-import { createElement } from '../modules/functions.js';
-import { lang } from '../modules/consts.js';
+import { createElement } from '../../functions/functions.js';
+import { lang } from './consts.js';
 
 export function renderControlBtns(page) {
   const controls = createElement('div', 'controls', page);

@@ -1,4 +1,4 @@
-import { createElement } from '../modules/functions.js';
+import { createElement } from '../../functions/functions.js';
 
 export function renderCurrentWeather(weather) {
   const weatherCurrentWrap = createElement('div', 'weather__current--wrap', weather);
@@ -22,8 +22,8 @@ export function renderCurrentWeather(weather) {
   const weatherWindSign = createElement('span', '', weatherWindWrap);
 
   const weatherHumidityWrap = createElement('p', 'weather__current--item', weatherCurrentData);
-  const weatherHumidityLabel = createElement('p', 'weather__current--item', weatherHumidityWrap);
-  const weatherHumidity = createElement('p', 'weather__current--item', weatherHumidityWrap);
+  const weatherHumidityLabel = createElement('span', '', weatherHumidityWrap);
+  const weatherHumidity = createElement('span', '', weatherHumidityWrap);
 
   return [
     temperature,
@@ -49,7 +49,7 @@ export function renderForecastWeather(weather) {
   const tomorrowTemperature = createElement('span', '', tomorrowTemperatureWrap);
   const tomorrowTemperatureSign = createElement('span', '', tomorrowTemperatureWrap);
   tomorrowTemperatureSign.innerText = '°';
-  const tomorrowIcon = createElement('i', '', tomorrowTemperatureWrap);
+  const tomorrowIcon = createElement('img', '', tomorrowTemperatureWrap);
 
   const after2Days = createElement('div', 'weather__forecast--item', forecast);
   const after2DaysDay = createElement('p', 'weather__forecast--day', after2Days);

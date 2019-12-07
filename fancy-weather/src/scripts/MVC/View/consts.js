@@ -121,16 +121,28 @@ const monthArr = {
 };
 
 const weatherIcons = new Map([
-  ['clear-day', 'wi-day-sunny'],
-  ['clear-night', 'wi-night-clear'],
-  ['rain', 'wi-rain'],
-  ['snow', 'wi-snow'],
+  ['clear-day', 'clear-day'],
+  ['clear-night', 'clear-night'],
+  ['rain', 'rain'],
+  ['snow', 'snow'],
   ['sleet', 'sleet'],
-  ['wind', 'wi-windy'],
-  ['fog', 'wi-fog'],
-  ['cloudy', 'wi-cloudy'],
-  ['partly-cloudy-day', 'wi-day-cloudy'],
-  ['partly-cloudy-night', 'wi-night-alt-cloudy'],
+  ['wind', 'windy'],
+  ['fog', 'fog'],
+  ['cloudy', 'cloudy'],
+  ['partly-cloudy-day', 'partly-cloudy-day'],
+  ['partly-cloudy-night', 'partly-cloudy-day'],
 ]);
 
+// const weatherIcons = [
+//   ['clear-day', 'wi-day-sunny'],
+//   ['clear-night', 'wi-night-clear'],
+//   ['rain', 'wi-rain'],
+//   ['snow', 'wi-snow'],
+//   ['sleet', 'sleet'],
+//   ['wind', 'wi-windy'],
+//   ['fog', 'wi-fog'],
+//   ['cloudy', 'wi-cloudy'],
+//   ['partly-cloudy-day', 'wi-day-cloudy'],
+//   ['partly-cloudy-night', 'wi-night-alt-cloudy'],
+// ];
 export { weekDayArr, monthArr, lang, controlsLocale, weatherIcons };

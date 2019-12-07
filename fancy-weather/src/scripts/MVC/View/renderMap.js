@@ -1,4 +1,5 @@
-import { createElement } from '../modules/functions.js';
+import { createElement } from '../../functions/functions.js';
+
 export function renderMap(container) {
   const mapWrap = createElement('div', 'map__wrap', container);
 

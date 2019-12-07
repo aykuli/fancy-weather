@@ -1,4 +1,5 @@
-import { createElement } from '../modules/functions.js';
+import { createElement } from '../../functions/functions.js';
+
 export function renderPlace(weather) {
   const place = createElement('p', 'weather__place', weather);
   const city = createElement('span', 'weather__place--item', place);

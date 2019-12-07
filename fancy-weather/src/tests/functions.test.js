@@ -1,4 +1,4 @@
-import { randomInt, celsiusToFarengeitAndReverse, timeThere, createPopup } from '../scripts/modules/functions.js';
+import { randomInt, celsiusToFarengeitAndReverse, timeThere, createPopup } from '../scripts/functions/functions.js';
 
 test('typeof functions must be function', () => {
   expect(typeof randomInt).toBe('function');
@@ -19,4 +19,11 @@ test('Check calculation temperature from celcius to Farengeit and reverse', () =
 
   tempFarengheit = celsiusToFarengeitAndReverse(131, false);
   expect(tempFarengheit).toStrictEqual('55');
+});
+
+test('Check randomInt function', () => {
+  const numb = randomInt(15, 37);
+
+  expect(numb).toBeGreaterThanOrEqual(15);
+  expect(numb).toBeLessThanOrEqual(37);
 });
