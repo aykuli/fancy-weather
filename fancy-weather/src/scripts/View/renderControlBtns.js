@@ -7,7 +7,8 @@ export default function renderControlBtns(page) {
   const controlsBtns = createElement('div', 'controls__btns', controls);
 
   const controlsBtnRefresh = createElement('button', 'controls__btn controls__btn--refresh', controlsBtns);
-  controlsBtnRefresh.innerHTML = '<i class="fa fa-refresh" aria-hidden="true"></i>';
+  const controlsBtnRefreshIcon = createElement('img', '', controlsBtnRefresh);
+  controlsBtnRefreshIcon.setAttribute('src', require('../../assets/img/icon_refresh.svg')); // eslint-disable-line
   const controlsLang = createElement('select', 'controls__btn controls__btn--lang', controlsBtns);
 
   for (let i = 0; i < 3; i += 1) {

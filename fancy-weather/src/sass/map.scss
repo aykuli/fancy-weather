@@ -17,3 +17,8 @@
     border-radius: 15px;
     border-bottom-right-radius: 0;
 }
+
+.mapboxgl-ctrl-fullscreen,
+.mapboxgl-ctrl-icon {
+    background-image: url(../../node_modules/mapbox-gl/src/css/svg/mapboxgl-ctrl-fullscreen.svg);
+}

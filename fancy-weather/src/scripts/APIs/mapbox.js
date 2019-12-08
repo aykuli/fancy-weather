@@ -1,4 +1,5 @@
 import mapboxgl from 'mapbox-gl';
+import '../../../node_modules/mapbox-gl/src/css/mapbox-gl.css';
 import { mapboxKey } from './apiKeys.js';
 import { createPopup } from '../functions/functions.js';
 
