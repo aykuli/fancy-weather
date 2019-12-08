@@ -1,12 +1,12 @@
-import { renderControlBtns } from '../scripts/MVC/VIew/renderControlBtns.js';
-import { renderInput } from '../scripts/MVC/View/renderInput.js';
+import renderControlBtns from '../scripts/MVC/VIew/renderControlBtns.js'; // eslint-disable-line
+import renderInput from '../scripts/MVC/View/renderInput.js';
 import { renderCurrentWeather, renderForecastWeather } from '../scripts/MVC/View/renderWeather.js';
-import { createPopup, createElement } from '../scripts/functions/functions.js';
-import { controlsLocale } from '../scripts/MVC/View/consts.js';
+import { createElement } from '../scripts/functions/functions.js';
 import View from '../scripts/MVC/View/View.js';
 
 require('@babel/register');
 const jsdom = require('jsdom');
+
 const { JSDOM } = jsdom;
 
 const options = {
@@ -28,9 +28,9 @@ const dom = new JSDOM(
   options
 ).window;
 
-let page = dom.window.document.querySelector('.page-wrap');
-
-test('has document', function() {
+const page = dom.window.document.querySelector('.page-wrap');
+/* eslint-disable */
+test('has document', () => {
   expect(page.nodeName).toEqual('DIV');
 });
 
@@ -122,3 +122,4 @@ test('1', () => {
   expect(view.cityBtn.innerText).toEqual('Search');
   expect(view.cityInput.placeholder).toEqual('Search city or ZIP');
 });
+/* eslint-enable */

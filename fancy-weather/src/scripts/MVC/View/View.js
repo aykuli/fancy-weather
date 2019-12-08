@@ -1,11 +1,11 @@
-import { weekDayArr, monthArr, lang, controlsLocale, weatherIcons } from './consts.js';
-import { celsiusToFarengeitAndReverse, createPopup, createElement } from '../../functions/functions.js';
-import { renderControlBtns } from './renderControlBtns.js';
-import { renderInput } from './renderInput.js';
+import { weekDayArr, monthArr, controlsLocale, weatherIcons } from './consts.js';
+import { celsiusToFarengeitAndReverse, createPopup, createElement, checkTime } from '../../functions/functions.js';
+import renderControlBtns from './renderControlBtns.js';
+import renderInput from './renderInput.js';
 import { renderCurrentWeather, renderForecastWeather } from './renderWeather.js';
-import { renderDate } from './renderDate.js';
-import { renderMap } from './renderMap.js';
-import { renderPlace } from './renderPlace.js';
+import renderDate from './renderDate.js';
+import renderMap from './renderMap.js';
+import renderPlace from './renderPlace.js';
 
 export default class View {
   constructor() {
@@ -66,15 +66,10 @@ export default class View {
     this.showDate();
     this.showTimeHHMM();
     window.setInterval(this.showTimeHHMM, 1000);
-    this.showWeatherUnits(localStorage.getItem('weatherLang'));
-
-    // this.speechBtn = createElement('button', 'speech__btn', this.page);
-    // this.speechBtn.innerText = 'Говорите';
-    // speechRecognition(this.speechBtn);
   }
 
   showDate() {
-    let time = new Date();
+    const time = new Date();
     const lang = localStorage.getItem('weatherLang');
 
     this.dateDay.innerText = weekDayArr[lang][time.getDay()];
@@ -89,27 +84,29 @@ export default class View {
   showLabels() {
     const lang = localStorage.getItem('weatherLang');
 
-    this.cityBtn.innerText = controlsLocale[lang][0];
-    this.cityInput.setAttribute('placeholder', controlsLocale[lang][1]);
-
-    this.latitudeLabel.innerText = controlsLocale[lang][2];
-    this.longitudeLabel.innerText = controlsLocale[lang][3];
+    let placeholder;
+    [
+      this.cityBtn.innerText,
+      placeholder,
+      this.latitudeLabel.innerText,
+      this.longitudeLabel.innerText,
+      this.weatherApparentLabel.innerText,
+      this.weatherWindLabel.innerText,
+      this.weatherWindSign.innerText,
+      this.weatherHumidityLabel.innerText,
+    ] = controlsLocale[lang];
+    this.cityInput.setAttribute('placeholder', placeholder);
   }
 
   showTimeHHMM = () => {
-    let tm = new Date();
-    let h = tm.getHours();
+    const tm = new Date();
     let m = tm.getMinutes();
     let s = tm.getSeconds();
-    m = this.checkTime(m);
-    s = this.checkTime(s);
+    m = checkTime(m);
+    s = checkTime(s);
 
-    this.datemm.innerHTML = ':' + m + ':' + s;
+    this.datemm.innerHTML = `:${m}:${s}`;
   };
-
-  checkTime(i) {
-    return i < 10 ? '0' + i : i;
-  }
 
   async showCity(city, country) {
     if (city !== '') {
@@ -126,8 +123,8 @@ export default class View {
   showCoordinates(lat, lng) {
     const latMin = Math.abs((lat.toFixed(0) - lat) * 60).toFixed(0);
     const lngMin = Math.abs((lng.toFixed(0) - lng) * 60).toFixed(0);
-    this.latitudeValue.innerText = `${lat.toFixed(0)}° ${latMin}\'`;
-    this.longitudeValue.innerText = `${lng.toFixed(0)}° ${lngMin}\'`;
+    this.latitudeValue.innerText = `${lat.toFixed(0)}° ${latMin}`;
+    this.longitudeValue.innerText = `${lng.toFixed(0)}° ${lngMin}`;
   }
 
   showWeatherData(data) {
@@ -182,13 +179,6 @@ export default class View {
     while (this.map.firstChild) {
       this.map.removeChild(this.map.firstChild);
     }
-  }
-
-  showWeatherUnits(lang) {
-    this.weatherApparentLabel.innerText = controlsLocale[lang][4];
-    this.weatherWindLabel.innerText = controlsLocale[lang][5];
-    this.weatherWindSign.innerText = controlsLocale[lang][6];
-    this.weatherHumidityLabel.innerText = controlsLocale[lang][7];
   }
 
   watchUnitChanging() {

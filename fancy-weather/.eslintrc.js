@@ -20,7 +20,8 @@ module.exports = {
       'error',
       'ignorePackages',
       {
-        js: 'always',
+        '.js': 'always',
+        '.test.js': 'always',
       },
     ],
     'no-restricted-syntax': ['error', 'ForInStatement', 'LabeledStatement', 'WithStatement'],

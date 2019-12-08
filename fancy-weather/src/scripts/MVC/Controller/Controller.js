@@ -1,11 +1,11 @@
-import { timeThere, createPopup } from '../../functions/functions.js';
-import { forwardGeocoding, reverseGeocoding } from '../Model/opencagedata.js';
+import { timeThere, createPopup, getSeason, getCity } from '../../functions/functions.js';
+import { forwardGeocoding } from '../Model/opencagedata.js';
+import getPlaceByCoors from './getPlaceByCoors.js';
 
 export default class Controller {
   constructor(model, view) {
     this.model = model;
     this.view = view;
-    this.continent = 'Asia';
 
     this.init();
 
@@ -53,7 +53,12 @@ export default class Controller {
     this.model.mapbox(lat, lng);
 
     const lang = localStorage.getItem('weatherLang');
-    const data = await this.getPlaceByCoors(lat, lng, lang);
+    const data = await getPlaceByCoors(lat, lng, lang);
+    if (data.total_results === 0) {
+      createPopup('Enter valid name of city/settlement');
+      return;
+    }
+
     const [city, country] = data;
     this.view.showCity(city, country);
     const weatherData = await this.model.getWeatherData(lat, lng);
@@ -61,7 +66,7 @@ export default class Controller {
 
     this.view.datehh.innerText = timeThere(weatherData.timezone);
 
-    this.showAppBg(lat, lng, weatherData, city, country);
+    this.showAppBg(lat, lng, weatherData);
   }
 
   watchInput() {
@@ -86,12 +91,11 @@ export default class Controller {
         this.view.weatherSummary.innerText = res.currently.summary;
       });
 
-      this.getPlaceByCoors(lat, lng, lang).then(res => {
+      getPlaceByCoors(lat, lng, lang).then(res => {
         const [city, country] = res;
         this.view.showCity(city, country);
         this.view.showDate();
         this.view.showLabels();
-        this.view.showWeatherUnits(lang);
       });
     });
   }
@@ -120,21 +124,16 @@ export default class Controller {
 
   async handleSearchRes(searchText, lang) {
     const data = await forwardGeocoding(searchText, lang);
-    function getCity() {
-      if (data.results[0].components.city) {
-        return data.results[0].components.city;
-      } else if (data.results[0].components.village) {
-        return data.results[0].components.village;
-      } else {
-        return data.results[0].components.state;
-      }
+    // if (data === undefined) console.clear();
+    if (data.total_results === 0 || data === undefined) {
+      createPopup('Enter valid name of city/settlement');
+      return;
     }
 
-    let city = getCity();
-
+    let city = getCity(data);
     if (city === undefined) city = '';
-    const country = data.results[0].components.country;
-    const coors = data.results[0].geometry;
+
+    const [country, coors] = [data.results[0].components.country, data.results[0].geometry];
 
     localStorage.removeItem('weatherLat');
     localStorage.setItem('weatherLat', coors.lat);
@@ -152,74 +151,40 @@ export default class Controller {
 
     this.view.datehh.innerText = timeThere(weatherData.timezone);
 
-    this.showAppBg(coors.lat, coors.lng, weatherData, city, country);
+    this.showAppBg(coors.lat, coors.lng, weatherData);
   }
 
-  async getPlaceByCoors(lat, lng, lang = 'en') {
-    const data = await reverseGeocoding(lat, lng, lang);
-
-    if (data.results[0] === undefined) {
-      createPopup("This place hasn't been founded. Check your connection or maybe this place doesn't exist");
-      return;
-    }
-
-    let city;
-    if (data.results[0].components.city) {
-      city = data.results[0].components.city;
-    } else if (data.results[0].components.village) {
-      city = data.results[0].components.village;
-    } else if (data.results[0].components.state) {
-      city = data.results[0].components.state;
-    }
-    if (city === undefined) city = '';
-    const country = data.results[0].components.country;
-    this.continent = data.results[0].components.continent;
-    return [city, country];
-  }
-
-  async showAppBg(lat, lng, weatherData, city, country) {
-    let data = await this.getPlaceByCoors(lat, lng, 'en');
-    [city, country] = data;
+  async showAppBg(lat, lng, weatherData) {
+    let data = await getPlaceByCoors(lat, lng, 'en');
+    const [city, country, continent] = data;
 
     const tm = new Date();
     const month = tm.getMonth();
-    let season = () => {
-      if (month < 2 || month === 11) {
-        return 'winter';
-      } else if (month > 1 || month < 5) {
-        return 'spring';
-      } else if (month > 4 || month < 8) {
-        return '';
-      } else {
-        return 'fall';
-      }
-    };
+    let season = getSeason(month);
 
-    if (this.continent === 'Africa' || this.continent === 'Oceania' || this.continent === 'South America') {
-      season = () => {
-        return 'summer';
-      };
+    if (continent === 'Africa' || continent === 'Oceania' || continent === 'South America') {
+      season = 'summer';
     }
 
     const time = this.view.datehh.textContent;
     const dayTime = time > 6 && time < 22 ? 'day' : 'night';
 
-    const icon = weatherData.currently.icon;
+    const { icon } = weatherData.currently;
 
-    data = await this.model.unsplashForBG(country, city, season(), dayTime, icon);
+    data = await this.model.unsplashForBG(country, city, season, dayTime, icon);
     this.view.page.style.backgroundImage = `url(${data})`;
   }
 
   watchSpeech(btn) {
     btn.addEventListener('click', e => {
       e.preventDefault();
-      const recognizer = new SpeechRecognition();
+      const recognizer = new SpeechRecognition(); // eslint-disable-line
       recognizer.interimResults = true;
       const lang = localStorage.getItem('weatherLang');
       recognizer.lang = lang;
 
       recognizer.onresult = async evt => {
-        let res = evt.results[e.resultIndex];
+        const res = evt.results[e.resultIndex];
 
         const speechResult = res.isFinal ? res[0].transcript : undefined;
         if (!speechResult) return;

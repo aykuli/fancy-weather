@@ -1,6 +1,6 @@
 import { createElement } from '../../functions/functions.js';
 
-export function renderMap(container) {
+export default function renderMap(container) {
   const mapWrap = createElement('div', 'map__wrap', container);
 
   const map = createElement('div', '', mapWrap);
