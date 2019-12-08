@@ -1,5 +1,5 @@
 import { renderCurrentWeather, renderForecastWeather } from '../scripts/View/renderWeather.js';
-import { createElement, getSeason, getCity } from '../scripts/functions/functions.js';
+import { createElement } from '../scripts/functions/functions.js';
 import renderInput from '../scripts/View/renderInput.js';
 
 require('@babel/register');
@@ -87,44 +87,6 @@ test('renderCurrentWeather creates elements in Block2 and 3', () => {
   expect(weatherWindSign.nodeName).toEqual('SPAN');
   expect(weatherHumidityLabel.nodeName).toEqual('SPAN');
   expect(weatherHumidity.nodeName).toEqual('SPAN');
-});
-
-test('getSeason function', () => {
-  let month = 0; // January
-  let season = getSeason(month);
-  expect(season).toEqual('winter');
-
-  month = 4; // May
-  season = getSeason(month);
-  expect(season).toEqual('spring');
-
-  month = 7; // August
-  season = getSeason(month);
-  expect(season).toEqual('');
-
-  month = 8; //September
-  season = getSeason(month);
-  expect(season).toEqual('fall');
-});
-
-test('getCity function', () => {
-  let data = {
-    results: {
-      0: {
-        components: { city: 'Moscow' },
-      },
-    },
-  };
-  expect(getCity(data)).toEqual('Moscow');
-
-  data = {
-    results: {
-      0: {
-        components: { state: 'SomePlaceOnTheEarth' },
-      },
-    },
-  };
-  expect(getCity(data)).toEqual('SomePlaceOnTheEarth');
 });
 
 test('renderInput creates input from in Block 1', () => {

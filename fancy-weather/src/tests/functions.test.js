@@ -1,4 +1,12 @@
-import { randomInt, celsiusToFarengeitAndReverse, timeThere, createPopup } from '../scripts/functions/functions.js';
+import {
+  randomInt,
+  celsiusToFarengeitAndReverse,
+  timeThere,
+  createPopup,
+  getSeason,
+  getCity,
+} from '../scripts/functions/functions.js';
+
 /* eslint-disable */
 test('typeof functions must be function', () => {
   expect(typeof randomInt).toBe('function');
@@ -26,5 +34,43 @@ test('Check randomInt function', () => {
 
   expect(numb).toBeGreaterThanOrEqual(15);
   expect(numb).toBeLessThanOrEqual(37);
+});
+
+test('getSeason function', () => {
+  let month = 0; // January
+  let season = getSeason(month);
+  expect(season).toEqual('winter');
+
+  month = 4; // May
+  season = getSeason(month);
+  expect(season).toEqual('spring');
+
+  month = 7; // August
+  season = getSeason(month);
+  expect(season).toEqual('');
+
+  month = 8; //September
+  season = getSeason(month);
+  expect(season).toEqual('fall');
+});
+
+test('getCity function', () => {
+  let data = {
+    results: {
+      0: {
+        components: { city: 'Moscow' },
+      },
+    },
+  };
+  expect(getCity(data)).toEqual('Moscow');
+
+  data = {
+    results: {
+      0: {
+        components: { state: 'SomePlaceOnTheEarth' },
+      },
+    },
+  };
+  expect(getCity(data)).toEqual('SomePlaceOnTheEarth');
 });
 /* eslint-enable */
