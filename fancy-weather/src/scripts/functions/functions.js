@@ -1,3 +1,5 @@
+import { errorMsg } from '../View/consts.js';
+
 const moment = require('moment-timezone');
 
 export function randomInt(min, max) {
@@ -18,10 +20,11 @@ export function timeThere(timezone) {
   return hour;
 }
 
-export function createPopup(msg) {
+export function createPopup(i = 0) {
   const popup = document.querySelector('.popup');
   popup.classList.remove('visually-hidden');
-  popup.innerText = msg;
+  const lang = localStorage.getItem('weatherLang');
+  popup.innerText = errorMsg[lang][i];
   setTimeout(() => popup.classList.add('visually-hidden'), 2500);
 }
 
@@ -57,4 +60,21 @@ export function getCity(data) {
 
 export function checkTime(i) {
   return i < 10 ? `0${i}` : i;
+}
+
+export function recognitionActivityShow() {
+  const bg = document.querySelector('.controls__speech--bg');
+  bg.style.backgroundColor = 'rgb(256, 103, 23)';
+
+  return window.setInterval(() => {
+    let el = document.querySelector('.pos0');
+    if (el) {
+      el.classList.add('pos1');
+      el.classList.remove('pos0');
+    } else {
+      el = document.querySelector('.pos1');
+      el.classList.add('pos0');
+      el.classList.remove('pos1');
+    }
+  }, 500);
 }

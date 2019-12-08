@@ -1,4 +1,4 @@
-import { createElement } from '../../functions/functions.js';
+import { createElement } from '../functions/functions.js';
 
 export default function renderPlace(weather) {
   const place = createElement('p', 'weather__place', weather);

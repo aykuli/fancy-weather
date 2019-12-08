@@ -1,5 +1,5 @@
 import { randomInt, celsiusToFarengeitAndReverse, timeThere, createPopup } from '../scripts/functions/functions.js';
-
+/* eslint-disable */
 test('typeof functions must be function', () => {
   expect(typeof randomInt).toBe('function');
   expect(typeof celsiusToFarengeitAndReverse).toBe('function');
@@ -27,3 +27,4 @@ test('Check randomInt function', () => {
   expect(numb).toBeGreaterThanOrEqual(15);
   expect(numb).toBeLessThanOrEqual(37);
 });
+/* eslint-enable */

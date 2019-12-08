@@ -132,4 +132,40 @@ const weatherIcons = new Map([
   ['partly-cloudy-night', 'partly-cloudy-night'],
 ]);
 
-export { weekDayArr, monthArr, lang, controlsLocale, weatherIcons };
+const errorMsg = {
+  en: [
+    'Enter valid name of city/settlement.',
+    'Geolocation is not supported by this browser.',
+    "Weather data hasn't been loaded",
+    'The coordinates were not determined. Refresh page.',
+    'The map was not loaded.',
+    'Something goes wrong. Connect to support',
+    'The background image was not loaded.',
+    'Speak again',
+    "You're pushing too fast. Wait for the microphone to be ready",
+  ],
+  ru: [
+    'Введите правильное название населенного пункта.',
+    'Геолокация не поддерживается этим браузером.',
+    'Погодные данные не загружены',
+    'Координаты не были определены. Обновить страницу.',
+    'Карта не была загружена.',
+    'Что-то пошло не так. Напишите в поддержку',
+    'Фоновое изображение не было загружено.',
+    'Повторите название населенного пункта',
+    'Вы слишком быстро нажимаете. Дождитесь, когда микрофон будет готов',
+  ],
+  be: [
+    'Калі ласка, увядзіце правільнае назва населенага пункта.',
+    'Геолокация не падтрымліваецца гэтым браўзэрам.',
+    'Пагодныя дадзеныя не загружаныя',
+    'Каардынаты не былі вызначаныя. Абнавіць старонку',
+    'Карта не была загружаная.',
+    'Нешта ідзе не так. Падлучэнне да падтрымкі.',
+    'Фонавы малюнак не было загружана.',
+    'Паўтарыце назва населенага пункта',
+    'Вы занадта хутка націскаеце. Дачакайцеся, калі мікрафон будзе гатовы',
+  ],
+};
+
+export { weekDayArr, monthArr, lang, controlsLocale, weatherIcons, errorMsg };

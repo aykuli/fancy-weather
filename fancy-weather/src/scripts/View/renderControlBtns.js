@@ -1,4 +1,4 @@
-import { createElement } from '../../functions/functions.js';
+import { createElement } from '../functions/functions.js';
 import { lang } from './consts.js';
 
 export default function renderControlBtns(page) {

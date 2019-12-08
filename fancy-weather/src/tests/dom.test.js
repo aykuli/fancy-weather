@@ -1,8 +1,8 @@
-import renderControlBtns from '../scripts/MVC/VIew/renderControlBtns.js'; // eslint-disable-line
-import renderInput from '../scripts/MVC/View/renderInput.js';
-import { renderCurrentWeather, renderForecastWeather } from '../scripts/MVC/View/renderWeather.js';
+import renderControlBtns from '../scripts/View/renderControlBtns.js'; // eslint-disable-line
+import renderInput from '../scripts/View/renderInput.js';
+import { renderCurrentWeather, renderForecastWeather } from '../scripts/View/renderWeather.js';
 import { createElement } from '../scripts/functions/functions.js';
-import View from '../scripts/MVC/View/View.js';
+import View from '../scripts/View/View.js';
 
 require('@babel/register');
 const jsdom = require('jsdom');

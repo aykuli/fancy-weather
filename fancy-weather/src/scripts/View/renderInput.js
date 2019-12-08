@@ -1,5 +1,5 @@
 import { controlsLocale } from './consts.js';
-import { createElement } from '../../functions/functions.js';
+import { createElement } from '../functions/functions.js';
 
 export default function renderInput(controls) {
   const citySearchForm = createElement('div', 'controls__search--form', controls);
@@ -10,10 +10,12 @@ export default function renderInput(controls) {
 
   const cityInputLabel = createElement('label', 'visually-hidden', citySearchForm);
   cityInputLabel.setAttribute('for', 'city-input');
-  const speechBtn = createElement('button', 'controls__speech--btn', citySearchForm);
   const cityBtn = createElement('button', 'controls__search--btn', citySearchForm);
-  const speechBtnText = createElement('span', 'visually-hidden', cityBtn);
+
+  const speechBg = createElement('span', 'controls__speech--bg pos0', citySearchForm);
+  const speechBtn = createElement('button', 'controls__speech--btn', citySearchForm);
+  const speechBtnText = createElement('span', 'visually-hidden', speechBg);
   speechBtnText.innerText = 'Search city by speech';
 
-  return [citySearchForm, cityInput, cityBtn, speechBtn];
+  return [citySearchForm, cityInput, cityBtn, speechBtn, speechBg];
 }

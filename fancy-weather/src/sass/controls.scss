@@ -200,6 +200,26 @@
     }
 
     &__speech {
+        &--bg {
+            position: absolute;
+            top: 8px;
+            right: 107px;
+            
+            // background-color: rgb(241, 103, 23);
+          
+            border-radius: 50%;
+
+            opacity: 0.3;
+
+            &:hover {
+                outline: none;
+            }
+
+            &:focus {
+                outline: none;
+            }
+        }
+
         &--btn {
             position: absolute;
             top: 8px;
@@ -212,16 +232,14 @@
             background-image: url(../assets/img/spech.png);
             background-position: 0 0;
             background-repeat: no-repeat;
+            border-radius: 50%;
             border: none;
+            opacity: 0.3;
 
-            opacity: 0.2;
             &:hover {
-                background-color: rgba(241, 103, 23, 0.5);
-                border-radius: 15px;
-                outline: none;
+                background-color: rgb(241, 103, 23);
             }
-
-            &:focus {
+            &:focus, &:active {
                 outline: none;
             }
         }
@@ -238,4 +256,29 @@
             }
         }
     }
+}
+
+.pos0 {
+    width: 30px;
+    height: 30px;
+
+    transition-property: width, height,top,right;
+    transition-duration: .5s;
+    transition-timing-function: linear;
+
+    opacity: 0.7;
+}
+
+.pos1 {
+    top: 3px;
+    right: 102px;
+
+    width: 40px;
+    height: 40px;
+
+    transition-property: width, height,top,right;
+    transition-duration: .5s;
+    transition-timing-function: linear;
+
+    opacity: 0.7;
 }

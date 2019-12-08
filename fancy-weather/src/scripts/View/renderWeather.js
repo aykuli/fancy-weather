@@ -1,4 +1,4 @@
-import { createElement } from '../../functions/functions.js';
+import { createElement } from '../functions/functions.js';
 
 export function renderCurrentWeather(weather) {
   const weatherCurrentWrap = createElement('div', 'weather__current--wrap', weather);

@@ -10,7 +10,6 @@ async function forwardGeocoding(settlement, lang = 'en') {
 
 async function reverseGeocoding(lat, lng, lang = 'en') {
   const url = `https://api.opencagedata.com/geocode/v1/json?q=${lat}%2C${lng}&key=${openCageDataKey}&language=${lang}&pretty=1`;
-
   const response = await fetch(url);
   const json = await response.json();
   return json;
