@@ -155,7 +155,7 @@ export default class View {
     const [iconTomorrow, iconAfter2Day, iconAfter3Day] = [getIcon(0), getIcon(1), getIcon(2), getIcon(3)];
     const iconUrl = (icon, el) => {
       if (el === this.weatherIconBig) {
-        return `url(${require(`../../../assets/img/${icon}.png`)})`;
+        return `url(${require(`../../../assets/img/${icon}.png`)})`; // eslint-disable-line
       }
       if (icon === 'cloudy' || icon === 'partly-cloudy-day' || icon === 'partly-cloudy-night') {
         el.classList.remove('weather__icon--small');
@@ -164,7 +164,7 @@ export default class View {
         el.classList.remove('weather__icon--small-top');
         el.classList.add('weather__icon--small');
       }
-      return `url(${require(`../../../assets/img/${icon}.png`)})`;
+      return `url(${require(`../../../assets/img/${icon}.png`)})`; // eslint-disable-line
     };
 
     const iconToday = weatherIcons.get(data.currently.icon);
