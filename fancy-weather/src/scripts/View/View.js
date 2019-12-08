@@ -21,7 +21,12 @@ export default class View {
       this.celsius,
     ] = renderControlBtns(this.page);
 
-    [this.citySearchForm, this.cityInput, this.cityBtn, this.speechBtn, this.speechBg] = renderInput(this.controls);
+    const lang = localStorage.getItem('weatherLang');
+
+    [this.citySearchForm, this.cityInput, this.cityBtn, this.speechBtn, this.speechBg] = renderInput(
+      this.controls,
+      lang
+    );
 
     // Block 2: Showing current weather
     this.container = createElement('div', 'container', this.page);

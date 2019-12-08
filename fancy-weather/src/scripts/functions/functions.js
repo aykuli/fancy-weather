@@ -39,9 +39,9 @@ export function getSeason(month) {
   let res = 'summer';
   if (month < 2 || month === 11) {
     res = 'winter';
-  } else if (month > 1 || month < 5) {
+  } else if (month > 1 && month < 5) {
     res = 'spring';
-  } else if (month > 4 || month < 8) {
+  } else if (month > 4 && month < 8) {
     res = '';
   } else {
     res = 'fall';

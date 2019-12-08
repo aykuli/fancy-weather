@@ -1,10 +1,10 @@
 import { controlsLocale } from './consts.js';
 import { createElement } from '../functions/functions.js';
 
-export default function renderInput(controls) {
+export default function renderInput(controls, lang) {
   const citySearchForm = createElement('div', 'controls__search--form', controls);
   const cityInput = createElement('input', 'controls__search--input', citySearchForm);
-  cityInput.setAttribute('placeholder', controlsLocale[localStorage.getItem('weatherLang')][1]);
+  cityInput.setAttribute('placeholder', controlsLocale[lang][1]);
   cityInput.setAttribute('type', 'text');
   cityInput.setAttribute('id', 'city-input');
 
