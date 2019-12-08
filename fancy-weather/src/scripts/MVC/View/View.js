@@ -1,6 +1,5 @@
-import { weekDayArr, monthArr, controlsLocale, weatherIcons } from './consts.js';
+import { weekDayArr, monthArr, lang, controlsLocale, weatherIcons } from './consts.js';
 import { celsiusToFarengeitAndReverse, createPopup, createElement } from '../../functions/functions.js';
-import 'weather-icons/css/weather-icons.css';
 import { renderControlBtns } from './renderControlBtns.js';
 import { renderInput } from './renderInput.js';
 import { renderCurrentWeather, renderForecastWeather } from './renderWeather.js';
@@ -22,7 +21,7 @@ export default class View {
       this.celsius,
     ] = renderControlBtns(this.page);
 
-    [this.citySearchForm, this.cityInput, this.cityBtn] = renderInput(this.controls);
+    [this.citySearchForm, this.cityInput, this.cityBtn, this.speechBtn] = renderInput(this.controls);
 
     // Block 2: Showing current weather
     this.container = createElement('div', 'container', this.page);
@@ -63,10 +62,15 @@ export default class View {
 
     this.renderPopup = createElement('div', 'popup visually-hidden', this.page);
 
+    this.showLabels();
     this.showDate();
     this.showTimeHHMM();
     window.setInterval(this.showTimeHHMM, 1000);
     this.showWeatherUnits(localStorage.getItem('weatherLang'));
+
+    // this.speechBtn = createElement('button', 'speech__btn', this.page);
+    // this.speechBtn.innerText = 'Говорите';
+    // speechRecognition(this.speechBtn);
   }
 
   showDate() {
@@ -82,12 +86,12 @@ export default class View {
     this.after3DaysDay.innerText = weekDayArr[lang][((time.getDay() + 3) % 7) + 7];
   }
 
-  showInput() {
+  showLabels() {
+    const lang = localStorage.getItem('weatherLang');
+
     this.cityBtn.innerText = controlsLocale[lang][0];
     this.cityInput.setAttribute('placeholder', controlsLocale[lang][1]);
-  }
 
-  showLatLng() {
     this.latitudeLabel.innerText = controlsLocale[lang][2];
     this.longitudeLabel.innerText = controlsLocale[lang][3];
   }
@@ -153,16 +157,22 @@ export default class View {
     };
     const [iconTomorrow, iconAfter2Day, iconAfter3Day] = [getIcon(0), getIcon(1), getIcon(2), getIcon(3)];
     const iconUrl = (icon, el) => {
-      if (icon === 'cloudy' || icon === 'partly-cloudy-day' || icon === 'patrly-cloudy-night') {
+      if (el === this.weatherIconBig) {
+        return `url(${require(`../../../assets/img/${icon}.png`)})`;
+      }
+      if (icon === 'cloudy' || icon === 'partly-cloudy-day' || icon === 'partly-cloudy-night') {
         el.classList.remove('weather__icon--small');
         el.classList.add('weather__icon--small-top');
+      } else {
+        el.classList.remove('weather__icon--small-top');
+        el.classList.add('weather__icon--small');
       }
       return `url(${require(`../../../assets/img/${icon}.png`)})`;
     };
 
     const iconToday = weatherIcons.get(data.currently.icon);
 
-    this.weatherIconBig.style.backgroundImage = iconUrl(iconToday);
+    this.weatherIconBig.style.backgroundImage = iconUrl(iconToday, this.weatherIconBig);
     this.tomorrowIcon.style.backgroundImage = iconUrl(iconTomorrow, this.tomorrowIcon);
     this.after2DaysIcon.style.backgroundImage = iconUrl(iconAfter2Day, this.after2DaysIcon);
     this.after3DaysIcon.style.backgroundImage = iconUrl(iconAfter3Day, this.after3DaysIcon);

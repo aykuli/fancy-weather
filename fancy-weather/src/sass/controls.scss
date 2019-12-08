@@ -124,8 +124,8 @@
             font-weight: 400;
             color: #fff;
 
-            background: rgba(76, 82, 85, 0.4);
-            border: 1px solid rgba(228, 227, 227, 0.2);
+            background: #7EA0C5;
+            border: 1px solid #7EA0C5;
             border-top-left-radius: 5px;
             border-bottom-left-radius: 5px;
             box-sizing: border-box;
@@ -135,7 +135,7 @@
             }
 
             &:valid, &:focus {
-                background: rgba(76, 82, 85, 0.4);
+                background: #7EA0C5;
             }
         }
 
@@ -153,7 +153,7 @@
             color: #fff;
             
             background: rgba(174, 181, 185, 0.5);
-            border: 1px solid #7591AF;
+            border: 1px solid #7EA0C5;
             border-top-right-radius: 5px;
             border-bottom-right-radius: 5px;
 
@@ -173,7 +173,7 @@
                 height: 44px;
                 margin-top: 0px;
                 
-                background-color: white;
+                background-color: #7EA0C5;
 
                 transition: all 0.3s ease-in-out;  
             }
@@ -195,6 +195,34 @@
     
             &:active {
                 background-color: rgba(241, 103, 23, 0.8);
+            }
+        }
+    }
+
+    &__speech {
+        &--btn {
+            position: absolute;
+            top: 8px;
+            right: 107px;
+
+            width: 30px;
+            height: 30px;
+
+            background-color: transparent;
+            background-image: url(../assets/img/spech.png);
+            background-position: 0 0;
+            background-repeat: no-repeat;
+            border: none;
+
+            opacity: 0.2;
+            &:hover {
+                background-color: rgba(241, 103, 23, 0.5);
+                border-radius: 15px;
+                outline: none;
+            }
+
+            &:focus {
+                outline: none;
             }
         }
     }

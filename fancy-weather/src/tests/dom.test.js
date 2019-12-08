@@ -2,7 +2,8 @@ import { renderControlBtns } from '../scripts/MVC/VIew/renderControlBtns.js';
 import { renderInput } from '../scripts/MVC/View/renderInput.js';
 import { renderCurrentWeather, renderForecastWeather } from '../scripts/MVC/View/renderWeather.js';
 import { createPopup, createElement } from '../scripts/functions/functions.js';
-import { View } from '../scripts/MVC/View/View.js';
+import { controlsLocale } from '../scripts/MVC/View/consts.js';
+import View from '../scripts/MVC/View/View.js';
 
 require('@babel/register');
 const jsdom = require('jsdom');
@@ -15,6 +16,7 @@ const options = {
   runScripts: 'outside-only',
 };
 
+// создаем виртуальный DOM в Node.js
 const dom = new JSDOM(
   `<!DOCTYPE html>
 <html lang="en">
@@ -53,13 +55,12 @@ test('renderInput creates input from in Block 1', () => {
   const elArr = renderInput(page);
 
   expect(elArr[0].className).toEqual('controls__search--form');
-  expect(elArr[0].nodeName).toEqual('FORM');
+  expect(elArr[0].nodeName).toEqual('DIV');
 
   expect(elArr[1].className).toEqual('controls__search--input');
   expect(elArr[1].nodeName).toEqual('INPUT');
 
   expect(elArr[2].className).toEqual('controls__search--btn');
-  expect(elArr[2].innerText).toEqual('Search');
 });
 
 test('renderForecastWeather creates elements in Block2 and 3', () => {
@@ -77,13 +78,13 @@ test('renderForecastWeather creates elements in Block2 and 3', () => {
 
   expect(tomorrowDay.className).toEqual('weather__forecast--day');
   expect(tomorrowTemperature.nodeName).toEqual('SPAN');
-  expect(tomorrowIcon.nodeName).toEqual('I');
+  expect(tomorrowIcon.nodeName).toEqual('DIV');
   expect(after2DaysDay.className).toEqual('weather__forecast--day');
   expect(after2DaysTemperature.nodeName).toEqual('SPAN');
-  expect(after2DaysIcon.nodeName).toEqual('I');
+  expect(after2DaysIcon.nodeName).toEqual('DIV');
   expect(after3DaysDay.className).toEqual('weather__forecast--day');
   expect(after3DaysTemperature.nodeName).toEqual('SPAN');
-  expect(after3DaysIcon.nodeName).toEqual('I');
+  expect(after3DaysIcon.nodeName).toEqual('DIV');
 });
 
 test('renderCurrentWeather creates elements in Block2 and 3', () => {
@@ -102,7 +103,7 @@ test('renderCurrentWeather creates elements in Block2 and 3', () => {
 
   expect(temperature.className).toEqual('');
   expect(weatherIconBig.className).toEqual('weather__icon--big');
-  expect(weatherIconBig.nodeName).toEqual('I');
+  expect(weatherIconBig.nodeName).toEqual('DIV');
   expect(weatherSummary.className).toEqual('weather__current--item');
   expect(weatherApparentLabel.nodeName).toEqual('SPAN');
   expect(weatherApparent.nodeName).toEqual('SPAN');
@@ -114,8 +115,10 @@ test('renderCurrentWeather creates elements in Block2 and 3', () => {
 });
 
 test('1', () => {
-  const lang = 'be';
   const view = new View();
-  view.showLatLng();
-  expect(view.latitudeLabel.innerText).toEqual('1');
+  view.showLabels();
+  expect(view.latitudeLabel.innerText).toEqual('Latitude: ');
+  expect(view.longitudeLabel.innerText).toEqual('Longintude: ');
+  expect(view.cityBtn.innerText).toEqual('Search');
+  expect(view.cityInput.placeholder).toEqual('Search city or ZIP');
 });

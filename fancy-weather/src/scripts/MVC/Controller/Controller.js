@@ -13,6 +13,7 @@ export default class Controller {
     this.watchLang();
     this.watchReload();
     this.view.watchUnitChanging();
+    this.watchSpeech(this.view.speechBtn);
   }
 
   init() {
@@ -51,9 +52,9 @@ export default class Controller {
     this.view.showCoordinates(lat, lng);
     this.model.mapbox(lat, lng);
 
-    let lang = localStorage.getItem('weatherLang');
-    let data = await this.getPlaceByCoors(lat, lng, lang);
-    let [city, country] = data;
+    const lang = localStorage.getItem('weatherLang');
+    const data = await this.getPlaceByCoors(lat, lng, lang);
+    const [city, country] = data;
     this.view.showCity(city, country);
     const weatherData = await this.model.getWeatherData(lat, lng);
     this.view.showWeatherData(weatherData);
@@ -65,6 +66,9 @@ export default class Controller {
 
   watchInput() {
     this.view.cityBtn.addEventListener('click', this.inputSearchResult.bind(this));
+    this.view.cityInput.addEventListener('keydown', e => {
+      if (e.code === 'Enter' || e.code === 'NumpadEnter') this.inputSearchResult();
+    });
   }
 
   watchLang() {
@@ -86,6 +90,7 @@ export default class Controller {
         const [city, country] = res;
         this.view.showCity(city, country);
         this.view.showDate();
+        this.view.showLabels();
         this.view.showWeatherUnits(lang);
       });
     });
@@ -93,14 +98,15 @@ export default class Controller {
 
   watchReload() {
     this.view.controlsBtnRefresh.addEventListener('click', () => {
-      this.model.unsplashForBG().then(res => (this.view.page.style.backgroundImage = `url(${res})`));
+      this.model.unsplashForBG().then(res => {
+        this.view.page.style.backgroundImage = `url(${res})`;
+      });
       this.view.controlsBtnRefresh.children[0].classList.add('spin-animation');
       setTimeout(() => this.view.controlsBtnRefresh.children[0].classList.remove('spin-animation'), 500);
     });
   }
 
-  async inputSearchResult(e) {
-    e.preventDefault();
+  async inputSearchResult() {
     const settlement = this.view.cityInput.value;
 
     if (settlement === '') {
@@ -108,17 +114,24 @@ export default class Controller {
       return;
     }
 
-    let lang = localStorage.getItem('weatherLang');
-    let data = await forwardGeocoding(settlement, lang);
-    let city;
+    const lang = localStorage.getItem('weatherLang');
+    this.handleSearchRes(settlement, lang);
+  }
 
-    if (data.results[0].components.city) {
-      city = data.results[0].components.city;
-    } else if (data.results[0].components.village) {
-      city = data.results[0].components.village;
-    } else if (data.results[0].components.state) {
-      city = data.results[0].components.state;
+  async handleSearchRes(searchText, lang) {
+    const data = await forwardGeocoding(searchText, lang);
+    function getCity() {
+      if (data.results[0].components.city) {
+        return data.results[0].components.city;
+      } else if (data.results[0].components.village) {
+        return data.results[0].components.village;
+      } else {
+        return data.results[0].components.state;
+      }
     }
+
+    let city = getCity();
+
     if (city === undefined) city = '';
     const country = data.results[0].components.country;
     const coors = data.results[0].geometry;
@@ -161,7 +174,6 @@ export default class Controller {
     if (city === undefined) city = '';
     const country = data.results[0].components.country;
     this.continent = data.results[0].components.continent;
-    console.log([city, country]);
     return [city, country];
   }
 
@@ -169,7 +181,7 @@ export default class Controller {
     let data = await this.getPlaceByCoors(lat, lng, 'en');
     [city, country] = data;
 
-    let tm = new Date();
+    const tm = new Date();
     const month = tm.getMonth();
     let season = () => {
       if (month < 2 || month === 11) {
@@ -195,6 +207,25 @@ export default class Controller {
     const icon = weatherData.currently.icon;
 
     data = await this.model.unsplashForBG(country, city, season(), dayTime, icon);
-    // this.view.page.style.backgroundImage = `url(${data})`;
+    this.view.page.style.backgroundImage = `url(${data})`;
+  }
+
+  watchSpeech(btn) {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      const recognizer = new SpeechRecognition();
+      recognizer.interimResults = true;
+      const lang = localStorage.getItem('weatherLang');
+      recognizer.lang = lang;
+
+      recognizer.onresult = async evt => {
+        let res = evt.results[e.resultIndex];
+
+        const speechResult = res.isFinal ? res[0].transcript : undefined;
+        if (!speechResult) return;
+        this.handleSearchRes(speechResult, lang);
+      };
+      recognizer.start();
+    });
   }
 }

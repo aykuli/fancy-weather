@@ -1,5 +1,4 @@
 const lang = ['en', 'ru', 'be'];
-
 const controlsLocale = {
   en: ['Search', 'Search city or ZIP', 'Latitude: ', 'Longintude: ', 'Feels like: ', 'Wind: ', ' m/s', 'Humidity: '],
   ru: [
