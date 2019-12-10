@@ -130,6 +130,8 @@
             border-bottom-left-radius: 5px;
             box-sizing: border-box;
 
+            text-overflow:ellipsis;
+
             &::placeholder {
                 color: #fff;
             }
@@ -204,9 +206,7 @@
             position: absolute;
             top: 8px;
             right: 107px;
-            
-            // background-color: rgb(241, 103, 23);
-          
+                      
             border-radius: 50%;
 
             opacity: 0.3;
