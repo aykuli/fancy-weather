@@ -17,7 +17,10 @@ export function timeThere(timezone) {
     .tz(timezone)
     .format();
   const hour = timeThatPlace.slice(11, 13);
-  return hour;
+  const tmCur = new Date();
+  const hCur = tmCur.getHours();
+  const delta = hour - hCur;
+  return [hour, delta];
 }
 
 export function createPopup(i = 0) {

@@ -69,8 +69,8 @@ export default class View {
 
     this.showLabels();
     this.showDate();
-    this.showTimeHHMM();
-    window.setInterval(this.showTimeHHMM, 1000);
+    // this.showTimeHHMM();
+    window.setInterval(this.showTimeHHMM, 60000);
   }
 
   showDate() {
@@ -103,14 +103,13 @@ export default class View {
     this.cityInput.setAttribute('placeholder', placeholder);
   }
 
-  showTimeHHMM = () => {
+  showTimeHHMM = delta => {
     const tm = new Date();
     let m = tm.getMinutes();
-    let s = tm.getSeconds();
+    const h = tm.getHours();
     m = checkTime(m);
-    s = checkTime(s);
-
-    this.datemm.innerHTML = `:${m}:${s}`;
+    this.datemm.innerHTML = `:${m}`;
+    this.datehh.innerText = h + delta;
   };
 
   async showCity(city, country) {

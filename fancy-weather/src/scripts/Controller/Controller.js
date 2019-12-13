@@ -56,47 +56,8 @@ export default class Controller {
     const weatherData = await getWeatherData(lat, lng);
     this.view.showWeatherData(weatherData);
 
-    this.view.datehh.innerText = timeThere(weatherData.timezone);
-
-    this.showAppBg(lat, lng, weatherData);
-  }
-
-  async navigatorGeo(pos) {
-    const [lat, lng] = [pos.coords.latitude, pos.coords.longitude];
-
-    // save current position in storage
-    localStorage.removeItem('weatherLat');
-    localStorage.setItem('weatherLat', lat);
-    localStorage.removeItem('weatherLng');
-    localStorage.setItem('weatherLng', lng);
-
-    localStorage.removeItem('weatherCurrentLng');
-    localStorage.setItem('weatherCurrentLng', lng);
-
-    // draw map of current geolocation
-    this.view.showCoordinates(lat, lng);
-    mapbox(lat, lng);
-
-    const lang = localStorage.getItem('weatherLang');
-    getPlaceByCoors(lat, lng, lang)
-      .then(res => {
-        if (res === undefined) {
-          createPopup(3);
-          return;
-        }
-        const [city, country] = res;
-        this.view.showCity(city, country);
-        this.view.showDate();
-        this.view.showLabels();
-      })
-      .catch(() => {
-        createPopup(0);
-      });
-
-    const weatherData = await getWeatherData(lat, lng);
-    this.view.showWeatherData(weatherData);
-
-    this.view.datehh.innerText = timeThere(weatherData.timezone);
+    this.view.datehh.innerText = timeThere(weatherData.timezone)[0];
+    this.view.showTimeHHMM(timeThere(weatherData.timezone)[1]);
 
     this.showAppBg(lat, lng, weatherData);
   }
@@ -184,7 +145,8 @@ export default class Controller {
     const weatherData = await getWeatherData(coors.lat, coors.lng, unit);
     this.view.showWeatherData(weatherData);
 
-    this.view.datehh.innerText = timeThere(weatherData.timezone);
+    this.view.datehh.innerText = timeThere(weatherData.timezone)[0];
+    this.view.showTimeHHMM(timeThere(weatherData.timezone)[1]);
 
     this.showAppBg(coors.lat, coors.lng, weatherData);
   }
