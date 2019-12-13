@@ -20,7 +20,7 @@ export function timeThere(timezone) {
   const tmCur = new Date();
   const hCur = tmCur.getHours();
   const delta = hour - hCur;
-  return [hour, delta];
+  localStorage.setItem('hoursDelta', delta);
 }
 
 export function createPopup(i = 0) {

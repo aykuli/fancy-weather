@@ -103,13 +103,13 @@ export default class View {
     this.cityInput.setAttribute('placeholder', placeholder);
   }
 
-  showTimeHHMM = (delta = 0) => {
+  showTimeHHMM = () => {
     const tm = new Date();
     let m = tm.getMinutes();
     const h = tm.getHours();
     m = checkTime(m);
     this.datemm.innerHTML = `:${m}`;
-    this.datehh.innerText = h + delta;
+    this.datehh.innerText = h + Number(localStorage.getItem('hoursDelta'));
   };
 
   async showCity(city, country) {

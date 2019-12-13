@@ -60,9 +60,8 @@ export default class Controller {
     }
     this.view.showWeatherData(weatherData);
 
-    const [hours, delta] = timeThere(weatherData.timezone);
-    this.view.datehh.innerText = hours;
-    this.view.showTimeHHMM(delta);
+    localStorage.setItem('hoursDelta', 0);
+    this.view.showTimeHHMM();
 
     this.showAppBg(lat, lng, weatherData);
   }
@@ -155,9 +154,9 @@ export default class Controller {
     const weatherData = await getWeatherData(coors.lat, coors.lng, unit);
     this.view.showWeatherData(weatherData);
 
-    const [hours, delta] = timeThere(weatherData.timezone);
-    this.view.datehh.innerText = hours;
-    this.view.showTimeHHMM(delta);
+    // find delta in hours and save it in localStorage
+    timeThere(weatherData.timezone);
+    this.view.showTimeHHMM();
 
     this.showAppBg(coors.lat, coors.lng, weatherData);
   }
