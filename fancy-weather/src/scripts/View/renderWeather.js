@@ -15,7 +15,8 @@ export function renderCurrentWeather(weather) {
   const weatherApparentWrap = createElement('p', 'weather__current--item', weatherCurrentData);
   const weatherApparentLabel = createElement('span', '', weatherApparentWrap);
   const weatherApparent = createElement('span', '', weatherApparentWrap);
-
+  const weatherApparentSign = createElement('span', '', weatherApparentWrap);
+  weatherApparentSign.innerText = '°';
   const weatherWindWrap = createElement('p', 'weather__current--item', weatherCurrentData);
   const weatherWindLabel = createElement('span', '', weatherWindWrap);
   const weatherWind = createElement('span', '', weatherWindWrap);

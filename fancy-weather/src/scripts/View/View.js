@@ -69,7 +69,7 @@ export default class View {
 
     this.showLabels();
     this.showDate();
-    // this.showTimeHHMM();
+    this.showTimeHHMM();
     window.setInterval(this.showTimeHHMM, 60000);
   }
 
@@ -103,7 +103,7 @@ export default class View {
     this.cityInput.setAttribute('placeholder', placeholder);
   }
 
-  showTimeHHMM = delta => {
+  showTimeHHMM = (delta = 0) => {
     const tm = new Date();
     let m = tm.getMinutes();
     const h = tm.getHours();
@@ -125,10 +125,11 @@ export default class View {
   }
 
   showCoordinates(lat, lng) {
-    const latMin = Math.abs((lat.toFixed(0) - lat) * 60).toFixed(0);
-    const lngMin = Math.abs((lng.toFixed(0) - lng) * 60).toFixed(0);
-    this.latitudeValue.innerText = `${lat.toFixed(0)}° ${latMin}`;
-    this.longitudeValue.innerText = `${lng.toFixed(0)}° ${lngMin}`;
+    const zeroAdd = val => (val < 10 ? `0${val}` : `${val}`);
+    const latMinutes = zeroAdd(Math.abs((lat.toFixed(0) - lat) * 60).toFixed(0));
+    const lngMinutes = zeroAdd(Math.abs((lng.toFixed(0) - lng) * 60).toFixed(0));
+    this.latitudeValue.innerText = `${Math.abs(lat.toFixed(0))}° ${latMinutes}`;
+    this.longitudeValue.innerText = `${Math.abs(lng.toFixed(0))}° ${lngMinutes}`;
   }
 
   showWeatherData(data) {
@@ -137,24 +138,26 @@ export default class View {
       return;
     }
 
-    this.temperature.innerText = data.currently.temperature.toFixed(0);
+    const tempArr = [
+      data.currently.temperature.toFixed(0),
+      data.currently.apparentTemperature.toFixed(0),
+      ((data.daily.data[0].temperatureMax + data.daily.data[0].temperatureMax) / 2).toFixed(0),
+      ((data.daily.data[1].temperatureMax + data.daily.data[1].temperatureMax) / 2).toFixed(0),
+      ((data.daily.data[2].temperatureMax + data.daily.data[2].temperatureMax) / 2).toFixed(0),
+    ];
+
+    const zeroFixedTemps = tempArr.map(el => (el.toString() === '-0' ? 0 : el));
+
+    [
+      this.temperature.innerText,
+      this.weatherApparent.innerText,
+      this.tomorrowTemperature.innerText,
+      this.after2DaysTemperature.innerText,
+      this.after3DaysTemperature.innerText,
+    ] = zeroFixedTemps;
     this.weatherSummary.innerText = data.currently.summary;
-    this.weatherApparent.innerText = `${data.currently.apparentTemperature}°`;
     this.weatherWind.innerText = data.currently.windSpeed.toFixed(1);
     this.weatherHumidity.innerText = `${(data.currently.humidity * 100).toFixed(0)}%`;
-
-    this.tomorrowTemperature.innerText = (
-      (data.daily.data[0].temperatureMax + data.daily.data[0].temperatureMax) /
-      2
-    ).toFixed(0);
-    this.after2DaysTemperature.innerText = (
-      (data.daily.data[2].temperatureMax + data.daily.data[2].temperatureMax) /
-      2
-    ).toFixed(0);
-    this.after3DaysTemperature.innerText = (
-      (data.daily.data[2].temperatureMax + data.daily.data[2].temperatureMax) /
-      2
-    ).toFixed(0);
 
     const getIcon = key => weatherIcons.get(data.daily.data[key].icon);
     const [iconTomorrow, iconAfter2Day, iconAfter3Day] = [getIcon(0), getIcon(1), getIcon(2), getIcon(3)];
@@ -215,8 +218,8 @@ export default class View {
     const tomorrow = Number(this.tomorrowTemperature.innerText);
     const after2Days = Number(this.after2DaysTemperature.innerText);
     const after3Days = Number(this.after3DaysTemperature.innerText);
-
-    const isCelsius = element === this.celsius;
+    // prettier-ignore
+    const isCelsius = (element === this.celsius);
     this.temperature.innerText = celsiusToFarengeitAndReverse(temperature, isCelsius);
     this.tomorrowTemperature.innerText = celsiusToFarengeitAndReverse(tomorrow, isCelsius);
     this.after2DaysTemperature.innerText = celsiusToFarengeitAndReverse(after2Days, isCelsius);

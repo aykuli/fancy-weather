@@ -16,16 +16,18 @@ test('typeof functions must be function', () => {
 });
 
 test('Check calculation temperature from celcius to Farengeit and reverse', () => {
-  let tempCelcius = celsiusToFarengeitAndReverse(20);
+  let isToCelsius = true;
+
+  let tempCelcius = celsiusToFarengeitAndReverse(20, !isToCelsius);
   expect(tempCelcius).toStrictEqual('68');
 
-  tempCelcius = celsiusToFarengeitAndReverse(100.4);
-  expect(tempCelcius).toStrictEqual('213');
+  tempCelcius = celsiusToFarengeitAndReverse(100, !isToCelsius);
+  expect(tempCelcius).toStrictEqual('212');
 
-  let tempFarengheit = celsiusToFarengeitAndReverse(41, false);
+  let tempFarengheit = celsiusToFarengeitAndReverse(41, isToCelsius);
   expect(tempFarengheit).toStrictEqual('5');
 
-  tempFarengheit = celsiusToFarengeitAndReverse(131, false);
+  tempFarengheit = celsiusToFarengeitAndReverse(131, isToCelsius);
   expect(tempFarengheit).toStrictEqual('55');
 });
 

@@ -8,8 +8,8 @@ export function randomInt(min, max) {
   return Math.round(rand);
 }
 
-export function celsiusToFarengeitAndReverse(temp, isToFarengheit = true) {
-  return isToFarengheit ? ((9 / 5) * temp + 32).toFixed(0) : ((5 / 9) * (temp - 32)).toFixed(0);
+export function celsiusToFarengeitAndReverse(temp, isToCelsius = true) {
+  return !isToCelsius ? ((9 / 5) * temp + 32).toFixed(0) : ((temp - 32) / 1.8).toFixed(0);
 }
 
 export function timeThere(timezone) {
@@ -28,6 +28,7 @@ export function createPopup(i = 0) {
   popup.classList.remove('visually-hidden');
   const lang = localStorage.getItem('weatherLang');
   popup.innerText = errorMsg[lang][i];
+  console.log(errorMsg[lang][i]);
   setTimeout(() => popup.classList.add('visually-hidden'), 2500);
 }
 

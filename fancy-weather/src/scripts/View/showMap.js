@@ -1,6 +1,6 @@
 export default function showMap(elem) {
   const width = document.body.clientWidth;
-  console.log(width);
+
   if (width >= 1000) {
     elem.setAttribute('style', 'width: 320px; height: 320px');
   }

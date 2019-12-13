@@ -54,10 +54,15 @@ export default class Controller {
       });
 
     const weatherData = await getWeatherData(lat, lng);
+    if (weatherData === undefined) {
+      createPopup(2);
+      return;
+    }
     this.view.showWeatherData(weatherData);
 
-    this.view.datehh.innerText = timeThere(weatherData.timezone)[0];
-    this.view.showTimeHHMM(timeThere(weatherData.timezone)[1]);
+    const [hours, delta] = timeThere(weatherData.timezone);
+    this.view.datehh.innerText = hours;
+    this.view.showTimeHHMM(delta);
 
     this.showAppBg(lat, lng, weatherData);
   }
@@ -79,7 +84,12 @@ export default class Controller {
       const [lat, lng] = [localStorage.getItem('weatherLat'), localStorage.getItem('weatherLng')];
 
       const unit = localStorage.getItem('weatherUnit');
-      getWeatherData(lat, lng, unit).then(res => {
+      getWeatherData(lat, lng, unit).then((res, rej) => {
+        if (rej !== undefined) {
+          createPopup(2);
+          return;
+        }
+        console.log('rej:', rej);
         this.view.weatherSummary.innerText = res.currently.summary;
       });
 
@@ -145,8 +155,9 @@ export default class Controller {
     const weatherData = await getWeatherData(coors.lat, coors.lng, unit);
     this.view.showWeatherData(weatherData);
 
-    this.view.datehh.innerText = timeThere(weatherData.timezone)[0];
-    this.view.showTimeHHMM(timeThere(weatherData.timezone)[1]);
+    const [hours, delta] = timeThere(weatherData.timezone);
+    this.view.datehh.innerText = hours;
+    this.view.showTimeHHMM(delta);
 
     this.showAppBg(coors.lat, coors.lng, weatherData);
   }
