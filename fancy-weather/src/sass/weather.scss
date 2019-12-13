@@ -188,7 +188,8 @@
             }
 
             &--item {
-                margin: 0 20px 25px;
+                width: 285px;
+                margin: 0 auto;
 
                 font-size: 24px;
             }
@@ -220,8 +221,15 @@
     }
 }
 
+
 @media(max-width: 400px) {
     .weather {
+        &__forecast {
+            &--item {
+                margin: 0 20px 25px;
+            }
+        }
+
         &__icon {
             &--big {
                 top: 115px;
