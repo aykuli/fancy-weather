@@ -157,9 +157,7 @@ export default class View {
       2
     ).toFixed(0);
 
-    const getIcon = key => {
-      return weatherIcons.get(data.daily.data[key].icon);
-    };
+    const getIcon = key => weatherIcons.get(data.daily.data[key].icon);
     const [iconTomorrow, iconAfter2Day, iconAfter3Day] = [getIcon(0), getIcon(1), getIcon(2), getIcon(3)];
     const iconUrl = (icon, el) => {
       if (el === this.weatherIconBig) {

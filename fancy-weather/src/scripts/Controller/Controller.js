@@ -3,7 +3,9 @@ import { forwardGeocoding } from '../APIs/opencagedata.js';
 import getPlaceByCoors from './getPlaceByCoors.js';
 import getWeatherData from '../APIs/getWeatherData.js';
 import mapbox from '../APIs/mapbox.js';
+import showMap from '../View/showMap.js';
 import unsplashForBG from '../APIs/unsplashForBG.js';
+import ipInfo from '../APIs/ipInfo.js';
 
 export default class Controller {
   constructor(view) {
@@ -16,26 +18,47 @@ export default class Controller {
     this.watchReload();
     this.view.watchUnitChanging();
     this.watchSpeech(this.view.speechBtn);
+    window.addEventListener('resize', () => showMap(this.view.map));
   }
 
   init() {
-    document.addEventListener('DOMContentLoaded', this.getCurrentCoors.bind(this));
+    document.addEventListener('DOMContentLoaded', () => this.getCurrentPlaceData());
   }
 
-  getCurrentCoors() {
-    const options = {
-      enableHighAccuracy: true,
-      timeout: 5000,
-      maximumAge: 0,
-    };
+  async getCurrentPlaceData() {
+    const [lat, lng] = await ipInfo();
 
-    function error(err) {
-      alert(`ERROR(${err.code}): ${err.message}`); // eslint-disable-line
-    }
+    // save current position in storage
+    localStorage.removeItem('weatherLat');
+    localStorage.setItem('weatherLat', lat);
+    localStorage.removeItem('weatherLng');
+    localStorage.setItem('weatherLng', lng);
 
-    navigator.geolocation.getCurrentPosition(this.navigatorGeo.bind(this), error, options);
+    this.view.showCoordinates(lat, lng);
+    mapbox(lat, lng);
 
-    if (!navigator.geolocation) createPopup(1);
+    const lang = localStorage.getItem('weatherLang');
+    getPlaceByCoors(lat, lng, lang)
+      .then(res => {
+        if (res === undefined) {
+          createPopup(3);
+          return;
+        }
+        const [city, country] = res;
+        this.view.showCity(city, country);
+        this.view.showDate();
+        this.view.showLabels();
+      })
+      .catch(() => {
+        createPopup(0);
+      });
+
+    const weatherData = await getWeatherData(lat, lng);
+    this.view.showWeatherData(weatherData);
+
+    this.view.datehh.innerText = timeThere(weatherData.timezone);
+
+    this.showAppBg(lat, lng, weatherData);
   }
 
   async navigatorGeo(pos) {

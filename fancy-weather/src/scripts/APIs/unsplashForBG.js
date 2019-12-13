@@ -31,6 +31,9 @@ export default async function unsplashForBG(...args) {
     localStorage.setItem('weatherBgImg', imgUrl());
     return imgUrl();
   } catch (err) {
+    if (localStorage.getItem('weatherBgImg') === null) {
+      return 'https://images.unsplash.com/photo-1433769747000-441481877caf?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max';
+    }
     return localStorage.getItem('weatherBgImg');
   }
 }

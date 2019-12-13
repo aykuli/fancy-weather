@@ -11,9 +11,7 @@
     }
 }
 
-.mapboxgl-canvas {
-    width: 320px;
-    height: 320px;
+canvas.mapboxgl-canvas {
     border-radius: 15px;
     border-bottom-right-radius: 0;
 }
@@ -22,3 +20,4 @@
 .mapboxgl-ctrl-icon {
     background-image: url(../../node_modules/mapbox-gl/src/css/svg/mapboxgl-ctrl-fullscreen.svg);
 }
+

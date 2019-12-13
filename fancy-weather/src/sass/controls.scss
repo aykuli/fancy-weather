@@ -182,6 +182,8 @@
 
             &:hover {
                 color:rgba(76, 82, 85, 0.8);
+                
+                cursor: pointer;
 
                 &:after{
                     margin-top:-44px;
@@ -238,6 +240,7 @@
 
             &:hover {
                 background-color: rgb(241, 103, 23);
+                cursor: pointer;
             }
             &:focus, &:active {
                 outline: none;
@@ -249,10 +252,32 @@
 @media(max-width: 400px) {
     .controls {
         &__search {
+            &--form {
+                width: 100%;
+            }
+
             &--input {
-                width: 200px;
+                width: 100%;
+                padding-left: 10px;
 
                 text-overflow: ellipsis;
+            }
+        }
+
+        &__speech {
+            &--bg {
+                position: absolute;
+                top: 8px;
+                right: 75px;
+            }
+    
+            &--btn {
+                position: absolute;
+                top: 8px;
+                right: 75px;
+    
+                width: 30px;
+                height: 30px;
             }
         }
     }

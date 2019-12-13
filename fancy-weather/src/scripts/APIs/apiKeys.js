@@ -6,4 +6,6 @@ const mapboxKey = 'pk.eyJ1IjoiYXlrdWxpIiwiYSI6ImNrM2pybXF5MjA0OWczcG14ZzdxNXBlYm
 
 const unsplasKey = 'd35b693bbc2465fad89fead4a6ea958ac2741d9791a9ece87994a879cdc68718';
 
-export { darkSkyKey, openCageDataKey, mapboxKey, unsplasKey };
+const ipInfoKey = 'abb04b3b63728f';
+
+export { darkSkyKey, openCageDataKey, mapboxKey, unsplasKey, ipInfoKey };

@@ -19,7 +19,7 @@ const dom = new JSDOM(
   `<!DOCTYPE html>
 <html lang="en">
 <body>
-  <div class="page-wrap visually-hidden"></div>
+  <div class="page-wrap"></div>
 </body>
 </html>
 `,

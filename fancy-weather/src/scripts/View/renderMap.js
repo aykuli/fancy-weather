@@ -1,11 +1,12 @@
 import { createElement } from '../functions/functions.js';
+import showMap from './showMap';
 
 export default function renderMap(container) {
   const mapWrap = createElement('div', 'map__wrap', container);
 
   const map = createElement('div', '', mapWrap);
   map.setAttribute('id', 'map');
-  map.setAttribute('style', 'width: 320px; height: 320px');
+  showMap(map);
 
   const coors = createElement('div', 'map__coors', mapWrap);
   const latitude = createElement('p', 'map__coors--latitude', coors);
