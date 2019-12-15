@@ -12,6 +12,7 @@ test('typeof functions must be function', () => {
   expect(typeof randomInt).toBe('function');
   expect(typeof celsiusToFarengeitAndReverse).toBe('function');
   expect(typeof timeThere).toBe('function');
+  expect(timeThere).toEqual(expect.anything());
   expect(typeof createPopup).toBe('function');
 });
 
@@ -74,5 +75,6 @@ test('getCity function', () => {
     },
   };
   expect(getCity(data)).toEqual('SomePlaceOnTheEarth');
+  expect(getCity(data)).toMatch(/\w+/g);
 });
 /* eslint-enable */

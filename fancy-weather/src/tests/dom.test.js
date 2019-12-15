@@ -1,6 +1,7 @@
 import { renderCurrentWeather, renderForecastWeather } from '../scripts/View/renderWeather.js';
 import { createElement } from '../scripts/functions/functions.js';
 import renderInput from '../scripts/View/renderInput.js';
+// import View from '../scripts/View/View.js'
 
 require('@babel/register');
 const jsdom = require('jsdom');
@@ -29,6 +30,7 @@ const dom = new JSDOM(
 const page = dom.window.document.querySelector('.page-wrap');
 /* eslint-disable */
 test('has document', () => {
+  expect(page).toBeDefined();
   expect(page.nodeName).toEqual('DIV');
 });
 
@@ -92,6 +94,9 @@ test('renderCurrentWeather creates elements in Block2 and 3', () => {
 test('renderInput creates input from in Block 1', () => {
   const lang = 'en';
   const elArr = renderInput(page, lang);
+  
+  expect(elArr).toBeInstanceOf(Array);
+  expect(String(elArr)).toEqual('[object HTMLDivElement],[object HTMLInputElement],[object HTMLButtonElement],[object HTMLButtonElement],[object HTMLSpanElement]');
   expect(elArr[0].className).toEqual('controls__search--form');
   expect(elArr[0].nodeName).toEqual('DIV');
 

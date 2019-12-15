@@ -1,5 +1,5 @@
 import { weekDayArr, monthArr, controlsLocale, weatherIcons } from './consts.js';
-import { celsiusToFarengeitAndReverse, createPopup, createElement, checkTime } from '../functions/functions.js';
+import { celsiusToFarengeitAndReverse, createPopup, createElement, zeroAdd } from '../functions/functions.js';
 import renderControlBtns from './renderControlBtns.js';
 import renderInput from './renderInput.js';
 import { renderCurrentWeather, renderForecastWeather } from './renderWeather.js';
@@ -81,9 +81,10 @@ export default class View {
     this.dateDD.innerText = time.getDate();
     this.dateMM.innerText = monthArr[lang][time.getMonth()];
 
-    this.tomorrowDay.innerText = weekDayArr[lang][((time.getDay() + 1) % 7) + 7];
-    this.after2DaysDay.innerText = weekDayArr[lang][((time.getDay() + 2) % 7) + 7];
-    this.after3DaysDay.innerText = weekDayArr[lang][((time.getDay() + 3) % 7) + 7];
+    const weekDayIndex = val => ((time.getDay() + val) % 7) + 7;
+    this.tomorrowDay.innerText = weekDayArr[lang][weekDayIndex(1)];
+    this.after2DaysDay.innerText = weekDayArr[lang][weekDayIndex(2)];
+    this.after3DaysDay.innerText = weekDayArr[lang][weekDayIndex(3)];
   }
 
   showLabels() {
@@ -107,7 +108,7 @@ export default class View {
     const tm = new Date();
     let m = tm.getMinutes();
     const h = tm.getHours();
-    m = checkTime(m);
+    m = zeroAdd(m);
     this.datemm.innerHTML = `:${m}`;
     this.datehh.innerText = h + Number(localStorage.getItem('hoursDelta'));
   };
@@ -125,11 +126,11 @@ export default class View {
   }
 
   showCoordinates(lat, lng) {
-    const zeroAdd = val => (val < 10 ? `0${val}` : `${val}`);
-    const latMinutes = zeroAdd(Math.abs((lat.toFixed(0) - lat) * 60).toFixed(0));
-    const lngMinutes = zeroAdd(Math.abs((lng.toFixed(0) - lng) * 60).toFixed(0));
-    this.latitudeValue.innerText = `${Math.abs(lat.toFixed(0))}° ${latMinutes}`;
-    this.longitudeValue.innerText = `${Math.abs(lng.toFixed(0))}° ${lngMinutes}`;
+    const getMinutes = val => zeroAdd(Math.abs((val.toFixed(0) - val) * 60).toFixed(0));
+    const innerTextVal = val => `${Math.abs(val.toFixed(0))}° ${getMinutes(val)}'`;
+
+    this.latitudeValue.innerText = innerTextVal(lat);
+    this.longitudeValue.innerText = innerTextVal(lng);
   }
 
   showWeatherData(data) {
@@ -160,7 +161,9 @@ export default class View {
     this.weatherHumidity.innerText = `${(data.currently.humidity * 100).toFixed(0)}%`;
 
     const getIcon = key => weatherIcons.get(data.daily.data[key].icon);
-    const [iconTomorrow, iconAfter2Day, iconAfter3Day] = [getIcon(0), getIcon(1), getIcon(2), getIcon(3)];
+    const icons = [weatherIcons.get(data.currently.icon), getIcon(0), getIcon(1), getIcon(2)];
+
+    const elArr = [this.weatherIconBig, this.tomorrowIcon, this.after2DaysIcon, this.after3DaysIcon];
     const iconUrl = (icon, el) => {
       if (el === this.weatherIconBig) {
         return `url(${require(`../../assets/img/${icon}.png`)})`; // eslint-disable-line
@@ -175,12 +178,9 @@ export default class View {
       return `url(${require(`../../assets/img/${icon}.png`)})`; // eslint-disable-line
     };
 
-    const iconToday = weatherIcons.get(data.currently.icon);
-
-    this.weatherIconBig.style.backgroundImage = iconUrl(iconToday, this.weatherIconBig);
-    this.tomorrowIcon.style.backgroundImage = iconUrl(iconTomorrow, this.tomorrowIcon);
-    this.after2DaysIcon.style.backgroundImage = iconUrl(iconAfter2Day, this.after2DaysIcon);
-    this.after3DaysIcon.style.backgroundImage = iconUrl(iconAfter3Day, this.after3DaysIcon);
+    for (let i = 0; i < elArr.length; i += 1) {
+      elArr[i].style.backgroundImage = iconUrl(icons[i], elArr[i]);
+    }
   }
 
   cleanMap() {
@@ -213,16 +213,17 @@ export default class View {
 
   setTemperature(element) {
     element.classList.add('controls__btn--unit-active');
-
-    const temperature = Number(this.temperature.innerText);
-    const tomorrow = Number(this.tomorrowTemperature.innerText);
-    const after2Days = Number(this.after2DaysTemperature.innerText);
-    const after3Days = Number(this.after3DaysTemperature.innerText);
     // prettier-ignore
     const isCelsius = (element === this.celsius);
-    this.temperature.innerText = celsiusToFarengeitAndReverse(temperature, isCelsius);
-    this.tomorrowTemperature.innerText = celsiusToFarengeitAndReverse(tomorrow, isCelsius);
-    this.after2DaysTemperature.innerText = celsiusToFarengeitAndReverse(after2Days, isCelsius);
-    this.after3DaysTemperature.innerText = celsiusToFarengeitAndReverse(after3Days, isCelsius);
+    const elArr = [
+      this.temperature.innerText,
+      this.tomorrowTemperature.innerText,
+      this.after2DaysTemperature.innerText,
+      this.after3DaysTemperature.innerText,
+    ];
+
+    for (let i = 0; i < elArr.length; i += 1) {
+      elArr[i] = celsiusToFarengeitAndReverse(Number(elArr[0]), isCelsius);
+    }
   }
 }

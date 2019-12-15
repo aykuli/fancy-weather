@@ -3,7 +3,7 @@ import { errorMsg } from '../View/consts.js';
 const moment = require('moment-timezone');
 
 export function randomInt(min, max) {
-  // получить случайное число от (min-0.5) до (max+0.5)
+  // get rundom number from (min-0.5) to (max+0.5)
   const rand = min - 0.5 + Math.random() * (max - min + 1);
   return Math.round(rand);
 }
@@ -62,7 +62,7 @@ export function getCity(data) {
   return '';
 }
 
-export function checkTime(i) {
+export function zeroAdd(i) {
   return i < 10 ? `0${i}` : i;
 }
 

@@ -153,7 +153,6 @@ export default class Controller {
     const weatherData = await getWeatherData(coors.lat, coors.lng, unit);
     this.view.showWeatherData(weatherData);
 
-    // find delta in hours and save it in localStorage
     timeThere(weatherData.timezone);
     this.view.showTimeHHMM();
 

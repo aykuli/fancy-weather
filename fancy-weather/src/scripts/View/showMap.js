@@ -9,10 +9,10 @@ export default function showMap(elem) {
     elem.setAttribute('style', `width: ${width - 80}px; height: ${width / 2}px`);
   }
 
-  if (width < 650 && width > 450) {
+  if (width < 650 && width > 400) {
     elem.setAttribute('style', `width: ${width - 80}px; height: ${width}px`);
   }
-  if (width <= 450) {
+  if (width <= 400) {
     elem.setAttribute('style', `width: ${width - 20}px; height: ${width}px`);
   }
 }
