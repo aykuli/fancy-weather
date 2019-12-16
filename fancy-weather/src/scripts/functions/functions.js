@@ -28,7 +28,6 @@ export function createPopup(i = 0) {
   popup.classList.remove('visually-hidden');
   const lang = localStorage.getItem('weatherLang');
   popup.innerText = errorMsg[lang][i];
-  console.log(errorMsg[lang][i]);
   setTimeout(() => popup.classList.add('visually-hidden'), 2500);
 }
 
@@ -54,12 +53,13 @@ export function getSeason(month) {
 }
 
 export function getCity(data) {
-  if (data.results[0].components.city === undefined) {
-    return data.results[0].components.village === undefined
-      ? data.results[0].components.state
-      : data.results[0].components.village;
-  }
-  return data.results[0].components.city;
+  const place = data.results[0].components;
+
+  if (place.city !== undefined) return place.city;
+  if (place.town !== undefined) return place.town;
+  if (place.village !== undefined) return place.village;
+  if (place.state !== undefined) return place.state;
+  return '';
 }
 
 export function zeroAdd(i) {

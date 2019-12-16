@@ -88,7 +88,6 @@ export default class Controller {
           createPopup(2);
           return;
         }
-        console.log('rej:', rej);
         this.view.weatherSummary.innerText = res.currently.summary;
       });
 

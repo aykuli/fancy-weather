@@ -5,6 +5,10 @@
     padding: 0;
 }
 
+body {
+    min-width: 320px;
+}
+
 .page-wrap {
     max-width: 1260px;
     min-width: 260px;
@@ -91,3 +95,8 @@
         font-size: 20px;
     }
 }
+
+@viewport {
+    width: 320px;
+  }
+

@@ -215,15 +215,14 @@ export default class View {
     element.classList.add('controls__btn--unit-active');
     // prettier-ignore
     const isCelsius = (element === this.celsius);
-    const elArr = [
-      this.temperature.innerText,
-      this.tomorrowTemperature.innerText,
-      this.after2DaysTemperature.innerText,
-      this.after3DaysTemperature.innerText,
-    ];
+    const temperature = Number(this.temperature.innerText);
+    const tomorrow = Number(this.tomorrowTemperature.innerText);
+    const after2Days = Number(this.after2DaysTemperature.innerText);
+    const after3Days = Number(this.after3DaysTemperature.innerText);
 
-    for (let i = 0; i < elArr.length; i += 1) {
-      elArr[i] = celsiusToFarengeitAndReverse(Number(elArr[0]), isCelsius);
-    }
+    this.temperature.innerText = celsiusToFarengeitAndReverse(temperature, isCelsius);
+    this.tomorrowTemperature.innerText = celsiusToFarengeitAndReverse(tomorrow, isCelsius);
+    this.after2DaysTemperature.innerText = celsiusToFarengeitAndReverse(after2Days, isCelsius);
+    this.after3DaysTemperature.innerText = celsiusToFarengeitAndReverse(after3Days, isCelsius);
   }
 }
