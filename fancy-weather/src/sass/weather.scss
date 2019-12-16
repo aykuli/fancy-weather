@@ -188,8 +188,7 @@
             }
 
             &--item {
-                width: 285px;
-                margin: 0 auto;
+                margin: 0 20px 25px;
 
                 font-size: 24px;
             }
@@ -219,9 +218,9 @@
     }
 }
 
-
 @media(max-width: 400px) {
     .weather {
+<<<<<<< HEAD
         &__current {
             font-size: 100px;
         }
@@ -232,6 +231,8 @@
             }
         }
 
+=======
+>>>>>>> parent of 1194997... fix: scss. horizontal scrolling
         &__icon {
             &--big {
                 top: 115px;

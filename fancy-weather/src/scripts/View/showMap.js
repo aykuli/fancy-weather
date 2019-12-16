@@ -9,10 +9,16 @@ export default function showMap(elem) {
     elem.setAttribute('style', `width: ${width - 80}px; height: ${width / 2}px`);
   }
 
+<<<<<<< HEAD
   if (width < 650 && width > 400) {
     elem.setAttribute('style', `width: ${width - 80}px; height: ${width}px`);
   }
   if (width <= 400) {
     elem.setAttribute('style', `width: ${width - 20}px; height: ${width}px`);
   }
+=======
+  if (width < 650) {
+    elem.setAttribute('style', `width: ${width - 80}px; height: ${width}px`);
+  }
+>>>>>>> parent of 1194997... fix: scss. horizontal scrolling
 }
