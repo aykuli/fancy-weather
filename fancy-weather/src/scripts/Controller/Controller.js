@@ -107,7 +107,7 @@ export default class Controller {
   watchReload() {
     this.view.controlsBtnRefresh.addEventListener('click', () => {
       unsplashForBG().then(res => {
-        this.view.page.style.backgroundImage = `url(${res})`;
+        document.body.style.backgroundImage = `url(${res})`;
       });
       this.view.controlsBtnRefresh.children[0].classList.add('spin-animation');
       setTimeout(() => this.view.controlsBtnRefresh.children[0].classList.remove('spin-animation'), 500);
@@ -182,7 +182,7 @@ export default class Controller {
     const { icon } = weatherData.currently;
 
     data = await unsplashForBG(country, city, season, dayTime, icon);
-    this.view.page.style.backgroundImage = `url(${data})`;
+    document.body.style.backgroundImage = `url(${data})`;
   }
 
   watchSpeech(btn) {

@@ -157,7 +157,9 @@ export default class View {
       this.after3DaysTemperature.innerText,
     ] = zeroFixedTemps;
     this.weatherSummary.innerText = data.currently.summary;
-    this.weatherWind.innerText = data.currently.windSpeed.toFixed(1);
+
+    const wind = data.currently.windSpeed;
+    this.weatherWind.innerText = data.flags.units === 'si' ? wind.toFixed(1) : (wind * 0.44704).toFixed(1);
     this.weatherHumidity.innerText = `${(data.currently.humidity * 100).toFixed(0)}%`;
 
     const getIcon = key => weatherIcons.get(data.daily.data[key].icon);
@@ -192,9 +194,10 @@ export default class View {
   watchUnitChanging() {
     this.units.addEventListener('click', e => {
       const active = document.querySelector('.controls__btn--unit-active');
-      localStorage.removeItem('weatherUnit');
 
       if (e.target !== active) {
+        localStorage.removeItem('weatherUnit');
+
         active.classList.remove('controls__btn--unit-active');
         this.setTemperature(e.target);
         switch (e.target) {
@@ -219,10 +222,12 @@ export default class View {
     const tomorrow = Number(this.tomorrowTemperature.innerText);
     const after2Days = Number(this.after2DaysTemperature.innerText);
     const after3Days = Number(this.after3DaysTemperature.innerText);
+    const apparent = Number(this.weatherApparent.innerText);
 
     this.temperature.innerText = celsiusToFarengeitAndReverse(temperature, isCelsius);
     this.tomorrowTemperature.innerText = celsiusToFarengeitAndReverse(tomorrow, isCelsius);
     this.after2DaysTemperature.innerText = celsiusToFarengeitAndReverse(after2Days, isCelsius);
     this.after3DaysTemperature.innerText = celsiusToFarengeitAndReverse(after3Days, isCelsius);
+    this.weatherApparent.innerText = celsiusToFarengeitAndReverse(apparent, isCelsius);
   }
 }

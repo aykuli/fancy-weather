@@ -7,11 +7,16 @@
 
 body {
     min-width: 320px;
+    background-color: rgba(32, 109, 197, .8);
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    background-size: cover;
+    background-blend-mode: multiply;
 }
 
 .page-wrap {
     max-width: 1260px;
-    min-width: 260px;
+    // min-width: 260px;
     margin: 0 auto;
     padding: 40px 90px;
 
@@ -21,11 +26,7 @@ body {
     font-weight: normal;
     color: #fff;
 
-    background-color: rgba(32, 109, 197, .8);
-    background-repeat: no-repeat;
-    background-position: 0 0;
-    background-size: cover;
-    background-blend-mode: multiply;
+
 }
 
 .visually-hidden {
