@@ -179,4 +179,10 @@ const ERRORS = {
   MICROPHONE_UNREADY_ERROR: 8,
 };
 
-export { weekDayArr, monthArr, lang, controlsLocale, weatherIcons, errorMsg, ERRORS };
+const unsplashConsts = {
+  BG:
+    'https://images.unsplash.com/photo-1433769747000-441481877caf?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max',
+  smallMaxSize: 600,
+};
+
+export { weekDayArr, monthArr, lang, controlsLocale, weatherIcons, errorMsg, ERRORS, unsplashConsts };

@@ -39,32 +39,34 @@ export default class Controller {
     mapbox(lat, lng);
 
     const lang = localStorage.getItem('weatherLang');
-    getPlaceByCoors(lat, lng, lang)
-      .then(res => {
-        if (res === undefined) {
-          createPopup(ERRORS.COORDINATES_UNAVAILABLE);
-          return;
-        }
-        const [city, country] = res;
-        this.view.showCity(city, country);
-        this.view.showDate();
-        this.view.showLabels();
-      })
-      .catch(() => {
-        createPopup(ERRORS.PLACE_INCORRECT);
-      });
-
-    const weatherData = await getWeatherData(lat, lng);
-    if (weatherData === undefined) {
-      createPopup(ERRORS.WEATHER_API_UNAVAILABLE);
-      return;
+    try {
+      const data = await getPlaceByCoors(lat, lng, lang);
+      if (data === undefined) {
+        createPopup(ERRORS.COORDINATES_UNAVAILABLE);
+      }
+      const [city, country] = data;
+      this.view.showCity(city, country);
+      this.view.showDate();
+      this.view.showLabels();
+    } catch (e) {
+      createPopup(ERRORS.PLACE_INCORRECT);
     }
-    this.view.showWeatherData(weatherData);
 
-    localStorage.setItem('hoursDelta', 0);
-    this.view.showTimeHHMM();
+    try {
+      const weatherData = await getWeatherData(lat, lng);
+      if (weatherData === undefined) {
+        createPopup(ERRORS.WEATHER_API_UNAVAILABLE);
+        return;
+      }
+      this.view.showWeatherData(weatherData);
 
-    this.showAppBg(lat, lng, weatherData);
+      localStorage.setItem('hoursDelta', 0);
+      this.view.showTimeHHMM();
+
+      this.showAppBg(lat, lng, weatherData);
+    } catch (e) {
+      createPopup(ERRORS.WEATHER_API_UNAVAILABLE);
+    }
   }
 
   watchInput() {
@@ -75,7 +77,7 @@ export default class Controller {
   }
 
   watchLang() {
-    this.view.controlsLang.addEventListener('change', () => {
+    this.view.controlsLang.addEventListener('change', async () => {
       const lang = this.view.controlsLang.value;
 
       localStorage.removeItem('weatherLang');
@@ -92,16 +94,18 @@ export default class Controller {
         this.view.weatherSummary.innerText = res.currently.summary;
       });
 
-      getPlaceByCoors(lat, lng, lang)
-        .then(res => {
-          const [city, country] = res;
-          this.view.showCity(city, country);
-          this.view.showDate();
-          this.view.showLabels();
-        })
-        .catch(() => {
-          createPopup(ERRORS.UNKNOWN_ERROR);
-        });
+      try {
+        const data = await getPlaceByCoors(lat, lng, lang);
+        if (data === undefined) {
+          createPopup(ERRORS.COORDINATES_UNAVAILABLE);
+        }
+        const [city, country] = data;
+        this.view.showCity(city, country);
+        this.view.showDate();
+        this.view.showLabels();
+      } catch {
+        createPopup(ERRORS.UNKNOWN_ERROR);
+      }
     });
   }
 

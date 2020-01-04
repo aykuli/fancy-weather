@@ -1,16 +1,17 @@
 import { unsplasKey } from './apiKeys.js';
 import { randomInt } from '../functions/functions.js';
+import { unsplashConsts } from '../View/consts';
 
 export default async function unsplashForBG(...args) {
   const max = document.documentElement.clientWidth;
-  const orientation = max > 600 ? 'landscape' : 'portrait';
+  const orientation = max > unsplashConsts.smallMaxSize ? 'landscape' : 'portrait';
   let query = '';
 
   if (args.length === 0) {
     query = localStorage.getItem('weatherBgQuery');
   } else {
     for (const arg of args) {
-      query += `${arg}-`;
+      query += arg.join('-');
     }
     localStorage.removeItem('weatherBgQuery');
     localStorage.setItem('weatherBgQuery', query);
@@ -24,7 +25,7 @@ export default async function unsplashForBG(...args) {
 
     const imgUrl = () => {
       const num = randomInt(0, json.results.length);
-      return max < 600 ? json.results[num].urls.small : json.results[num].urls.regular;
+      return json.results[num].urls[max < unsplashConsts.smallMaxSize ? 'small' : 'regular'];
     };
 
     localStorage.removeItem('weatherBgImg');
@@ -32,7 +33,7 @@ export default async function unsplashForBG(...args) {
     return imgUrl();
   } catch (err) {
     if (localStorage.getItem('weatherBgImg') === null) {
-      return 'https://images.unsplash.com/photo-1433769747000-441481877caf?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max';
+      return unsplashConsts.BG;
     }
     return localStorage.getItem('weatherBgImg');
   }

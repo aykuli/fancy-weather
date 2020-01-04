@@ -7,6 +7,5 @@ export default async function getWeatherData(lat, lng) {
   const url = `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/${apiKey}/${lat},${lng}?lang=${lang}&units=${unit}`;
 
   const response = await fetch(url, { type: 'no-cors' });
-  const json = await response.json();
-  return json;
+  return response.json();
 }
