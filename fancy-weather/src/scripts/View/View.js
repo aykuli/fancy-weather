@@ -1,4 +1,4 @@
-import { weekDayArr, monthArr, controlsLocale, weatherIcons } from './consts.js';
+import { weekDayArr, monthArr, controlsLocale, weatherIcons, ERRORS } from './consts.js';
 import { celsiusToFarengeitAndReverse, createPopup, createElement, zeroAdd } from '../functions/functions.js';
 import renderControlBtns from './renderControlBtns.js';
 import renderInput from './renderInput.js';
@@ -135,7 +135,7 @@ export default class View {
 
   showWeatherData(data) {
     if (data === undefined) {
-      createPopup("Weather data hasn't been loaded");
+      createPopup(ERRORS.WEATHER_API_UNAVAILABLE);
       return;
     }
 
@@ -170,7 +170,7 @@ export default class View {
       if (el === this.weatherIconBig) {
         return `url(${require(`../../assets/img/${icon}.png`)})`; // eslint-disable-line
       }
-      if (icon === 'cloudy' || icon === 'partly-cloudy-day' || icon === 'partly-cloudy-night') {
+      if (['cloudy', 'partly-cloudy-day', 'partly-cloudy-night'].includes(icon)) {
         el.classList.remove('weather__icon--small');
         el.classList.add('weather__icon--small-top');
       } else {
@@ -208,7 +208,7 @@ export default class View {
             localStorage.setItem('weatherUnit', 'si');
             break;
           default:
-            createPopup('Something wrong with units. Reload page');
+            createPopup(ERRORS.UNKNOWN_ERROR);
         }
       }
     });

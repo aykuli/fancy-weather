@@ -70,7 +70,7 @@ export default class Controller {
   watchInput() {
     this.view.cityBtn.addEventListener('click', this.inputSearchResult.bind(this));
     this.view.cityInput.addEventListener('keydown', e => {
-      if (e.code === 'Enter' || e.code === 'NumpadEnter') this.inputSearchResult();
+      if (['Enter', 'NumpadEnter'].includes(e.code)) this.inputSearchResult();
     });
   }
 
@@ -86,7 +86,7 @@ export default class Controller {
       const unit = localStorage.getItem('weatherUnit');
       getWeatherData(lat, lng, unit).then((res, rej) => {
         if (rej !== undefined) {
-          createPopup(2);
+          createPopup(ERRORS.WEATHER_API_UNAVAILABLE);
           return;
         }
         this.view.weatherSummary.innerText = res.currently.summary;
@@ -173,7 +173,7 @@ export default class Controller {
     const month = tm.getMonth();
     let season = getSeason(month);
 
-    if (continent === 'Africa' || continent === 'Oceania' || continent === 'South America') {
+    if (['Africa', 'Oceania', 'South America'].includes(continent)) {
       season = 'summer';
     }
 
