@@ -9,7 +9,7 @@ export function randomInt(min, max) {
 }
 
 export function celsiusToFarengeitAndReverse(temp, isToCelsius = true) {
-  return !isToCelsius ? ((9 / 5) * temp + 32).toFixed(0) : ((temp - 32) / 1.8).toFixed(0);
+  return isToCelsius ? ((temp - 32) / 1.8).toFixed(0) : ((9 / 5) * temp + 32).toFixed(0);
 }
 
 export function timeThere(timezone) {
