@@ -23,11 +23,11 @@ export function timeThere(timezone) {
   localStorage.setItem('hoursDelta', delta);
 }
 
-export function createPopup(i = 0) {
+export function createPopup(errorType) {
   const popup = document.querySelector('.popup');
   popup.classList.remove('visually-hidden');
   const lang = localStorage.getItem('weatherLang');
-  popup.innerText = errorMsg[lang][i];
+  popup.innerText = errorMsg[lang][errorType];
   setTimeout(() => popup.classList.add('visually-hidden'), 2500);
 }
 
@@ -39,17 +39,14 @@ export function createElement(tag, classes, whereAppend) {
 }
 
 export function getSeason(month) {
-  let res = 'summer';
-  if (month < 2 || month === 11) {
-    res = 'winter';
-  } else if (month > 1 && month < 5) {
-    res = 'spring';
-  } else if (month > 4 && month < 8) {
-    res = '';
-  } else {
-    res = 'fall';
-  }
-  return res;
+  const winter = [11, 0, 1];
+  const spring = [2, 3, 4];
+  const fall = [8, 9, 10];
+
+  if (winter.includes(month)) return 'winter';
+  if (spring.includes(month)) return 'spring';
+  if (fall.includes(month)) return 'fall';
+  return 'summer';
 }
 
 export function getCity(data) {

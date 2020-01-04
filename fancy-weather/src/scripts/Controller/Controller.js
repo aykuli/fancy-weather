@@ -6,6 +6,7 @@ import mapbox from '../APIs/mapbox.js';
 import showMap from '../View/showMap.js';
 import unsplashForBG from '../APIs/unsplashForBG.js';
 import ipInfo from '../APIs/ipInfo.js';
+import { ERRORS } from '../View/consts';
 
 export default class Controller {
   constructor(view) {
@@ -41,7 +42,7 @@ export default class Controller {
     getPlaceByCoors(lat, lng, lang)
       .then(res => {
         if (res === undefined) {
-          createPopup(3);
+          createPopup(ERRORS.COORDINATES_UNAVAILABLE);
           return;
         }
         const [city, country] = res;
@@ -50,12 +51,12 @@ export default class Controller {
         this.view.showLabels();
       })
       .catch(() => {
-        createPopup(0);
+        createPopup(ERRORS.PLACE_INCORRECT);
       });
 
     const weatherData = await getWeatherData(lat, lng);
     if (weatherData === undefined) {
-      createPopup(2);
+      createPopup(ERRORS.WEATHER_API_UNAVAILABLE);
       return;
     }
     this.view.showWeatherData(weatherData);
@@ -99,7 +100,7 @@ export default class Controller {
           this.view.showLabels();
         })
         .catch(() => {
-          createPopup(5);
+          createPopup(ERRORS.UNKNOWN_ERROR);
         });
     });
   }
@@ -118,7 +119,7 @@ export default class Controller {
     const settlement = this.view.cityInput.value;
 
     if (settlement === '') {
-      createPopup(0);
+      createPopup(ERRORS.PLACE_INCORRECT);
       return;
     }
 
@@ -130,7 +131,7 @@ export default class Controller {
     const data = await forwardGeocoding(searchText, lang);
 
     if (data.total_results === 0 || data === undefined) {
-      createPopup(0);
+      createPopup(ERRORS.PLACE_INCORRECT);
       return;
     }
 
@@ -199,7 +200,7 @@ export default class Controller {
     recognition.onerror = () => {
       this.view.speechBg.style.backgroundColor = 'transparent';
       clearInterval(idInterval);
-      createPopup(7);
+      createPopup(ERRORS.SPEACH_RECOGNIZING_ERROR);
     };
 
     recognition.onend = () => {
@@ -224,7 +225,7 @@ export default class Controller {
       try {
         recognition.start();
       } catch (e) {
-        createPopup(8);
+        createPopup(ERRORS.MICROPHONE_UNREADY_ERROR);
       }
       idInterval = recognitionActivityShow();
     });

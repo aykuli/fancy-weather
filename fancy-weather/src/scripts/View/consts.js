@@ -148,7 +148,7 @@ const errorMsg = {
     'Введите правильное название населенного пункта.',
     'Геолокация не поддерживается этим браузером.',
     'Погодные данные не загружены',
-    'Координаты не были определены. Обновить страницу.',
+    'Координаты не были определены. Обновите страницу.',
     'Карта не была загружена.',
     'Что-то пошло не так. Напишите в поддержку',
     'Фоновое изображение не было загружено.',
@@ -167,5 +167,16 @@ const errorMsg = {
     'Вы занадта хутка націскаеце. Дачакайцеся, калі мікрафон будзе гатовы',
   ],
 };
+const ERRORS = {
+  PLACE_INCORRECT: 0,
+  LOCATION_UNAVAILABLE: 1,
+  WEATHER_API_UNAVAILABLE: 2,
+  COORDINATES_UNAVAILABLE: 3,
+  MAP_UNLOADED: 4,
+  UNKNOWN_ERROR: 5,
+  BACKGROUND_IMAGE_ERROR: 6,
+  SPEACH_RECOGNIZING_ERROR: 7,
+  MICROPHONE_UNREADY_ERROR: 8,
+};
 
-export { weekDayArr, monthArr, lang, controlsLocale, weatherIcons, errorMsg };
+export { weekDayArr, monthArr, lang, controlsLocale, weatherIcons, errorMsg, ERRORS };
