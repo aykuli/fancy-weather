@@ -1,15 +1,19 @@
-import { createElement } from '../functions/functions.js';
+import { createElement, createElementWithAppend, appendNodes } from '../functions/functions.js';
 import { lang } from './consts.js';
 
 export default function renderControlBtns(page) {
-  const controls = createElement('div', 'controls', page);
+  const controls = createElement('div', 'controls');
 
-  const controlsBtns = createElement('div', 'controls__btns', controls);
+  const controlsBtns = createElement('div', 'controls__btns');
+  appendNodes([controlsBtns], controls);
 
-  const controlsBtnRefresh = createElement('button', 'controls__btn controls__btn--refresh', controlsBtns);
-  const controlsBtnRefreshIcon = createElement('img', '', controlsBtnRefresh);
+  const controlsBtnRefresh = createElement('button', 'controls__btn controls__btn--refresh');
+  const controlsLang = createElement('select', 'controls__btn controls__btn--lang');
+  const units = createElement('div', 'controls__unit');
+  appendNodes([controlsBtnRefresh, controlsLang, units], controlsBtns);
+
+  const controlsBtnRefreshIcon = createElementWithAppend('img', '', controlsBtnRefresh);
   controlsBtnRefreshIcon.setAttribute('src', require('../../assets/img/icon_refresh.svg')); // eslint-disable-line
-  const controlsLang = createElement('select', 'controls__btn controls__btn--lang', controlsBtns);
 
   for (let i = 0; i < 3; i += 1) {
     const option = new Option(lang[i], lang[i], false, false);
@@ -28,10 +32,10 @@ export default function renderControlBtns(page) {
       controlsLang.value = 'en';
   }
 
-  const units = createElement('div', 'controls__unit', controlsBtns);
-  const farengheit = createElement('button', 'controls__btn controls__btn--farengeit', units);
+  const farengheit = createElement('button', 'controls__btn controls__btn--farengeit');
+  const celsius = createElement('button', 'controls__btn controls__btn--celsius');
+  appendNodes([farengheit, celsius], units);
   farengheit.innerText = '°F';
-  const celsius = createElement('button', 'controls__btn controls__btn--celsius', units);
   celsius.innerText = '°С';
 
   switch (localStorage.getItem('weatherUnit')) {
@@ -46,5 +50,7 @@ export default function renderControlBtns(page) {
       localStorage.setItem('weatherUnit', 'si');
       celsius.classList.add('controls__btn--unit-active');
   }
+
+  appendNodes([controls], page);
   return [controls, controlsLang, controlsBtnRefresh, units, farengheit, celsius];
 }

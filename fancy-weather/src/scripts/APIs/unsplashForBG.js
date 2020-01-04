@@ -10,9 +10,7 @@ export default async function unsplashForBG(...args) {
   if (args.length === 0) {
     query = localStorage.getItem('weatherBgQuery');
   } else {
-    for (const arg of args) {
-      query += arg.join('-');
-    }
+    query += args.join('-');
     localStorage.removeItem('weatherBgQuery');
     localStorage.setItem('weatherBgQuery', query);
   }

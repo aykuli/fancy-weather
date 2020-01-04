@@ -31,11 +31,25 @@ export function createPopup(errorType) {
   setTimeout(() => popup.classList.add('visually-hidden'), 2500);
 }
 
-export function createElement(tag, classes, whereAppend) {
+export function createElementWithAppend(tag, classes, whereAppend) {
   const element = document.createElement(tag);
   if (classes) element.className = classes;
   whereAppend.append(element);
   return element;
+}
+
+export function createElement(tag, classes) {
+  const element = document.createElement(tag);
+  if (classes) element.className = classes;
+  return element;
+}
+
+export function appendNodes(nodes, parentNode) {
+  const fragment = document.createDocumentFragment();
+  nodes.forEach(node => {
+    fragment.appendChild(node);
+  });
+  parentNode.append(fragment);
 }
 
 export function getSeason(month) {

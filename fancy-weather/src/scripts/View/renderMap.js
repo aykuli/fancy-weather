@@ -1,21 +1,28 @@
-import { createElement } from '../functions/functions.js';
+import { createElement, appendNodes } from '../functions/functions.js';
 import showMap from './showMap';
 
 export default function renderMap(container) {
-  const mapWrap = createElement('div', 'map__wrap', container);
+  const mapWrap = createElement('div', 'map__wrap');
 
-  const map = createElement('div', '', mapWrap);
+  const map = createElement('div', '');
+  const coors = createElement('div', 'map__coors');
+  appendNodes([map, coors], mapWrap);
   map.setAttribute('id', 'map');
   showMap(map);
 
-  const coors = createElement('div', 'map__coors', mapWrap);
-  const latitude = createElement('p', 'map__coors--latitude', coors);
-  const latitudeLabel = createElement('span', '', latitude);
-  const latitudeValue = createElement('span', 'map__coors--latitude', latitude);
+  const latitude = createElement('p', 'map__coors--latitude');
+  const longitude = createElement('p', 'map__coors--longitude');
+  appendNodes([latitude, longitude], coors);
 
-  const longitude = createElement('p', 'map__coors--longitude', coors);
-  const longitudeLabel = createElement('span', '', longitude);
-  const longitudeValue = createElement('span', 'map__coors--longitude', longitude);
+  const latitudeLabel = createElement('span', '');
+  const latitudeValue = createElement('span', 'map__coors--latitude');
+  appendNodes([latitudeLabel, latitudeValue], latitude);
+
+  const longitudeLabel = createElement('span', '');
+  const longitudeValue = createElement('span', 'map__coors--longitude');
+  appendNodes([longitudeLabel, longitudeValue], longitude);
+
+  appendNodes([mapWrap], container);
 
   return [map, latitudeLabel, latitudeValue, longitudeLabel, longitudeValue];
 }

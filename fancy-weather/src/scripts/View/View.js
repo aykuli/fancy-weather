@@ -1,5 +1,11 @@
 import { weekDayArr, monthArr, controlsLocale, weatherIcons, ERRORS } from './consts.js';
-import { celsiusToFarengeitAndReverse, createPopup, createElement, zeroAdd } from '../functions/functions.js';
+import {
+  celsiusToFarengeitAndReverse,
+  createPopup,
+  createElement,
+  zeroAdd,
+  appendNodes,
+} from '../functions/functions.js';
 import renderControlBtns from './renderControlBtns.js';
 import renderInput from './renderInput.js';
 import { renderCurrentWeather, renderForecastWeather } from './renderWeather.js';
@@ -9,7 +15,7 @@ import renderPlace from './renderPlace.js';
 
 export default class View {
   constructor() {
-    this.page = createElement('div', 'page-wrap', document.body);
+    this.page = createElement('div', 'page-wrap');
 
     // Block 1: control elements and input form
     [
@@ -29,8 +35,8 @@ export default class View {
     );
 
     // Block 2: Showing current weather
-    this.container = createElement('div', 'container', this.page);
-    this.weather = createElement('div', 'weather', this.container);
+    this.container = createElement('div', 'container');
+    this.weather = createElement('div', 'weather');
 
     // Block 3: Weather data
     [this.city, this.country] = renderPlace(this.weather);
@@ -60,13 +66,16 @@ export default class View {
       this.after3DaysIcon,
     ] = renderForecastWeather(this.weather);
 
+    appendNodes([this.weather], this.container);
+
     // Block 4: Map and coordinates
     [this.map, this.latitudeLabel, this.latitudeValue, this.longitudeLabel, this.longitudeValue] = renderMap(
       this.container
     );
 
-    this.renderPopup = createElement('div', 'popup visually-hidden', this.page);
-
+    this.renderPopup = createElement('div', 'popup visually-hidden');
+    appendNodes([this.container, this.renderPopup], this.page);
+    appendNodes([this.page], document.body);
     this.showLabels();
     this.showDate();
     this.showTimeHHMM();

@@ -1,12 +1,16 @@
-import { createElement } from '../functions/functions.js';
+import { createElement, appendNodes } from '../functions/functions.js';
 
 export default function renderDate(weather) {
-  const date = createElement('p', 'weather__date', weather);
-  const dateDay = createElement('span', 'weather__date--item', date);
-  const dateMM = createElement('span', 'weather__date--item', date);
-  const dateDD = createElement('span', 'weather__date--item', date);
-  const datehh = createElement('span', '', date);
-  const datemm = createElement('span', '', date);
+  const date = createElement('p', 'weather__date');
 
-  return [dateDay, dateMM, dateDD, datehh, datemm];
+  const dateDay = createElement('span', 'weather__date--item');
+  const dateMM = createElement('span', 'weather__date--item');
+  const dateDD = createElement('span', 'weather__date--item');
+  const datehh = createElement('span', '');
+  const datemm = createElement('span', '');
+
+  const nodes = [dateDay, dateMM, dateDD, datehh, datemm];
+  appendNodes(nodes, date);
+  appendNodes([date], weather);
+  return nodes;
 }
